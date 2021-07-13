@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.0.0)
+
+
+
+if(COMMAND target_link_library)
+	message("target_link_library is a command")
+else()
+	message("target_link_library is NOT a command")
+endif()
+
+if(COMMAND target_link_libraries)
+	message("target_link_libraries is a command")
+else()
+	message("target_link_libraries is NOT a command")
+endif()
+
+if(EXISTS /home/mky/Desktop/cmake_tutorials/module5/CMakeLists.txt)
+	message("Given file exists")
+else()
+	message("File not found")
+endif()

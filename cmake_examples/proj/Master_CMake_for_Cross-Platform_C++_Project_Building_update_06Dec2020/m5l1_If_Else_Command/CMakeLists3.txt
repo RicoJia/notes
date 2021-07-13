@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.0.0)
+
+
+set(Name1 Charlie)
+set(Name2 Charlies)
+
+if(Name1 STRLESS Name2)
+	message("${Name1} is less than ${Name2}")
+elseif(Name1 STRGREATER Name2)
+	message("${Name1} is greater than ${Name2}")
+elseif(Name1 SRTEQUAL Name2)
+	message("${Name1} is equal to ${Name2}")
+endif()
