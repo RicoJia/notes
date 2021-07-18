@@ -1,6 +1,6 @@
-/home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters/build/CMakeFiles/rebuild_cache.dir
-/home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters/build/CMakeFiles/filters.dir
-/home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters/build/CMakeFiles/edit_cache.dir
-/home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters/build/gtest/CMakeFiles/rebuild_cache.dir
-/home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters/build/gtest/CMakeFiles/filter_test.dir
-/home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters/build/gtest/CMakeFiles/edit_cache.dir
+/home/ricojia/file_exchange_port/notes/Fun_Projects/filters/build/CMakeFiles/rebuild_cache.dir
+/home/ricojia/file_exchange_port/notes/Fun_Projects/filters/build/CMakeFiles/filters.dir
+/home/ricojia/file_exchange_port/notes/Fun_Projects/filters/build/CMakeFiles/edit_cache.dir
+/home/ricojia/file_exchange_port/notes/Fun_Projects/filters/build/gtest/CMakeFiles/rebuild_cache.dir
+/home/ricojia/file_exchange_port/notes/Fun_Projects/filters/build/gtest/CMakeFiles/filter_test.dir
+/home/ricojia/file_exchange_port/notes/Fun_Projects/filters/build/gtest/CMakeFiles/edit_cache.dir

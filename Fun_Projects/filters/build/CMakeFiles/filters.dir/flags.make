@@ -6,5 +6,5 @@ CXX_FLAGS =  -fPIC -std=c++2a -O3   -Wall -Wextra
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters/include 
+CXX_INCLUDES = -I/home/ricojia/file_exchange_port/notes/Fun_Projects/filters/include 
 

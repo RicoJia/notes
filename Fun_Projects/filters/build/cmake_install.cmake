@@ -1,4 +1,4 @@
-# Install script for directory: /home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters
+# Install script for directory: /home/ricojia/file_exchange_port/notes/Fun_Projects/filters
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters/build/gtest/cmake_install.cmake")
+  include("/home/ricojia/file_exchange_port/notes/Fun_Projects/filters/build/gtest/cmake_install.cmake")
 
 endif()
 
@@ -51,5 +51,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/ricojia/file_exchange_port/notes/Fun_Projects/filters/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

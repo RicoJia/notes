@@ -18,12 +18,14 @@ public:
     template<class F, class... Args>
     auto enqueue(F&& f, Args&&... args) 
         -> std::future<typename std::result_of<F(Args...)>::type>;
+    int get_size() const; 
     ~ThreadPool();
 private:
     // need to keep track of threads so we can join them
     std::vector< std::thread > workers;
     // the task queue
     std::queue< std::function<void()> > tasks;
+    unsigned int size_; 
     
     // synchronization
     std::mutex queue_mutex;
@@ -33,7 +35,7 @@ private:
  
 // the constructor just launches some amount of workers
 inline ThreadPool::ThreadPool(size_t threads)
-    :   stop(false)
+    :   size_(threads), stop(false)
 {
     for(size_t i = 0;i<threads;++i)
         workers.emplace_back(
@@ -84,6 +86,10 @@ auto ThreadPool::enqueue(F&& f, Args&&... args)
     }
     condition.notify_one();
     return res;
+}
+
+inline int ThreadPool::get_size() const{
+   return size_;  
 }
 
 // the destructor joins all threads

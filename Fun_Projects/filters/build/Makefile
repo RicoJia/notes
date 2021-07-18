@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters
+CMAKE_SOURCE_DIR = /home/ricojia/file_exchange_port/notes/Fun_Projects/filters
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters/build
+CMAKE_BINARY_DIR = /home/ricojia/file_exchange_port/notes/Fun_Projects/filters/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters/build/CMakeFiles /home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ricojia/file_exchange_port/notes/Fun_Projects/filters/build/CMakeFiles /home/ricojia/file_exchange_port/notes/Fun_Projects/filters/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ricojia/file_exchange_port/notes/Fun_Projects/filters/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

@@ -1,4 +1,4 @@
-# Install script for directory: /home/ricojia/file_exchange_port/notes.wiki/Fun_Projects/filters/gtest
+# Install script for directory: /home/ricojia/file_exchange_port/notes/Fun_Projects/filters/gtest
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

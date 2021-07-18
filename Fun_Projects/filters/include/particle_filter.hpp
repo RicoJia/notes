@@ -17,7 +17,6 @@
 #include "thread_pool.hpp"
 
 namespace Filter{
-
   class Particle_Filter{
     public:
 
@@ -43,13 +42,14 @@ namespace Filter{
       * @brief: Register function for send_relief callback. See Particle_Filter::send_belief_cb_
       * @param: Callable with signature void (const std::vector<double>&). 
       */
-      void register_belief_callback(std::function<void(std::vector<double>&)>); 
+      void register_belief_callback(std::function<void(const std::vector<double>&)>); 
 
       /**
       * @brief: Main function that contains the main prediction-corrrection loop. 
       * @notes: std::runtime_error will be thrown if callbacks are not attached. 
       */
       void run(); 
+      
     private:
       struct State{
         std::vector<double> state_vec;
@@ -63,10 +63,10 @@ namespace Filter{
       std::function<void( std::vector<double>&)> update_control_cb_;
       
       //The callable takes in a single predicted state before an observation, and returns the likelihood of observation given the state observation.
-      std::function<void(const std::vector<double>&)> calc_observation_cb_; 
+      std::function<double (const std::vector<double>&)> calc_observation_cb_; 
 
       //The callable takes in the final state estimate (belief), and stores it or does whatever.
-      std::function<void(std::vector<double>&)> send_belief_cb_; 
+      std::function<void(const std::vector<double>&)> send_belief_cb_; 
 
       // generate a random number in [lower_lim, upper_lim] following universal distribution
       std::vector<double> generate_random_num_universal (const double& lower_lim, const double& upper_lim, const unsigned int& num) const ; 
@@ -74,7 +74,8 @@ namespace Filter{
       // resampling using Russian Rollet
       void resampling(); 
 
-
+      // return the average over each dimension 
+      std::vector<double> average_belief(); 
   }; 
 }
 #endif /* end of include guard: __PARTICLE_FILTER_HPP__ */
