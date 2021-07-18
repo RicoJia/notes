@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC  -fPIC -std=c++2a -O3  -shared  -o face_tracker.cpython-36m-x86_64-linux-gnu.so CMakeFiles/face_tracker.dir/face_tracker.cpp.o -flto 
