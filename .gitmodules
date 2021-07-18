@@ -1,0 +1,3 @@
+[submodule "Fun_Projects/face_tracker/pybind11"]
+	path = Fun_Projects/face_tracker/pybind11
+	url = https://github.com/pybind/pybind11.git
