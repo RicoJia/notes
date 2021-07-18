@@ -34,6 +34,5 @@ PYBIND11_MODULE(example, m) { //module name must match file name
     m.doc() = "pybind11 example plugin";
     // define add function
     m.def("pybind_test", &pybind_test, "A function which adds two numbers");
-
 }
 

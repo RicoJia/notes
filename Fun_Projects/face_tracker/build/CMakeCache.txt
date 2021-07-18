@@ -242,10 +242,10 @@ PYBIND11_PYTHON_VERSION:STRING=
 PYBIND11_TEST:BOOL=OFF
 
 //Path to a program.
-PYTHON_EXECUTABLE:FILEPATH=/usr/bin/python3.6
+PYTHON_EXECUTABLE:FILEPATH=/usr/bin/python
 
 //Path to a library.
-PYTHON_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libpython3.6m.so
+PYTHON_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libpython2.7.so
 
 //Value Computed by CMake
 face_tracker_BINARY_DIR:STATIC=/home/ricojia/file_exchange_port/notes/Fun_Projects/face_tracker/build
@@ -435,25 +435,25 @@ CMAKE_UNAME:INTERNAL=/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding PYTHON
-FIND_PACKAGE_MESSAGE_DETAILS_PYTHON:INTERNAL=/usr/bin/python3.63.6.9
+FIND_PACKAGE_MESSAGE_DETAILS_PYTHON:INTERNAL=/usr/bin/python2.7.17
 //Details about finding PythonInterp
-FIND_PACKAGE_MESSAGE_DETAILS_PythonInterp:INTERNAL=[/usr/bin/python3.6][v3.6.9()]
+FIND_PACKAGE_MESSAGE_DETAILS_PythonInterp:INTERNAL=[/usr/bin/python][v2.7.17()]
 //Test HAS_FLTO
 HAS_FLTO:INTERNAL=1
 PYBIND11_INCLUDE_DIR:INTERNAL=/home/ricojia/file_exchange_port/notes/Fun_Projects/face_tracker/pybind11/include
 //ADVANCED property for variable: PYTHON_EXECUTABLE
 PYTHON_EXECUTABLE-ADVANCED:INTERNAL=1
-PYTHON_INCLUDE_DIRS:INTERNAL=/usr/include/python3.6m
+PYTHON_INCLUDE_DIRS:INTERNAL=/usr/include/python2.7
 PYTHON_IS_DEBUG:INTERNAL=0
-PYTHON_LIBRARIES:INTERNAL=/usr/lib/x86_64-linux-gnu/libpython3.6m.so
+PYTHON_LIBRARIES:INTERNAL=/usr/lib/x86_64-linux-gnu/libpython2.7.so
 //ADVANCED property for variable: PYTHON_LIBRARY
 PYTHON_LIBRARY-ADVANCED:INTERNAL=1
-PYTHON_MODULE_EXTENSION:INTERNAL=.cpython-36m-x86_64-linux-gnu.so
+PYTHON_MODULE_EXTENSION:INTERNAL=.so
 PYTHON_MODULE_PREFIX:INTERNAL=
-PYTHON_VERSION:INTERNAL=3.6.9
-PYTHON_VERSION_MAJOR:INTERNAL=3
-PYTHON_VERSION_MINOR:INTERNAL=6
-Python_ADDITIONAL_VERSIONS:INTERNAL=3.9;3.8;3.7;3.6;3.5;3.4
+PYTHON_VERSION:INTERNAL=2.7.17
+PYTHON_VERSION_MAJOR:INTERNAL=2
+PYTHON_VERSION_MINOR:INTERNAL=7
+Python_ADDITIONAL_VERSIONS:INTERNAL=3.10;3.9;3.8;3.7;3.6;3.5;3.4
 //CMAKE_INSTALL_PREFIX during last run
 _GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=/usr/local
 _Python:INTERNAL=PYTHON
@@ -462,5 +462,5 @@ pybind11_FOUND:INTERNAL=TRUE
 //Directory where pybind11 headers are located
 pybind11_INCLUDE_DIR:INTERNAL=/home/ricojia/file_exchange_port/notes/Fun_Projects/face_tracker/pybind11/include
 //Directories where pybind11 and possibly Python headers are located
-pybind11_INCLUDE_DIRS:INTERNAL=/home/ricojia/file_exchange_port/notes/Fun_Projects/face_tracker/pybind11/include;/usr/include/python3.6m
+pybind11_INCLUDE_DIRS:INTERNAL=/home/ricojia/file_exchange_port/notes/Fun_Projects/face_tracker/pybind11/include;/usr/include/python2.7
 

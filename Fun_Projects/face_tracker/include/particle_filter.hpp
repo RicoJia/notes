@@ -20,6 +20,7 @@
 #include <thread>
 #include <utility>
 #include <iostream>
+#include <memory>
 
 #include "thread_pool.hpp"
 

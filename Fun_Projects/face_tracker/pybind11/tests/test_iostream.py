@@ -69,6 +69,96 @@ def test_captured_large_string(capsys):
     assert stderr == ""
 
 
+def test_captured_utf8_2byte_offset0(capsys):
+    msg = "\u07FF"
+    msg = "" + msg * (1024 // len(msg) + 1)
+
+    m.captured_output_default(msg)
+    stdout, stderr = capsys.readouterr()
+    assert stdout == msg
+    assert stderr == ""
+
+
+def test_captured_utf8_2byte_offset1(capsys):
+    msg = "\u07FF"
+    msg = "1" + msg * (1024 // len(msg) + 1)
+
+    m.captured_output_default(msg)
+    stdout, stderr = capsys.readouterr()
+    assert stdout == msg
+    assert stderr == ""
+
+
+def test_captured_utf8_3byte_offset0(capsys):
+    msg = "\uFFFF"
+    msg = "" + msg * (1024 // len(msg) + 1)
+
+    m.captured_output_default(msg)
+    stdout, stderr = capsys.readouterr()
+    assert stdout == msg
+    assert stderr == ""
+
+
+def test_captured_utf8_3byte_offset1(capsys):
+    msg = "\uFFFF"
+    msg = "1" + msg * (1024 // len(msg) + 1)
+
+    m.captured_output_default(msg)
+    stdout, stderr = capsys.readouterr()
+    assert stdout == msg
+    assert stderr == ""
+
+
+def test_captured_utf8_3byte_offset2(capsys):
+    msg = "\uFFFF"
+    msg = "12" + msg * (1024 // len(msg) + 1)
+
+    m.captured_output_default(msg)
+    stdout, stderr = capsys.readouterr()
+    assert stdout == msg
+    assert stderr == ""
+
+
+def test_captured_utf8_4byte_offset0(capsys):
+    msg = "\U0010FFFF"
+    msg = "" + msg * (1024 // len(msg) + 1)
+
+    m.captured_output_default(msg)
+    stdout, stderr = capsys.readouterr()
+    assert stdout == msg
+    assert stderr == ""
+
+
+def test_captured_utf8_4byte_offset1(capsys):
+    msg = "\U0010FFFF"
+    msg = "1" + msg * (1024 // len(msg) + 1)
+
+    m.captured_output_default(msg)
+    stdout, stderr = capsys.readouterr()
+    assert stdout == msg
+    assert stderr == ""
+
+
+def test_captured_utf8_4byte_offset2(capsys):
+    msg = "\U0010FFFF"
+    msg = "12" + msg * (1024 // len(msg) + 1)
+
+    m.captured_output_default(msg)
+    stdout, stderr = capsys.readouterr()
+    assert stdout == msg
+    assert stderr == ""
+
+
+def test_captured_utf8_4byte_offset3(capsys):
+    msg = "\U0010FFFF"
+    msg = "123" + msg * (1024 // len(msg) + 1)
+
+    m.captured_output_default(msg)
+    stdout, stderr = capsys.readouterr()
+    assert stdout == msg
+    assert stderr == ""
+
+
 def test_guard_capture(capsys):
     msg = "I've been redirected to Python, I hope!"
     m.guard_output(msg)
@@ -216,3 +306,26 @@ def test_redirect_both(capfd):
     assert stderr == ""
     assert stream.getvalue() == msg
     assert stream2.getvalue() == msg2
+
+
+def test_threading():
+    with m.ostream_redirect(stdout=True, stderr=False):
+        # start some threads
+        threads = []
+
+        # start some threads
+        for _j in range(20):
+            threads.append(m.TestThread())
+
+        # give the threads some time to fail
+        threads[0].sleep()
+
+        # stop all the threads
+        for t in threads:
+            t.stop()
+
+        for t in threads:
+            t.join()
+
+        # if a thread segfaults, we don't get here
+        assert True
