@@ -1,5 +1,0 @@
-/home/ricojia/file_exchange_port/notes/Fun_Projects/face_tracker/build/CMakeFiles/rebuild_cache.dir
-/home/ricojia/file_exchange_port/notes/Fun_Projects/face_tracker/build/CMakeFiles/face_tracker.dir
-/home/ricojia/file_exchange_port/notes/Fun_Projects/face_tracker/build/CMakeFiles/edit_cache.dir
-/home/ricojia/file_exchange_port/notes/Fun_Projects/face_tracker/build/pybind11/CMakeFiles/rebuild_cache.dir
-/home/ricojia/file_exchange_port/notes/Fun_Projects/face_tracker/build/pybind11/CMakeFiles/edit_cache.dir
