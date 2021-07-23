@@ -48,7 +48,8 @@ while True:
         for pt in corner_points: 
             draw_point(frame, pt)
     else: 
-        #calculate window size and center
+        return_state = tracker.run_one_iteration(frame)
+        #TODO: calculate window size and center
         draw_box(frame, corner_points)
         SET_ROI = True
 

@@ -38,6 +38,18 @@ Face_tracker_PF::Face_tracker_PF(const py::list& ranges, const int& particle_num
     }
     pf_ = std::make_unique<Particle_Filter>(ranges_vec, particle_num); 
     // register callbacks
+    pf_ -> register_control_callback(std::bind(&Face_tracker_PF::control_callback, this, std::placeholders::_1)); 
+    pf_ -> register_observation_callback(std::bind(&Face_tracker_PF::observation_callback, this, std::placeholders::_1));
+}
+
+void Face_tracker_PF::control_callback(std::vector<double>& states){
+    //TODO
+    cout<<__FUNCTION__<<" | "<<states.size()<<endl;
+}
+
+double Face_tracker_PF::observation_callback(const std::vector<double>& state_estimate){
+    //TODO
+    return 0; 
 }
 
 py::array_t<double> Face_tracker_PF::run_one_iteration(const py::array_t<double>& frame){
