@@ -19,9 +19,28 @@ def mouse_drawing(event, x_temp, y_temp, flags, params):
         if not SET_ROI: 
             corner_points.append((x_temp, y_temp))
 
+def get_state_ranges(cap): 
+    if cap.isOpened(): 
+        width  = cap.get(cv2.CAP_PROP_FRAME_WIDTH)   # float `width`
+        height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)  # float `height`
+        x_range = (0, width)
+        y_range = (0, height)  #? 
+        fps = cap.get(cv2.CAP_PROP_FPS)
+        vx_range = (-width/fps, width/fps)      #assume face can flash across the window in 1s
+        vy_range = (-height/fps, height/fps)
+        hx_range = (0, width)
+        hy_range = (0, height)
+        at_dot_range = (0,2)        #scale change
+    return [x_range, y_range, vx_range, vy_range, hx_range, hy_range, at_dot_range]
+
 cv2.namedWindow("face_tracker")
 cv2.setMouseCallback("face_tracker", mouse_drawing)
 cap = cv2.VideoCapture(2)
+
+# initialize face tracker
+ranges = get_state_ranges(cap)
+PARTICLE_NUM = 100
+tracker = face_tracker_pf(ranges, PARTICLE_NUM)
 
 while True:
     rval, frame = cap.read()
@@ -29,7 +48,7 @@ while True:
         for pt in corner_points: 
             draw_point(frame, pt)
     else: 
-        #do_stuff
+        #calculate window size and center
         draw_box(frame, corner_points)
         SET_ROI = True
 

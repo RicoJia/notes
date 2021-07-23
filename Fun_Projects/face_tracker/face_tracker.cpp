@@ -1,27 +1,46 @@
 #include <pybind11/pybind11.h>
+#include <pybind11/numpy.h>
 #include <memory>
 #include "particle_filter.hpp"
 
+#pragma GCC visibility push(hidden)
 namespace py = pybind11;
 
 using Filter::Particle_Filter; 
+//TODO
+using std::cout; using std::endl; 
+
 class Face_tracker_PF{
   public: 
-    explicit Face_tracker_PF(const py::list& ranges, const int& particle_num){
-        std::vector<std::pair<double, double>> ranges_vec; 
-        for(const auto& item : ranges){
-          auto range = item.cast<py::list>();
-          ranges_vec.emplace_back(std::make_pair<double, double>(range[0].cast<double>(), range[1].cast<double>())); 
-        }
-        // pf_ = std::make_unique<Particle_Filter>(ranges_vec, particle_num); 
-    }
+    explicit Face_tracker_PF(const py::list& ranges, const int& particle_num); 
+    py::array_t<double> run_one_iteration(const py::array_t<double>& frame);
   private: 
     std::unique_ptr<Particle_Filter> pf_; 
+    // pre-allocating return state so it's fast
+    py::array_t<double> return_state_;    
 
 
 }; 
 
+Face_tracker_PF::Face_tracker_PF(const py::list& ranges, const int& particle_num) : 
+    return_state_(py::array_t<double>({particle_num}))
+{
+    std::vector<std::pair<double, double>> ranges_vec; 
+    for(const auto& item : ranges){
+      auto range = item.cast<py::list>();
+      ranges_vec.emplace_back(std::make_pair<double, double>(range[0].cast<double>(), range[1].cast<double>())); 
+      cout<<ranges_vec.back().first<<" , "<<ranges_vec.back().second<<endl;
+    }
+    pf_ = std::make_unique<Particle_Filter>(ranges_vec, particle_num); 
+    // register callbacks
+}
 
+py::array_t<double> Face_tracker_PF::run_one_iteration(const py::array_t<double>& frame){
+   // use async, future  
+   return return_state_; 
+}
+
+#pragma GCC visibility pop
 
 PYBIND11_MODULE(face_tracker, m) { //module name must match file name
     // optional module docstring
@@ -29,6 +48,7 @@ PYBIND11_MODULE(face_tracker, m) { //module name must match file name
     py::class_<Face_tracker_PF>(m, "face_tracker_pf")
       .def(py::init<const py::list&, const int&>(), 
                                   py::arg("ranges"),
-                                  py::arg("particle_num") = 100);
+                                  py::arg("particle_num") = 100)
+      .def("run_one_iteration", &Face_tracker_PF::run_one_iteration);
 }
 
