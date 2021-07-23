@@ -10,6 +10,7 @@ using Filter::Particle_Filter;
 //TODO
 using std::cout; using std::endl; 
 
+
 class Face_tracker_PF{
   public: 
     explicit Face_tracker_PF(const py::list& ranges, const int& particle_num); 
@@ -40,7 +41,9 @@ Face_tracker_PF::Face_tracker_PF(const py::list& ranges, const int& particle_num
 }
 
 py::array_t<double> Face_tracker_PF::run_one_iteration(const py::array_t<double>& frame){
-   // use async, future  
+   // particle_filter will launch a thread pool that calls the callbacks
+   std::vector<double> belief = pf_ -> run(); 
+   memcpy((double*)return_state_.request().ptr, belief.data(), sizeof(double) * belief.size()); 
    return return_state_; 
 }
 
