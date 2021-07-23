@@ -18,7 +18,11 @@ class Face_tracker_PF{
     std::unique_ptr<Particle_Filter> pf_; 
     // pre-allocating return state so it's fast
     py::array_t<double> return_state_;    
-
+    
+    //takes in a set of states, and apply control with noise. 
+    void control_callback(std::vector<double>& states);
+    // Given state estimate, return the likelihood of the current observation
+    double observation_callback(const std::vector<double>& state_estimate);
 
 }; 
 

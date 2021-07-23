@@ -46,16 +46,10 @@ namespace Filter{
       void register_observation_callback(std::function<double (const std::vector<double>&)>); 
 
       /**
-      * @brief: Register function for send_relief callback. See Particle_Filter::send_belief_cb_
-      * @param: Callable with signature void (const std::vector<double>&). 
-      */
-      void register_belief_callback(std::function<void(const std::vector<double>&)>); 
-
-      /**
       * @brief: Main function that contains the main prediction-corrrection loop. 
       * @notes: std::runtime_error will be thrown if callbacks are not attached. 
       */
-      void run(); 
+      std::vector<double> run(); 
       
     private:
       struct State{
@@ -72,8 +66,6 @@ namespace Filter{
       //The callable takes in a single predicted state before an observation, and returns the likelihood of observation given the state observation.
       std::function<double (const std::vector<double>&)> calc_observation_cb_; 
 
-      //The callable takes in the final state estimate (belief), and stores it or does whatever.
-      std::function<void(const std::vector<double>&)> send_belief_cb_; 
 
       // generate a random number in [lower_lim, upper_lim] following universal distribution
       std::vector<double> generate_random_num_universal (const double& lower_lim, const double& upper_lim, const unsigned int& num) const ; 
@@ -110,10 +102,6 @@ inline void Particle_Filter::register_control_callback(std::function<void (std::
 
 inline void Particle_Filter::register_observation_callback(std::function<double (const std::vector<double>&)> calc_observation_cb){
     calc_observation_cb_ = calc_observation_cb; 
-  }
-
-inline void Particle_Filter::register_belief_callback(std::function<void (const std::vector<double>&)> send_belief_cb){
-    send_belief_cb_ = send_belief_cb;  
   }
 
 inline void Particle_Filter::resampling(){
@@ -158,7 +146,7 @@ inline std::vector<double> Particle_Filter::generate_random_num_universal (const
   }
 
 
-inline void Particle_Filter::run(){
+inline std::vector<double> Particle_Filter::run(){
     if (update_control_cb_ == nullptr){
       throw std::runtime_error("update_control_cb_ has not been attached. Particle Filter not running");
     }
@@ -167,12 +155,10 @@ inline void Particle_Filter::run(){
       throw std::runtime_error("calc_observation_cb_ has not been attached. Particle Filter not running");
     }
 
-    if (send_belief_cb_ == nullptr){
-      throw std::runtime_error("send_belief_cb_ has not been attached. Particle Filter not running");
-    }
-
     //TODO: to test
     resampling();
+
+    //TODO: try parallelizing this whole process
     for (auto& state : states_)
         update_control_cb_(state.state_vec);
     for (auto& state : states_)
@@ -183,7 +169,7 @@ inline void Particle_Filter::run(){
     std::for_each(states_.begin(), states_.end(),[sum](State& s){s.weight /= sum;});
 
     //send average belief
-    send_belief_cb_(average_belief());
+    return average_belief();
   }
 
 }
