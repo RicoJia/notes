@@ -10,8 +10,9 @@ set(CMAKE_CXX_STANDARD 14)
 add_definitions(${GCC_COMPILE_FLAGS})
 
 pybind11_add_module(face_tracker face_tracker.cpp)
+target_include_directories(face_tracker PUBLIC ../filters/include)
+target_link_libraries(face_tracker PUBLIC -lfilters)
 
-target_include_directories(face_tracker PUBLIC include)
 
 add_custom_command(TARGET PUBLIC face_tracker  POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/face_tracker.cpython* ${CMAKE_BINARY_DIR}/../face_tracker.so)
 
