@@ -1,6 +1,6 @@
-[submodule "Fun_Projects/filter_projects/face_tracker/pybind11"]
-	path = Fun_Projects/filter_projects/face_tracker/pybind11
-	url = https://github.com/pybind/pybind11.git
 [submodule "examples/pybind-example/pybind11"]
 	path = examples/pybind-example/pybind11
+	url = https://github.com/pybind/pybind11.git
+[submodule "Fun_Projects/filter_projects/face_tracker/pybind11"]
+	path = Fun_Projects/filter_projects/face_tracker/pybind11
 	url = https://github.com/pybind/pybind11.git
