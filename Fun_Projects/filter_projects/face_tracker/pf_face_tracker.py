@@ -34,8 +34,13 @@ def get_state_ranges(cap):
     return [x_range, y_range, vx_range, vy_range, hx_range, hy_range, at_dot_range]
 
 def update_corner_points(corner_points, return_state): 
-    center = np.array([return_state[:2]]) 
-
+    center = np.array(return_state[:2]) 
+    h_half = return_state[4]/2.0
+    w_half = return_state[5]/2.0
+    diagonal_half = np.array([h_half, w_half])
+    # print((center - diagonal_half).astype(np.int))
+    corner_points[0] = tuple((center - diagonal_half).astype(np.int))
+    corner_points[1] = tuple((center + diagonal_half).astype(np.int))
 
 cv2.namedWindow("face_tracker")
 cv2.setMouseCallback("face_tracker", mouse_drawing)
@@ -58,7 +63,7 @@ while True:
     else: 
         return_state = tracker.run_one_iteration(frame)
         update_corner_points(corner_points, return_state)
-        print(return_state)
+        print(return_state[:2])
         #TODO: calculate window size and center
         draw_box(frame, corner_points)
         SET_ROI = True

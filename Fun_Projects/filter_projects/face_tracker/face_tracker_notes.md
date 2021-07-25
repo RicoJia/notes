@@ -10,5 +10,4 @@
   - control 
   - observation
 3. Add visualization
-  - cv.rectangle doesn't care about the bounds
   - what if a target is lost? what do we do? 
