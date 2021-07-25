@@ -51,6 +51,9 @@ namespace Filter{
       */
       std::vector<double> run(); 
       
+      // generate a random number in [lower_lim, upper_lim] following universal distribution
+      static std::vector<double> generate_random_num_universal (const double& lower_lim, const double& upper_lim, const unsigned int& num); 
+
     private:
       struct State{
         std::vector<double> state_vec;
@@ -65,10 +68,6 @@ namespace Filter{
       
       //The callable takes in a single predicted state before an observation, and returns the likelihood of observation given the state observation.
       std::function<double (const std::vector<double>&)> calc_observation_cb_; 
-
-
-      // generate a random number in [lower_lim, upper_lim] following universal distribution
-      std::vector<double> generate_random_num_universal (const double& lower_lim, const double& upper_lim, const unsigned int& num) const ; 
 
       // resampling using Russian Rollet
       void resampling(); 
@@ -94,6 +93,10 @@ inline Particle_Filter::Particle_Filter(const std::vector<std::pair<double, doub
     auto max_num_threads = std::thread::hardware_concurrency(); 
     auto num_threads = std::min( (max_num_threads < 2) ? 2: max_num_threads - 1, particle_num ); 
     thread_pool_ = std::make_unique<ThreadPool>(num_threads); 
+
+    //TODO
+    using std::cout; using std::endl; 
+    for (auto& state : states_) cout<<"weight: "<<state.weight<<" x "<<state.state_vec[0]<<" y: "<<state.state_vec[1]<<endl;
   }
 
 inline void Particle_Filter::register_control_callback(std::function<void (std::vector<double>&)> update_control_cb){
@@ -110,7 +113,8 @@ inline void Particle_Filter::resampling(){
     std::vector<double> weight_cdfs(particle_num, states_.at(0).weight);
     std::transform(states_.begin()+1, states_.end(), weight_cdfs.begin(), weight_cdfs.begin()+1, [](const State& current_state, const double& last_total_weight){return current_state.weight + last_total_weight;});
 
-    for (auto& i : weight_cdfs) std::cout<<i<<std::endl;
+    // TODO
+    // for (auto& i : weight_cdfs) std::cout<<i<<std::endl;
     // generate a random number in [0, 1/particle_num] , then do Russian-Roulette importance sampling 
     double r = generate_random_num_universal(0, 1.0/particle_num, 1).at(0); 
     std::vector<State> new_states;
@@ -134,7 +138,7 @@ inline std::vector<double> Particle_Filter::average_belief(){
     return avg;
   }
 
-inline std::vector<double> Particle_Filter::generate_random_num_universal (const double& lower_lim, const double& upper_lim, const unsigned int& num) const {
+inline std::vector<double> Particle_Filter::generate_random_num_universal (const double& lower_lim, const double& upper_lim, const unsigned int& num) {
       std::random_device rd; //Will be used to obtain a seed for the random number engine
       std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
       std::uniform_real_distribution<> distribution (lower_lim, upper_lim);

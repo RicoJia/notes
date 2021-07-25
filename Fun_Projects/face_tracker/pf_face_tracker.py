@@ -21,17 +21,21 @@ def mouse_drawing(event, x_temp, y_temp, flags, params):
 
 def get_state_ranges(cap): 
     if cap.isOpened(): 
+        # ranges is [(upper_lim, lower_lim, standard_deviation_of_noise), ...]
         width  = cap.get(cv2.CAP_PROP_FRAME_WIDTH)   # float `width`
         height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)  # float `height`
-        x_range = (0, width)
-        y_range = (0, height)  #? 
-        fps = cap.get(cv2.CAP_PROP_FPS)
-        vx_range = (-width/fps, width/fps)      #assume face can flash across the window in 1s
-        vy_range = (-height/fps, height/fps)
-        hx_range = (0, width)
-        hy_range = (0, height)
-        at_dot_range = (0,2)        #scale change
+        x_range = (0, width, 0.6)
+        y_range = (0, height, 0.6)  #? 
+        vx_range = (-width, width, 0.6)      #assume face can flash across the window in 1s
+        vy_range = (-height, height, 0.6)
+        hx_range = (0, width, 0.6)
+        hy_range = (0, height, 0.6)
+        at_dot_range = (0,2, 0.6)        #scale change
     return [x_range, y_range, vx_range, vy_range, hx_range, hy_range, at_dot_range]
+
+def update_corner_points(corner_points, return_state): 
+    center = np.array([return_state[:2]]) 
+
 
 cv2.namedWindow("face_tracker")
 cv2.setMouseCallback("face_tracker", mouse_drawing)
@@ -40,7 +44,11 @@ cap = cv2.VideoCapture(2)
 # initialize face tracker
 ranges = get_state_ranges(cap)
 PARTICLE_NUM = 100
-tracker = face_tracker_pf(ranges, PARTICLE_NUM)
+SCALE_CHANGE_DISTURB = 0.001
+VELOCITY_DISTURB = 0.1
+FRAME_RATE = cap.get(cv2.CAP_PROP_FPS)
+tracker_input = {"ranges":ranges, "PARTICLE_NUM":PARTICLE_NUM, "SCALE_CHANGE_DISTURB":SCALE_CHANGE_DISTURB, "VELOCITY_DISTURB":VELOCITY_DISTURB, "FRAME_RATE":FRAME_RATE}
+tracker = face_tracker_pf(tracker_input)
 
 while True:
     rval, frame = cap.read()
@@ -49,6 +57,8 @@ while True:
             draw_point(frame, pt)
     else: 
         return_state = tracker.run_one_iteration(frame)
+        update_corner_points(corner_points, return_state)
+        print(return_state)
         #TODO: calculate window size and center
         draw_box(frame, corner_points)
         SET_ROI = True
