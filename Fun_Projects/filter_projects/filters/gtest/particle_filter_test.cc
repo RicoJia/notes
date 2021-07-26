@@ -49,7 +49,6 @@ TEST_F(ParticleFilterTest, InitializationTest)
         cout<<error.what()<<endl;
     };
 
-    pf_ -> register_belief_callback([](const std::vector<double>& state_vec){for(const auto& s: state_vec) cout<<s<<endl;}); 
     pf_ -> run(); 
 }
 

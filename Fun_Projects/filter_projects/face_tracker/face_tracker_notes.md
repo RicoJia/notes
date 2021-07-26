@@ -11,3 +11,7 @@
   - observation
 3. Add visualization
   - what if a target is lost? what do we do? 
+  - cv uses BGR
+
+
+- background learning rate? 

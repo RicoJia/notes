@@ -38,7 +38,6 @@ def update_corner_points(corner_points, return_state):
     h_half = return_state[4]/2.0
     w_half = return_state[5]/2.0
     diagonal_half = np.array([h_half, w_half])
-    # print((center - diagonal_half).astype(np.int))
     corner_points[0] = tuple((center - diagonal_half).astype(np.int))
     corner_points[1] = tuple((center + diagonal_half).astype(np.int))
 
@@ -52,8 +51,6 @@ PARTICLE_NUM = 100
 SCALE_CHANGE_DISTURB = 0.001
 VELOCITY_DISTURB = 0.1
 FRAME_RATE = cap.get(cv2.CAP_PROP_FPS)
-tracker_input = {"ranges":ranges, "PARTICLE_NUM":PARTICLE_NUM, "SCALE_CHANGE_DISTURB":SCALE_CHANGE_DISTURB, "VELOCITY_DISTURB":VELOCITY_DISTURB, "FRAME_RATE":FRAME_RATE}
-tracker = face_tracker_pf(tracker_input)
 
 while True:
     rval, frame = cap.read()
@@ -61,12 +58,15 @@ while True:
         for pt in corner_points: 
             draw_point(frame, pt)
     else: 
+        if not SET_ROI: 
+            SET_ROI = True
+            tracker_input = {"ranges":ranges, "PARTICLE_NUM":PARTICLE_NUM, "SCALE_CHANGE_DISTURB":SCALE_CHANGE_DISTURB, "VELOCITY_DISTURB":VELOCITY_DISTURB, "FRAME_RATE":FRAME_RATE, "ROI_corner_points":corner_points}
+            print(tracker_input)
+            tracker = face_tracker_pf(tracker_input)
+
         return_state = tracker.run_one_iteration(frame)
         update_corner_points(corner_points, return_state)
-        print(return_state[:2])
-        #TODO: calculate window size and center
         draw_box(frame, corner_points)
-        SET_ROI = True
 
     cv2.imshow("face_tracker", frame)
     key = cv2.waitKey(20)
