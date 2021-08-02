@@ -39,6 +39,8 @@ class FaceTrackerPF{
 
     void calc_region_hist (std::vector<double>& hist, uint32_t x, uint32_t y, uint32_t w, uint32_t h);
 
+    double calc_bhattacharya_coefficient(const std::vector<double>& hist1, const std::vector<double>& hist2);
+
     std::unique_ptr<Particle_Filter> pf_; 
     // pre-allocating return state so it's fast
     py::array_t<double> return_state_;    
@@ -110,8 +112,14 @@ inline void FaceTrackerPF::control_callback(std::vector<double>& states){
   states.at(AT_DOT) += (std_devs.at(6)*scale_change_disturb_); 
 }
 
+//TODO - to compare
 inline double FaceTrackerPF::observation_callback(const std::vector<double>& state_estimate){
     std::vector<double> hist(512, 0);  
+    // calculate the histogram of the state. 
+    calc_region_hist(hist, state_estimate.at(X), state_estimate.at(Y), state_estimate.at(HX), state_estimate.at(HY)); 
+    // calculate the Bhattacharya Coefficient between the ROI histogram and the state's histogram 
+    // To check: sum up all weights, then normalize
+
     return 0; 
 }
 
