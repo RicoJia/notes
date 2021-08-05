@@ -14,6 +14,7 @@ using Filter::Particle_Filter;
 using std::cout; using std::endl; 
 
 #define RIGHT_SHIFT 5   // We take the first 3 digits of a pixel value.
+#define NUM_BINS 512    // 8 * 8 * 8 bins
 
 enum State_Index{
   X = 0, 
@@ -51,6 +52,7 @@ class FaceTrackerPF{
     const double scale_change_disturb_; 
     const double velocity_disturb_; 
     const double delta_t_; 
+    const double sigma_weight_; 
 
     uint8_t* image_; 
     std::vector<double> roi_dist_; 
@@ -61,6 +63,7 @@ inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) :
     scale_change_disturb_(inputs["SCALE_CHANGE_DISTURB"].cast<double>()),
     velocity_disturb_(inputs["VELOCITY_DISTURB"].cast<double>()), 
     delta_t_(1.0/inputs["FRAME_RATE"].cast<float>()), 
+    sigma_weight_(inputs["SIGMA_WEIGHT"].cast<float>()), 
     image_(nullptr) 
 {
     // initialize ranges, ranges is [(upper_lim, lower_lim, standard_deviation_of_noise), ...]
@@ -80,7 +83,7 @@ inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) :
     auto corner_points = inputs["ROI_corner_points"].cast<py::list>(); 
     auto corner_point_1 = corner_points[0].cast<std::tuple<int64_t, int64_t>>();
     auto corner_point_2 = corner_points[1].cast<std::tuple<int64_t, int64_t>>();
-    std::get<0>(corner_point_1)+std::get<0>(corner_point_2);    //TODO: not working here.
+    std::get<0>(corner_point_1)+std::get<0>(corner_point_2);    
     auto x_val = (std::get<0>(corner_point_1)+std::get<0>(corner_point_2))/2; 
     auto y_val = (std::get<1>(corner_point_1)+std::get<1>(corner_point_2))/2; 
     auto w = std::abs(std::get<0>(corner_point_1) - std::get<0>(corner_point_2));
@@ -114,16 +117,16 @@ inline void FaceTrackerPF::control_callback(std::vector<double>& states){
 
 //TODO - to compare
 inline double FaceTrackerPF::observation_callback(const std::vector<double>& state_estimate){
-    std::vector<double> hist(512, 0);  
+    std::vector<double> hist(NUM_BINS, 0);  
     // calculate the histogram of the state. 
     calc_region_hist(hist, state_estimate.at(X), state_estimate.at(Y), state_estimate.at(HX), state_estimate.at(HY)); 
     // calculate the Bhattacharya Coefficient between the ROI histogram and the state's histogram 
-    // To check: sum up all weights, then normalize
-
-    return 0; 
+    double bc = calc_bhattacharya_coefficient(hist, roi_dist_);
+    // return unnormalized_weight, which will be normalized by the particle_filter framework.
+    return exp((bc - 1)/sigma_weight_);
 }
 
-// Store our custom pixel value in image_ into the histogram. custom pixel value = k_pixel * raw_pixel_value is in [0,512], and each value is composed of: [3bits_for_B | 3bits_for_G | 3bits_for_R]. K is the kernal function value. (x,y) is the center, (w, h) are the width and height of a region
+// Store our custom pixel value in image_ into the histogram. custom pixel value = k_pixel * raw_pixel_value is in [0,NUM_BINS], and each value is composed of: [3bits_for_B | 3bits_for_G | 3bits_for_R]. K is the kernal function value. (x,y) is the center, (w, h) are the width and height of a region
 inline void FaceTrackerPF::calc_region_hist (std::vector<double>& hist, uint32_t x_center, uint32_t y_center, uint32_t w, uint32_t h){
 
   auto dist = [&x_center , &y_center](double x, double y){
@@ -137,7 +140,7 @@ inline void FaceTrackerPF::calc_region_hist (std::vector<double>& hist, uint32_t
   uint32_t x_end = std::min((uint32_t)ranges_vec_.at(X).second - 1, x_center + w/2);
   uint32_t y_end = std::min((uint32_t)ranges_vec_.at(Y).second - 1, y_center + h/2);
   // initialize histogram to 0; 
-  hist = std::vector<double>(512, 0.0); 
+  hist = std::vector<double>(NUM_BINS, 0.0); 
   double sum_k = 0.0; 
   for (auto x = x_begin; x<x_end; ++x)
     for (auto y = y_begin; y < y_end; ++y){
@@ -156,6 +159,18 @@ inline void FaceTrackerPF::calc_region_hist (std::vector<double>& hist, uint32_t
 
   // normalize
   std::for_each(hist.begin(),hist.end(), [&sum_k](double& num){num /= sum_k;});
+}
+
+inline double FaceTrackerPF::calc_bhattacharya_coefficient(const std::vector<double>& hist1, const std::vector<double>& hist2){
+   double bc = 0; 
+   cout<<"------------"<<endl;
+   for(auto i = 0; i < NUM_BINS; ++i){
+     //TODO
+     cout<<"|"<<hist1.at(i)<<", "<<hist2.at(i);
+    bc += std::sqrt(hist1.at(i) * hist2.at(i)); 
+   } 
+   cout<<"BC: "<<bc<<endl; 
+   return bc; 
 }
 
 /*

@@ -70,7 +70,7 @@ namespace Filter{
       // resampling using Russian Rollet
       void resampling(); 
 
-      // return the average over each dimension 
+      // return the average accross all particles over each dimension 
       std::vector<double> average_belief(); 
   }; 
 
@@ -147,7 +147,7 @@ inline std::vector<double> Particle_Filter::run(){
     for (auto& state : states_)
         update_control_cb_(state.state_vec);
     for (auto& state : states_)
-        calc_observation_cb_(state.state_vec);
+        state.weight = calc_observation_cb_(state.state_vec);
 
     // normalize the states
     double sum = std::accumulate(states_.begin(), states_.end(), 0.0, [](double sum, const State& s){return sum + s.weight;});
