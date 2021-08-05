@@ -41,6 +41,7 @@ def update_corner_points(corner_points, return_state):
     corner_points[0] = tuple((center - diagonal_half).astype(np.int))
     corner_points[1] = tuple((center + diagonal_half).astype(np.int))
 
+# set up video streaming
 cv2.namedWindow("face_tracker")
 cv2.setMouseCallback("face_tracker", mouse_drawing)
 cap = cv2.VideoCapture(2)
@@ -54,6 +55,7 @@ FRAME_RATE = cap.get(cv2.CAP_PROP_FPS)
 
 while True:
     rval, frame = cap.read()
+    # initialize ROI - we need two corner points
     if len(corner_points) < 2:  #for initialization
         for pt in corner_points: 
             draw_point(frame, pt)
@@ -64,6 +66,7 @@ while True:
             print("corner_points: ", corner_points)
             tracker = face_tracker_pf(tracker_input)
 
+        # after initializing ROI, run one iteration
         return_state = tracker.run_one_iteration(frame)
         update_corner_points(corner_points, return_state)
         draw_box(frame, corner_points)
