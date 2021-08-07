@@ -14,7 +14,7 @@ class ParticleFilterTest : public ::testing::Test{  //need :: for ::testing?
 
     virtual void SetUp() override {
       pf_ = std::make_unique<Filter::Particle_Filter>(
-        std::vector<std::pair<double, double>>{{1.0, 2.0}, {39.0, 40.0}}, 
+        std::vector<double>{1.0, 20.0}, 
         10
       );
     }

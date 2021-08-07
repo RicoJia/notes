@@ -1,6 +1,7 @@
 #ifndef __FILTERS_UTIL_HPP__
 #define __FILTERS_UTIL_HPP__
 
+#include <cmath>
 #include <vector>
 #include <random>
 #include <chrono>
@@ -30,6 +31,10 @@ namespace Filter{
         ret.emplace_back(distribution(generator)); 
       }
     }  
+
+    bool is_equal(double a, double b){
+      return std::abs(a-b) < std::pow(10, -6); 
+    }
   }
 }
 

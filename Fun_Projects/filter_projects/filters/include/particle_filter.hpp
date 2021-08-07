@@ -24,15 +24,17 @@
 #include "thread_pool.hpp"
 #include "filters_util.hpp"
 
+//TODO
+using std::cout; using std::endl;
+
 namespace Filter{
   class Particle_Filter{
     public:
 
       /**
-      * @brief: Constructor for particle filter
-      * @param: ranges - upper and lower ranges limits of each state. 
+      * @brief: Constructor for particle filter, initial state is specified
       */
-      Particle_Filter(const std::vector<std::pair<double, double>>& ranges, const unsigned int particle_num); 
+      Particle_Filter(const std::vector<double> initial_state, const unsigned int particle_num); 
 
       /**
       * @brief: Register function for send_relief callback, which updates the state with control input in place. See Particle_Filter::update_control_cb_;
@@ -74,19 +76,10 @@ namespace Filter{
       std::vector<double> average_belief(); 
   }; 
 
-inline Particle_Filter::Particle_Filter(const std::vector<std::pair<double, double>>& ranges, const unsigned int particle_num): 
-    states_(std::vector<State>(particle_num))
+inline Particle_Filter::Particle_Filter(const std::vector<double> initial_state, const unsigned int particle_num): 
+    states_(std::vector<State>(particle_num, State{initial_state, 1.0/particle_num}))
 
   {
-    // generate N evenly distributed states for each state vec, N = ranges.size() 
-    for (unsigned int state_i = 0; state_i < ranges.size(); ++state_i){
-      auto dim = Util::generate_random_num_universal(ranges.at(state_i).first, ranges.at(state_i).second, particle_num); 
-      for (unsigned int i = 0; i < particle_num; ++i){
-        states_.at(i).state_vec.emplace_back(dim.at(i)); 
-        states_.at(i).weight = 1.0/particle_num; 
-      }
-    }
-
     // launch a thread pool for parallelism
     auto max_num_threads = std::thread::hardware_concurrency(); 
     auto num_threads = std::min( (max_num_threads < 2) ? 2: max_num_threads - 1, particle_num ); 
@@ -115,8 +108,8 @@ inline void Particle_Filter::resampling(){
     for(int i = 0; i < particle_num; ++i){
       double current_spoke = r + (i * 1.0) /particle_num;
 
-      for (; cdf_index < particle_num && weight_cdfs.at(cdf_index) < current_spoke; ++cdf_index){}
-      new_states.emplace_back(State{std::move(states_.at(cdf_index).state_vec), 1.0/particle_num});
+      for (; cdf_index < particle_num && weight_cdfs.at(cdf_index) < current_spoke; ++cdf_index){}    
+      new_states.emplace_back(State{states_.at(cdf_index).state_vec, 1.0/particle_num});   // all new states have uniform weight, and the same states_.at(cdf_index) can be resampled multiple times. 
     }
     states_ = std::move(new_states); 
   }
@@ -140,19 +133,24 @@ inline std::vector<double> Particle_Filter::run(){
       throw std::runtime_error("calc_observation_cb_ has not been attached. Particle Filter not running");
     }
 
-    //TODO: to test
+    //TODO: TO fix: size of vecs are zero
     resampling();
 
     //TODO: try parallelizing this whole process
+    std::cout<<__FUNCTION__<<"1"<<std::endl; 
+
     for (auto& state : states_)
         update_control_cb_(state.state_vec);
+    std::cout<<__FUNCTION__<<"2"<<std::endl; 
     for (auto& state : states_)
         state.weight = calc_observation_cb_(state.state_vec);
-
+    std::cout<<__FUNCTION__<<"3"<<std::endl; 
     // normalize the states
     double sum = std::accumulate(states_.begin(), states_.end(), 0.0, [](double sum, const State& s){return sum + s.weight;});
+    std::cout<<__FUNCTION__<<"4"<<std::endl; 
     std::for_each(states_.begin(), states_.end(),[sum](State& s){s.weight /= sum;});
 
+    std::cout<<__FUNCTION__<<"5"<<std::endl; 
     //send average belief
     return average_belief();
   }

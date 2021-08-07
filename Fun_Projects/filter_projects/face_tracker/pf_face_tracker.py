@@ -63,12 +63,14 @@ while True:
         if not SET_ROI: 
             SET_ROI = True
             tracker_input = {"ranges":ranges, "PARTICLE_NUM":PARTICLE_NUM, "SCALE_CHANGE_DISTURB":SCALE_CHANGE_DISTURB, "VELOCITY_DISTURB":VELOCITY_DISTURB, "FRAME_RATE":FRAME_RATE, "ROI_corner_points":corner_points, "SIGMA_WEIGHT" : 0.2, "initial_frame" : frame}
-            print("corner_points: ", corner_points)
             tracker = face_tracker_pf(tracker_input)
 
         # after initializing ROI, run one iteration
-        return_state = tracker.run_one_iteration(frame)
-        update_corner_points(corner_points, return_state)
+        # return_state = tracker.run_one_iteration(frame)
+        # print("corner points before update: ", corner_points)
+        # update_corner_points(corner_points, return_state)
+        # print("corner points after update: ", corner_points)
+
         draw_box(frame, corner_points)
 
     cv2.imshow("face_tracker", frame)

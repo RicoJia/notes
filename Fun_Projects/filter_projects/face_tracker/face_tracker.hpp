@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <memory>
@@ -74,11 +75,6 @@ inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) :
       noise_vec_.emplace_back(range[2].cast<double>());   
     }
   
-    // initialize pf_
-    pf_ = std::make_unique<Particle_Filter>(ranges_vec_, particle_num_); 
-    pf_ -> register_control_callback(std::bind(&FaceTrackerPF::control_callback, this, std::placeholders::_1)); 
-    pf_ -> register_observation_callback(std::bind(&FaceTrackerPF::observation_callback, this, std::placeholders::_1));
-
     // initialize ROI distributions
     auto corner_points = inputs["ROI_corner_points"].cast<py::list>(); 
     auto corner_point_1 = corner_points[0].cast<std::tuple<int64_t, int64_t>>();
@@ -95,6 +91,11 @@ inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) :
     calc_region_hist(roi_dist_, (uint32_t)x_val, (uint32_t)y_val, (uint32_t)w, (uint32_t)h);  
     image_ = nullptr; 
 
+    // initialize pf_ with ROI and zero dynamics. 
+    pf_ = std::make_unique<Particle_Filter>(std::vector<double>{[X] = x_val, [Y] = y_val, [VX] = 0.0, [VY] = 0.0, [HX] = w, [HY] = h, [AT_DOT] = 0.0}, particle_num_); 
+    pf_ -> register_control_callback(std::bind(&FaceTrackerPF::control_callback, this, std::placeholders::_1)); 
+    pf_ -> register_observation_callback(std::bind(&FaceTrackerPF::observation_callback, this, std::placeholders::_1));
+
     return_state_ = py::array_t<double>({particle_num_});
 }
 
@@ -106,8 +107,12 @@ inline void FaceTrackerPF::control_callback(std::vector<double>& states){
   for (unsigned int i = 0; i < states.size(); ++i){
     std_devs.emplace_back(Filter::Util::generate_random_num_universal(0.0, 1.0, 1)[0]);
   }
-  states.at(X) += (states.at(VX)*delta_t_ + std_devs.at(0) * states.at(HX));     //TODO: add noise
-  states.at(Y) += (states.at(VY)*delta_t_ + std_devs.at(1) * states.at(HY));     //TODO: add noise
+  states.at(X);
+  states.at(HX);
+  states.at(VX);
+  std_devs.at(0); 
+  states.at(X) += (states.at(VX)*delta_t_ + std_devs.at(0) * states.at(HX));    
+  states.at(Y) += (states.at(VY)*delta_t_ + std_devs.at(1) * states.at(HY));     
   states.at(VX) += (std_devs.at(2)*velocity_disturb_); 
   states.at(VY) += (std_devs.at(3)*velocity_disturb_); 
   states.at(HX) += (std_devs.at(4)*scale_change_disturb_ + states.at(AT_DOT) * delta_t_); 
@@ -153,23 +158,21 @@ inline void FaceTrackerPF::calc_region_hist (std::vector<double>& hist, uint32_t
       uint8_t green = image_[ 3 * (width - 1) * y + x + 1 ] >> RIGHT_SHIFT; 
       uint8_t red = image_[ 3 * (width - 1) * y + x + 2 ] >> RIGHT_SHIFT; 
       uint8_t bin_index = blue << (2 * RIGHT_SHIFT) | green << RIGHT_SHIFT | red; 
-
       hist.at(bin_index) += k; 
     }
 
-  // normalize
-  std::for_each(hist.begin(),hist.end(), [&sum_k](double& num){num /= sum_k;});
+  // normalize if sum_k is not 0, else we have the same weight TODO
+  if (!Filter::Util::is_equal(sum_k, 0.0))
+      std::for_each(hist.begin(),hist.end(), [&sum_k](double& num){num /= sum_k;});
+  else
+    std::for_each(hist.begin(), hist.end(), [this](double& num){num = 1.0/this->particle_num_; });
 }
 
 inline double FaceTrackerPF::calc_bhattacharya_coefficient(const std::vector<double>& hist1, const std::vector<double>& hist2){
    double bc = 0; 
-   cout<<"------------"<<endl;
    for(auto i = 0; i < NUM_BINS; ++i){
-     //TODO
-     cout<<"|"<<hist1.at(i)<<", "<<hist2.at(i);
     bc += std::sqrt(hist1.at(i) * hist2.at(i)); 
    } 
-   cout<<"BC: "<<bc<<endl; 
    return bc; 
 }
 
@@ -184,6 +187,7 @@ inline double FaceTrackerPF::calc_bhattacharya_coefficient(const std::vector<dou
 inline py::array_t<double> FaceTrackerPF::run_one_iteration(const py::array_t<double>& frame){
    // particle_filter will launch a thread pool that calls the callbacks
    image_ = (uint8_t*) frame.request().ptr; 
+   cout<<"------------"<<endl;
    std::vector<double> belief = pf_ -> run(); 
    adjust_belief(belief); 
    memcpy((double*)return_state_.request().ptr, belief.data(), sizeof(double) * belief.size()); 
