@@ -115,11 +115,13 @@ inline void Particle_Filter::resampling(){
   }
 
 inline std::vector<double> Particle_Filter::average_belief(){
+
     auto num_dim = states_.at(0).state_vec.size(); 
     std::vector<double> avg (num_dim);
     for (auto i = 0; i < num_dim; ++i){
         avg.at(i) = std::accumulate(states_.begin(), states_.end(), 0.0, [&i](double sum, const State& s1){return sum + s1.weight * s1.state_vec.at(i);});
     }
+
     return avg;
   }
 
@@ -133,24 +135,17 @@ inline std::vector<double> Particle_Filter::run(){
       throw std::runtime_error("calc_observation_cb_ has not been attached. Particle Filter not running");
     }
 
-    //TODO: TO fix: size of vecs are zero
     resampling();
 
     //TODO: try parallelizing this whole process
-    std::cout<<__FUNCTION__<<"1"<<std::endl; 
-
     for (auto& state : states_)
         update_control_cb_(state.state_vec);
-    std::cout<<__FUNCTION__<<"2"<<std::endl; 
     for (auto& state : states_)
         state.weight = calc_observation_cb_(state.state_vec);
-    std::cout<<__FUNCTION__<<"3"<<std::endl; 
     // normalize the states
     double sum = std::accumulate(states_.begin(), states_.end(), 0.0, [](double sum, const State& s){return sum + s.weight;});
-    std::cout<<__FUNCTION__<<"4"<<std::endl; 
     std::for_each(states_.begin(), states_.end(),[sum](State& s){s.weight /= sum;});
 
-    std::cout<<__FUNCTION__<<"5"<<std::endl; 
     //send average belief
     return average_belief();
   }

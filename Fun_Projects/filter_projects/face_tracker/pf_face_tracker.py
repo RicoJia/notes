@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 from face_tracker import face_tracker_pf
+import time # TODO
 
 # setup initial location of window by using two corner points
 corner_points = []
@@ -48,13 +49,16 @@ cap = cv2.VideoCapture(2)
 
 # initialize face tracker
 ranges = get_state_ranges(cap)
-PARTICLE_NUM = 100
+PARTICLE_NUM = 100  
 SCALE_CHANGE_DISTURB = 0.001
-VELOCITY_DISTURB = 0.1
+VELOCITY_DISTURB = 40
 FRAME_RATE = cap.get(cv2.CAP_PROP_FPS)
 
 while True:
     rval, frame = cap.read()
+    kernel = np.ones((5, 5), 'uint8')
+    frame = cv2.erode(frame, kernel, iterations=1)
+    frame = cv2.dilate(frame, kernel, iterations=1)
     # initialize ROI - we need two corner points
     if len(corner_points) < 2:  #for initialization
         for pt in corner_points: 
@@ -66,15 +70,14 @@ while True:
             tracker = face_tracker_pf(tracker_input)
 
         # after initializing ROI, run one iteration
-        # return_state = tracker.run_one_iteration(frame)
-        # print("corner points before update: ", corner_points)
-        # update_corner_points(corner_points, return_state)
-        # print("corner points after update: ", corner_points)
+        return_state = tracker.run_one_iteration(frame)
+        update_corner_points(corner_points, return_state)
 
         draw_box(frame, corner_points)
 
     cv2.imshow("face_tracker", frame)
-    key = cv2.waitKey(20)
+    key = cv2.waitKey(20)  
     if key == 27: # exit on ESC
         break
+    time.sleep(0.5)
 

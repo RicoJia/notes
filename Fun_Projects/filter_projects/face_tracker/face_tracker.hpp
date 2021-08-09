@@ -2,17 +2,19 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <memory>
+#include <thread>
 #include <vector>
 #include <tuple>
 #include "particle_filter.hpp"
 #include <cmath>
+#include <chrono>   //TODO
 
 #pragma GCC visibility push(hidden)
 namespace py = pybind11;
 
 using Filter::Particle_Filter; 
 //TODO
-using std::cout; using std::endl; 
+using std::cout; using std::endl; using namespace std::chrono_literals;
 
 #define RIGHT_SHIFT 5   // We take the first 3 digits of a pixel value.
 #define NUM_BINS 512    // 8 * 8 * 8 bins
@@ -24,7 +26,8 @@ enum State_Index{
   VY = 3,
   HX = 4,
   HY = 5,
-  AT_DOT = 6
+  AT_DOT = 6,
+  NUM_DIM = AT_DOT + 1
 }; 
 
 class FaceTrackerPF{
@@ -57,6 +60,12 @@ class FaceTrackerPF{
 
     uint8_t* image_; 
     std::vector<double> roi_dist_; 
+
+    //TODO
+    double x_init_;
+    double y_init_;
+    double w_init_;
+    double h_init_;
 }; 
 
 inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) : 
@@ -79,7 +88,6 @@ inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) :
     auto corner_points = inputs["ROI_corner_points"].cast<py::list>(); 
     auto corner_point_1 = corner_points[0].cast<std::tuple<int64_t, int64_t>>();
     auto corner_point_2 = corner_points[1].cast<std::tuple<int64_t, int64_t>>();
-    std::get<0>(corner_point_1)+std::get<0>(corner_point_2);    
     auto x_val = (std::get<0>(corner_point_1)+std::get<0>(corner_point_2))/2; 
     auto y_val = (std::get<1>(corner_point_1)+std::get<1>(corner_point_2))/2; 
     auto w = std::abs(std::get<0>(corner_point_1) - std::get<0>(corner_point_2));
@@ -96,17 +104,24 @@ inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) :
     pf_ -> register_control_callback(std::bind(&FaceTrackerPF::control_callback, this, std::placeholders::_1)); 
     pf_ -> register_observation_callback(std::bind(&FaceTrackerPF::observation_callback, this, std::placeholders::_1));
 
-    return_state_ = py::array_t<double>({particle_num_});
+    return_state_ = py::array_t<double>({NUM_DIM});
+
+    //TODO
+    x_init_ = x_val; 
+    y_init_ = y_val; 
+    w_init_ = w;
+    h_init_ = h; 
 }
 
 // adding 0-mean Gaussian Noise
 inline void FaceTrackerPF::control_callback(std::vector<double>& states){
-  //TODO: not gaussian noise
+  //TODO: Need to make it individual std dev
   std::vector<double> std_devs; 
   std_devs.reserve(states.size()); 
   for (unsigned int i = 0; i < states.size(); ++i){
-    std_devs.emplace_back(Filter::Util::generate_random_num_universal(0.0, 1.0, 1)[0]);
+    std_devs.emplace_back(Filter::Util::generate_random_num_gaussian(0.0, 0.05, 1)[0]);
   }
+
   states.at(X);
   states.at(HX);
   states.at(VX);
@@ -123,11 +138,27 @@ inline void FaceTrackerPF::control_callback(std::vector<double>& states){
 //TODO - to compare
 inline double FaceTrackerPF::observation_callback(const std::vector<double>& state_estimate){
     std::vector<double> hist(NUM_BINS, 0);  
-    // calculate the histogram of the state. 
-    calc_region_hist(hist, state_estimate.at(X), state_estimate.at(Y), state_estimate.at(HX), state_estimate.at(HY)); 
+    // TODO
+    cout<<"-----------"<<endl;
+
+    // calculate the histogram of the state. TODO
+    // calc_region_hist(hist, state_estimate.at(X), state_estimate.at(Y), state_estimate.at(HX), state_estimate.at(HY)); 
     // calculate the Bhattacharya Coefficient between the ROI histogram and the state's histogram 
-    double bc = calc_bhattacharya_coefficient(hist, roi_dist_);
+    // double bc = calc_bhattacharya_coefficient(hist, roi_dist_);
     // return unnormalized_weight, which will be normalized by the particle_filter framework.
+
+    //TODO to d
+    calc_region_hist(hist, x_init_, y_init_, w_init_, h_init_);
+    double bc = calc_bhattacharya_coefficient(hist, roi_dist_);
+    // cout<<"state estimate: "; 
+    // for (auto & i : state_estimate) cout<<i<<" ";
+    // cout<<endl; 
+    for(auto& i : hist) cout<<i<<" "; 
+    cout<<endl<<"BC: "<<bc<<endl;
+    cout<<"ROI hist: "<<endl; 
+    for (auto& i : roi_dist_) cout<<i<<" ";
+    cout<<endl;
+
     return exp((bc - 1)/sigma_weight_);
 }
 
@@ -147,7 +178,13 @@ inline void FaceTrackerPF::calc_region_hist (std::vector<double>& hist, uint32_t
   // initialize histogram to 0; 
   hist = std::vector<double>(NUM_BINS, 0.0); 
   double sum_k = 0.0; 
-  for (auto x = x_begin; x<x_end; ++x)
+
+  //TODO
+  std::cout<<__FUNCTION__<<"x, y, w, h"<<x_center<<y_center<<w<<h<<std::endl; 
+  //TODO
+  static bool init = false;
+
+  for (auto x = x_begin; x<x_end; ++x){
     for (auto y = y_begin; y < y_end; ++y){
       double r = dist(x, y) / half_diag;
       double k = 1 - r*r; 
@@ -159,9 +196,16 @@ inline void FaceTrackerPF::calc_region_hist (std::vector<double>& hist, uint32_t
       uint8_t red = image_[ 3 * (width - 1) * y + x + 2 ] >> RIGHT_SHIFT; 
       uint8_t bin_index = blue << (2 * RIGHT_SHIFT) | green << RIGHT_SHIFT | red; 
       hist.at(bin_index) += k; 
-    }
 
-  // normalize if sum_k is not 0, else we have the same weight TODO
+      //TODO
+      if (!init) cout<<(int)image_[ 3 * (width - 1) * y + x ]<<"|"<<(int)image_[ 3 * (width - 1) * y + x + 1 ]<<"|"<<(int)image_[ 3 * (width - 1) * y + x + 2]<<" ";
+    }
+  }
+      //TODO
+      cout<<endl;
+      init = true;
+
+  // normalize if sum_k is not 0, else we have the same weight 
   if (!Filter::Util::is_equal(sum_k, 0.0))
       std::for_each(hist.begin(),hist.end(), [&sum_k](double& num){num /= sum_k;});
   else
