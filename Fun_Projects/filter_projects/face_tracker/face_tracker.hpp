@@ -60,12 +60,6 @@ class FaceTrackerPF{
 
     uint8_t* image_; 
     std::vector<double> roi_dist_; 
-
-    //TODO
-    int64_t x_init_; 
-    int64_t y_init_; 
-    int64_t w_init_; 
-    int64_t h_init_; 
 }; 
 
 inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) : 
@@ -106,11 +100,6 @@ inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) :
 
     return_state_ = py::array_t<double>({NUM_DIM});
 
-    //TODO
-    x_init_ = x_val;
-    y_init_ = y_val; 
-    w_init_ = w;
-    h_init_ = h;
 }
 
 // adding 0-mean Gaussian Noise
@@ -139,17 +128,15 @@ inline double FaceTrackerPF::observation_callback(const std::vector<double>& sta
     std::vector<double> hist(NUM_BINS, 0);  
     // TODO
     cout<<"-----------"<<endl;
-    //TODO
-    calc_region_hist(hist, x_init_, y_init_, w_init_, h_init_); 
 
     // calculate the histogram of the state. 
-    // calc_region_hist(hist, state_estimate.at(X), state_estimate.at(Y), state_estimate.at(HX), state_estimate.at(HY)); 
+    calc_region_hist(hist, state_estimate.at(X), state_estimate.at(Y), state_estimate.at(HX), state_estimate.at(HY)); 
     // calculate the Bhattacharya Coefficient between the ROI histogram and the state's histogram 
     double bc = calc_bhattacharya_coefficient(hist, roi_dist_);
 
-    //TODO
-    // cout<<"state estimate: "; 
-    // for (auto & i : state_estimate) cout<<i<<" ";
+    // TODO
+    cout<<"state estimate: "; 
+    for (auto & i : state_estimate) cout<<i<<" ";
     cout<<endl; 
     for(auto& i : hist) cout<<i<<" "; 
     cout<<endl<<"BC: "<<bc<<endl;
@@ -192,9 +179,6 @@ inline void FaceTrackerPF::calc_region_hist (std::vector<double>& hist, int64_t 
       uint16_t red = image_[3 * (width * y + x) + 2] >> RIGHT_SHIFT; 
       uint16_t bin_index = blue << (2 * (8 - RIGHT_SHIFT)) | green << (8 - RIGHT_SHIFT) | red; 
       hist.at(bin_index) += k; 
-
-      //TODO
-      cout<<"x,y: "<<x<<" "<<y<<" "<<" | b: "<< (int)image_[3 * (width * y + x)]<< " g: "<<(int)image_[3 * (width * y + x) + 1]<<" r: "<<(int)image_[3 * (width * y + x) + 2]<<endl;
     }
   }
   std::for_each(hist.begin(),hist.end(), [&sum_k](double& num){num /= sum_k;});

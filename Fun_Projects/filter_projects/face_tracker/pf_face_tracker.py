@@ -49,7 +49,7 @@ cap = cv2.VideoCapture(2)
 
 # initialize face tracker
 ranges = get_state_ranges(cap)
-PARTICLE_NUM = 100  
+PARTICLE_NUM = 100 
 SCALE_CHANGE_DISTURB = 0.001
 VELOCITY_DISTURB = 40
 FRAME_RATE = cap.get(cv2.CAP_PROP_FPS)
@@ -59,6 +59,7 @@ while True:
     kernel = np.ones((5, 5), 'uint8')
     frame = cv2.erode(frame, kernel, iterations=1)
     frame = cv2.dilate(frame, kernel, iterations=1)
+
     # initialize ROI - we need two corner points
     if len(corner_points) < 2:  #for initialization
         for pt in corner_points: 
@@ -79,5 +80,4 @@ while True:
     key = cv2.waitKey(20)  
     if key == 27: # exit on ESC
         break
-    time.sleep(0.5)
 
