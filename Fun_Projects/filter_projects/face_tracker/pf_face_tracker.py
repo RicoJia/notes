@@ -49,8 +49,8 @@ cap = cv2.VideoCapture(2)
 
 # initialize face tracker
 ranges = get_state_ranges(cap)
-PARTICLE_NUM = 100 
-SCALE_CHANGE_DISTURB = 0.001
+PARTICLE_NUM = 500 
+SCALE_CHANGE_DISTURB = 0.005
 VELOCITY_DISTURB = 40
 FRAME_RATE = cap.get(cv2.CAP_PROP_FPS)
 
@@ -73,6 +73,7 @@ while True:
         # after initializing ROI, run one iteration
         return_state = tracker.run_one_iteration(frame)
         update_corner_points(corner_points, return_state)
+        print("state: ", return_state) #TODO
 
         draw_box(frame, corner_points)
 

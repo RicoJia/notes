@@ -7,7 +7,6 @@
 #include <tuple>
 #include "particle_filter.hpp"
 #include <cmath>
-#include <chrono>   //TODO
 
 #pragma GCC visibility push(hidden)
 namespace py = pybind11;
@@ -108,7 +107,7 @@ inline void FaceTrackerPF::control_callback(std::vector<double>& states){
     std::vector<double> std_devs; 
     std_devs.reserve(states.size()); 
     for (unsigned int i = 0; i < states.size(); ++i){
-      std_devs.emplace_back(Filter::Util::generate_random_num_gaussian(0.0, 0.05, 1)[0]);
+      std_devs.emplace_back(Filter::Util::generate_random_num_gaussian(0.0, 0.6, 1)[0]);
     }
 
     states.at(X);
@@ -126,24 +125,11 @@ inline void FaceTrackerPF::control_callback(std::vector<double>& states){
 
 inline double FaceTrackerPF::observation_callback(const std::vector<double>& state_estimate){
     std::vector<double> hist(NUM_BINS, 0);  
-    // TODO
-    cout<<"-----------"<<endl;
 
     // calculate the histogram of the state. 
     calc_region_hist(hist, state_estimate.at(X), state_estimate.at(Y), state_estimate.at(HX), state_estimate.at(HY)); 
     // calculate the Bhattacharya Coefficient between the ROI histogram and the state's histogram 
     double bc = calc_bhattacharya_coefficient(hist, roi_dist_);
-
-    // TODO
-    cout<<"state estimate: "; 
-    for (auto & i : state_estimate) cout<<i<<" ";
-    cout<<endl; 
-    for(auto& i : hist) cout<<i<<" "; 
-    cout<<endl<<"BC: "<<bc<<endl;
-    cout<<"ROI hist: "<<endl; 
-    for (auto& i : roi_dist_) cout<<i<<" ";
-    cout<<endl;
-
     // return unnormalized_weight, which will be normalized by the particle_filter framework.
     return exp((bc - 1)/sigma_weight_);
 }
