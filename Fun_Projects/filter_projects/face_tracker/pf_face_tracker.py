@@ -49,7 +49,7 @@ cap = cv2.VideoCapture(2)
 
 # initialize face tracker
 ranges = get_state_ranges(cap)
-PARTICLE_NUM = 500 
+PARTICLE_NUM = 60 
 SCALE_CHANGE_DISTURB = 0.005
 VELOCITY_DISTURB = 40
 FRAME_RATE = cap.get(cv2.CAP_PROP_FPS)
@@ -57,6 +57,8 @@ FRAME_RATE = cap.get(cv2.CAP_PROP_FPS)
 while True:
     rval, frame = cap.read()
     kernel = np.ones((5, 5), 'uint8')
+    #TODO - how to erode and dilate properly
+    frame = cv2.dilate(frame, kernel, iterations=1)
     frame = cv2.erode(frame, kernel, iterations=1)
     frame = cv2.dilate(frame, kernel, iterations=1)
 

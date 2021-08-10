@@ -130,29 +130,36 @@ inline double FaceTrackerPF::observation_callback(const std::vector<double>& sta
     calc_region_hist(hist, state_estimate.at(X), state_estimate.at(Y), state_estimate.at(HX), state_estimate.at(HY)); 
     // calculate the Bhattacharya Coefficient between the ROI histogram and the state's histogram 
     double bc = calc_bhattacharya_coefficient(hist, roi_dist_);
+
     // return unnormalized_weight, which will be normalized by the particle_filter framework.
     return exp((bc - 1)/sigma_weight_);
 }
 
 // Store our custom pixel value in image_ into the histogram. custom pixel value = k_pixel * raw_pixel_value is in [0,NUM_BINS], and each value is composed of: [3bits_for_B | 3bits_for_G | 3bits_for_R]. K is the kernal function value. (x,y) is the center, (w, h) are the width and height of a region
 inline void FaceTrackerPF::calc_region_hist (std::vector<double>& hist, int64_t x_center, int64_t y_center, int64_t w, int64_t h){
+  // initialize histogram to 0;
+  hist = std::vector<double>(NUM_BINS, 0.0);
+  // return with empty histogram if (x,y) is outside the image, or if the dimension is <0.
+  auto x_bound = (int64_t)ranges_vec_.at(X).second - 1; 
+  auto y_bound = (int64_t)ranges_vec_.at(Y).second - 1; 
+  if (x_center < 0 || x_center > x_bound || y_center < 0 || y_center > y_bound || w <= 0 || h <= 0) return;
+
+  // the actual starting and end points
+  double half_diag = std::sqrt(w*w + h*h)/2.0;
+  int64_t x_begin = std::max((int64_t)0, x_center - w/2);
+  int64_t y_begin = std::max((int64_t)0, y_center - h/2);
+  int64_t x_end = std::min(x_bound, x_center + w/2);
+  int64_t y_end = std::min(y_bound, y_center + h/2);
+  double sum_k = 0.0;
+
   // distance between the pixel and the center of the region. 
   auto dist = [&x_center , &y_center](double x, double y){
       double x_diff = x - (double)x_center; 
       double y_diff = y - (double)y_center;
       return std::sqrt(x_diff * x_diff + y_diff * y_diff);
   };
-  double half_diag = std::sqrt(w*w + h*h)/2.0; 
-  // boundary of the region, bounded within the image.
-  int64_t x_begin = std::max((int64_t)0, x_center - w/2);
-  int64_t y_begin = std::max((int64_t)0, y_center - h/2);    
-  int64_t x_end = std::min((int64_t)ranges_vec_.at(X).second - 1, x_center + w/2);
-  int64_t y_end = std::min((int64_t)ranges_vec_.at(Y).second - 1, y_center + h/2);
 
-  // initialize histogram to 0; 
-  hist = std::vector<double>(NUM_BINS, 0.0); 
-  double sum_k = 0.0; 
-
+  // get value of each pixel
   for (auto x = x_begin; x<x_end; ++x){
     for (auto y = y_begin; y < y_end; ++y){
       double r = dist(x, y) / half_diag;
@@ -168,7 +175,6 @@ inline void FaceTrackerPF::calc_region_hist (std::vector<double>& hist, int64_t 
     }
   }
   std::for_each(hist.begin(),hist.end(), [&sum_k](double& num){num /= sum_k;});
-
 }
 
 inline double FaceTrackerPF::calc_bhattacharya_coefficient(const std::vector<double>& hist1, const std::vector<double>& hist2){
@@ -190,7 +196,6 @@ inline double FaceTrackerPF::calc_bhattacharya_coefficient(const std::vector<dou
 inline py::array_t<double> FaceTrackerPF::run_one_iteration(const py::array_t<uint8_t>& frame){
    // particle_filter will launch a thread pool that calls the callbacks
    image_ = (uint8_t*) frame.request().ptr; 
-   cout<<"------------"<<endl;
    std::vector<double> belief = pf_ -> run(); 
    adjust_belief(belief); 
    memcpy((double*)return_state_.request().ptr, belief.data(), sizeof(double) * belief.size()); 

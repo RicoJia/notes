@@ -145,7 +145,7 @@ inline std::vector<double> Particle_Filter::run(){
     // normalize the states
     double sum = std::accumulate(states_.begin(), states_.end(), 0.0, [](double sum, const State& s){return sum + s.weight;});
     std::for_each(states_.begin(), states_.end(),[sum](State& s){s.weight /= sum;});
-
+  
     //send average belief
     return average_belief();
   }
