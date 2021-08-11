@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
 from face_tracker import face_tracker_pf
-import time # TODO
 
 # setup initial location of window by using two corner points
 corner_points = []
@@ -27,8 +26,8 @@ def get_state_ranges(cap):
         height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)  # float `height`
         x_range = (0, width, 0.6)
         y_range = (0, height, 0.6)  #? 
-        vx_range = (-width, width, 0.6)      #assume face can flash across the window in 1s
-        vy_range = (-height, height, 0.6)
+        vx_range = (-width, 1.5 * width, 0.6)      #assume face can flash across the window in 1s
+        vy_range = (-height, 1.5 * height, 0.6)
         hx_range = (0, width, 0.6)
         hy_range = (0, height, 0.6)
         at_dot_range = (0,2, 0.6)        #scale change
@@ -49,27 +48,30 @@ cap = cv2.VideoCapture(2)
 
 # initialize face tracker
 ranges = get_state_ranges(cap)
-PARTICLE_NUM = 60 
-SCALE_CHANGE_DISTURB = 0.005
-VELOCITY_DISTURB = 40
+PARTICLE_NUM = 500
+SCALE_CHANGE_DISTURB = 0.1
+VELOCITY_DISTURB = 70
 FRAME_RATE = cap.get(cv2.CAP_PROP_FPS)
+SIGMA_WEIGHT = 0.01
+SIGMA_CONTROL = 2.0
 
 while True:
+    #TODO
     rval, frame = cap.read()
     kernel = np.ones((5, 5), 'uint8')
     #TODO - how to erode and dilate properly
-    frame = cv2.dilate(frame, kernel, iterations=1)
     frame = cv2.erode(frame, kernel, iterations=1)
     frame = cv2.dilate(frame, kernel, iterations=1)
 
     # initialize ROI - we need two corner points
     if len(corner_points) < 2:  #for initialization
+        # rval, frame = cap.read()    #TODO
         for pt in corner_points: 
             draw_point(frame, pt)
     else: 
         if not SET_ROI: 
             SET_ROI = True
-            tracker_input = {"ranges":ranges, "PARTICLE_NUM":PARTICLE_NUM, "SCALE_CHANGE_DISTURB":SCALE_CHANGE_DISTURB, "VELOCITY_DISTURB":VELOCITY_DISTURB, "FRAME_RATE":FRAME_RATE, "ROI_corner_points":corner_points, "SIGMA_WEIGHT" : 0.2, "initial_frame" : frame}
+            tracker_input = {"ranges":ranges, "PARTICLE_NUM":PARTICLE_NUM, "SCALE_CHANGE_DISTURB":SCALE_CHANGE_DISTURB, "VELOCITY_DISTURB":VELOCITY_DISTURB, "FRAME_RATE":FRAME_RATE, "ROI_corner_points":corner_points, "SIGMA_WEIGHT" : SIGMA_WEIGHT, "SIGMA_CONTROL" : SIGMA_CONTROL, "initial_frame" : frame}
             tracker = face_tracker_pf(tracker_input)
 
         # after initializing ROI, run one iteration

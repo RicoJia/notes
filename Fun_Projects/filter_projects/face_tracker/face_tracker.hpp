@@ -56,6 +56,7 @@ class FaceTrackerPF{
     const double velocity_disturb_; 
     const double delta_t_; 
     const double sigma_weight_; 
+    const double sigma_control_; 
 
     uint8_t* image_; 
     std::vector<double> roi_dist_; 
@@ -67,6 +68,7 @@ inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) :
     velocity_disturb_(inputs["VELOCITY_DISTURB"].cast<double>()), 
     delta_t_(1.0/inputs["FRAME_RATE"].cast<float>()), 
     sigma_weight_(inputs["SIGMA_WEIGHT"].cast<float>()), 
+    sigma_control_(inputs["SIGMA_CONTROL"].cast<float>()),
     image_(nullptr) 
 {
     // initialize ranges, ranges is [(upper_lim, lower_lim, standard_deviation_of_noise), ...]
@@ -107,7 +109,7 @@ inline void FaceTrackerPF::control_callback(std::vector<double>& states){
     std::vector<double> std_devs; 
     std_devs.reserve(states.size()); 
     for (unsigned int i = 0; i < states.size(); ++i){
-      std_devs.emplace_back(Filter::Util::generate_random_num_gaussian(0.0, 0.6, 1)[0]);
+      std_devs.emplace_back(Filter::Util::generate_random_num_gaussian(0.0, sigma_control_, 1)[0]);
     }
 
     states.at(X);
