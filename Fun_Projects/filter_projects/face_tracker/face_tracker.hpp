@@ -38,7 +38,7 @@ class FaceTrackerPF{
     //takes in a set of states, and apply control with noise.
     void control_callback(std::vector<double>& states);
     // Given state estimate, return the likelihood of the current observation
-    double observation_callback(const std::vector<double>& state_estimate);
+    void observation_callback(double& output_weight, const std::vector<double>& state_estimate);
     void adjust_belief(std::vector<double>& belief);
 
     void calc_region_hist (std::vector<double>& hist, int64_t x_center, int64_t y_center, int64_t w, int64_t h);
@@ -97,7 +97,7 @@ inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) :
     // initialize pf_ with ROI and zero dynamics. 
     pf_ = std::make_unique<Particle_Filter>(std::vector<double>{[X] = x_val, [Y] = y_val, [VX] = 0.0, [VY] = 0.0, [HX] = w, [HY] = h, [AT_DOT] = 0.0}, particle_num_); 
     pf_ -> register_control_callback(std::bind(&FaceTrackerPF::control_callback, this, std::placeholders::_1)); 
-    pf_ -> register_observation_callback(std::bind(&FaceTrackerPF::observation_callback, this, std::placeholders::_1));
+    pf_ -> register_observation_callback(std::bind(&FaceTrackerPF::observation_callback, this, std::placeholders::_1, std::placeholders::_2));
 
     return_state_ = py::array_t<double>({NUM_DIM});
 
@@ -105,7 +105,6 @@ inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) :
 
 // adding 0-mean Gaussian Noise
 inline void FaceTrackerPF::control_callback(std::vector<double>& states){
-    //TODO: Need to make it individual std dev
     std::vector<double> std_devs; 
     std_devs.reserve(states.size()); 
     for (unsigned int i = 0; i < states.size(); ++i){
@@ -125,7 +124,7 @@ inline void FaceTrackerPF::control_callback(std::vector<double>& states){
     states.at(AT_DOT) += (std_devs.at(6)*scale_change_disturb_); 
 }
 
-inline double FaceTrackerPF::observation_callback(const std::vector<double>& state_estimate){
+inline void FaceTrackerPF::observation_callback(double& output_weight, const std::vector<double>& state_estimate){
     std::vector<double> hist(NUM_BINS, 0);  
 
     // calculate the histogram of the state. 
@@ -134,7 +133,7 @@ inline double FaceTrackerPF::observation_callback(const std::vector<double>& sta
     double bc = calc_bhattacharya_coefficient(hist, roi_dist_);
 
     // return unnormalized_weight, which will be normalized by the particle_filter framework.
-    return exp((bc - 1)/sigma_weight_);
+    output_weight = exp((bc - 1)/sigma_weight_);
 }
 
 // Store our custom pixel value in image_ into the histogram. custom pixel value = k_pixel * raw_pixel_value is in [0,NUM_BINS], and each value is composed of: [3bits_for_B | 3bits_for_G | 3bits_for_R]. K is the kernal function value. (x,y) is the center, (w, h) are the width and height of a region

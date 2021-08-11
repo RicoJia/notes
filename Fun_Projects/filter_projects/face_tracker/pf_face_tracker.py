@@ -48,8 +48,8 @@ cap = cv2.VideoCapture(2)
 
 # initialize face tracker
 ranges = get_state_ranges(cap)
-PARTICLE_NUM = 500
-SCALE_CHANGE_DISTURB = 0.1
+PARTICLE_NUM = 2000
+SCALE_CHANGE_DISTURB = 0.001
 VELOCITY_DISTURB = 70
 FRAME_RATE = cap.get(cv2.CAP_PROP_FPS)
 SIGMA_WEIGHT = 0.01

@@ -46,7 +46,7 @@ namespace Filter{
       * @brief: Register function for calc_observation callback. See Particle_Filter::calc_observation_cb_
       * @param: Callable with signature double (std::vector<double>&). 
       */
-      void register_observation_callback(std::function<double (const std::vector<double>&)>); 
+      void register_observation_callback(std::function<void (double&, const std::vector<double>&)> calc_observation_cb); 
 
       /**
       * @brief: Main function that contains the main prediction-corrrection loop. 
@@ -67,7 +67,7 @@ namespace Filter{
       std::function<void( std::vector<double>&)> update_control_cb_;
       
       //The callable takes in a single predicted state before an observation, and returns the likelihood of observation given the state observation.
-      std::function<double (const std::vector<double>&)> calc_observation_cb_; 
+      std::function<void (double&, const std::vector<double>&)> calc_observation_cb_; 
 
       // resampling using Russian Rollet
       void resampling(); 
@@ -91,7 +91,7 @@ inline void Particle_Filter::register_control_callback(std::function<void (std::
     update_control_cb_ = update_control_cb; 
   }
 
-inline void Particle_Filter::register_observation_callback(std::function<double (const std::vector<double>&)> calc_observation_cb){
+inline void Particle_Filter::register_observation_callback(std::function<void (double&, const std::vector<double>&)> calc_observation_cb){
     calc_observation_cb_ = calc_observation_cb; 
   }
 
@@ -137,11 +137,26 @@ inline std::vector<double> Particle_Filter::run(){
 
     resampling();
 
-    //TODO: try parallelizing this whole process
-    for (auto& state : states_)
-        update_control_cb_(state.state_vec);
-    for (auto& state : states_)
-        state.weight = calc_observation_cb_(state.state_vec);
+    //Parallelized control update and observation
+    std::vector<std::future<void>> fut_vec; 
+    fut_vec.reserve(states_.size()); 
+    for (auto& state : states_){
+        auto fut = thread_pool_->enqueue(update_control_cb_, std::ref<std::vector<double>>(state.state_vec)); 
+        fut_vec.emplace_back(std::move(fut)); 
+        // update_control_cb_(state.state_vec);
+    }
+    for(auto& fut : fut_vec) fut.get();
+
+    fut_vec.clear(); 
+
+    for (auto& state : states_){
+        auto fut = thread_pool_ -> enqueue(calc_observation_cb_, std::ref<double>(state.weight), std::ref<std::vector<double>>(state.state_vec));
+        fut_vec.emplace_back(std::move(fut));
+        // calc_observation_cb_(state.weight, state.state_vec);
+    }
+
+    for(auto& fut : fut_vec) fut.get();
+
     // normalize the states
     double sum = std::accumulate(states_.begin(), states_.end(), 0.0, [](double sum, const State& s){return sum + s.weight;});
     std::for_each(states_.begin(), states_.end(),[sum](State& s){s.weight /= sum;});

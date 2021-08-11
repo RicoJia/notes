@@ -42,7 +42,7 @@ TEST_F(ParticleFilterTest, InitializationTest)
     }; 
     // attach observation callback
     try{
-        pf_ -> register_observation_callback([](const std::vector<double>& state_vec){return 1.0;});
+        pf_ -> register_observation_callback([](double& output_weight, const std::vector<double>& state_vec){output_weight = 1.0;});
         pf_ -> run();
     }
     catch (const std::runtime_error& error){
