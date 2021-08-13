@@ -9,6 +9,20 @@
 
 namespace Filter{
   namespace Util{
+    //generate a vector of uniformly distributed random numbers. Each number falls in the range defined by elements with the same indices in upper_lims and lower lims. 
+    std::vector<double> generate_random_num_universal(const std::vector<double>& upper_lims, const std::vector<double>& lower_lims){
+      std::random_device rd; //Will be used to obtain a seed for the random number engine
+      std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+      if (upper_lims.size() != lower_lims.size()) return {};
+      unsigned int sz = upper_lims.size();
+      std::vector<double> ret_vec;
+      ret_vec.reserve(sz);
+      for (unsigned int i = 0; i < upper_lims.size(); ++i){
+          std::uniform_real_distribution<> distribution (lower_lims.at(i), upper_lims.at(i));
+          ret_vec.emplace_back(distribution(gen)); 
+      }
+      return ret_vec;
+    }
       // generate a random number in [lower_lim, upper_lim] following universal distribution
     std::vector<double> generate_random_num_universal (const double& lower_lim, const double& upper_lim, const unsigned int& num) {
       std::random_device rd; //Will be used to obtain a seed for the random number engine

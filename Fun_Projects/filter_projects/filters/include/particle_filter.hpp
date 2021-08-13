@@ -54,10 +54,16 @@ namespace Filter{
       */
       std::vector<double> run(); 
       
+      /**
+       * @brief: Function user can call to reset all states to random, with uniform weight. This is good for quickly bring the focus back once the target gets back into the scene
+       * @param: upper_lims - upper limit of each state
+       * @param: lower_lims - lower limit of each state
+       */
+      void reset_all_states_random(const std::vector<double>& upper_lims, const std::vector<double>& lower_lims);
     private:
       struct State{
-        std::vector<double> state_vec;
-        double weight;
+        std::vector<double> state_vec_;
+        double weight_;
       };
       std::vector<State> states_;
 
@@ -98,8 +104,8 @@ inline void Particle_Filter::register_observation_callback(std::function<void (d
 inline void Particle_Filter::resampling(){
     // create the CDF of weight at each state. 
     auto particle_num = states_.size(); 
-    std::vector<double> weight_cdfs(particle_num, states_.at(0).weight);
-    std::transform(states_.begin()+1, states_.end(), weight_cdfs.begin(), weight_cdfs.begin()+1, [](const State& current_state, const double& last_total_weight){return current_state.weight + last_total_weight;});
+    std::vector<double> weight_cdfs(particle_num, states_.at(0).weight_);
+    std::transform(states_.begin()+1, states_.end(), weight_cdfs.begin(), weight_cdfs.begin()+1, [](const State& current_state, const double& last_total_weight){return current_state.weight_ + last_total_weight;});
 
     double r = Util::generate_random_num_universal(0, 1.0/particle_num, 1).at(0); 
     std::vector<State> new_states;
@@ -109,17 +115,17 @@ inline void Particle_Filter::resampling(){
       double current_spoke = r + (i * 1.0) /particle_num;
 
       for (; cdf_index < particle_num && weight_cdfs.at(cdf_index) < current_spoke; ++cdf_index){}    
-      new_states.emplace_back(State{states_.at(cdf_index).state_vec, 1.0/particle_num});   // all new states have uniform weight, and the same states_.at(cdf_index) can be resampled multiple times. 
+      new_states.emplace_back(State{states_.at(cdf_index).state_vec_, 1.0/particle_num});   // all new states have uniform weight, and the same states_.at(cdf_index) can be resampled multiple times. 
     }
     states_ = std::move(new_states); 
   }
 
 inline std::vector<double> Particle_Filter::average_belief(){
 
-    auto num_dim = states_.at(0).state_vec.size(); 
+    auto num_dim = states_.at(0).state_vec_.size(); 
     std::vector<double> avg (num_dim);
     for (auto i = 0; i < num_dim; ++i){
-        avg.at(i) = std::accumulate(states_.begin(), states_.end(), 0.0, [&i](double sum, const State& s1){return sum + s1.weight * s1.state_vec.at(i);});
+        avg.at(i) = std::accumulate(states_.begin(), states_.end(), 0.0, [&i](double sum, const State& s1){return sum + s1.weight_ * s1.state_vec_.at(i);});
     }
 
     return avg;
@@ -141,29 +147,35 @@ inline std::vector<double> Particle_Filter::run(){
     std::vector<std::future<void>> fut_vec; 
     fut_vec.reserve(states_.size()); 
     for (auto& state : states_){
-        auto fut = thread_pool_->enqueue(update_control_cb_, std::ref<std::vector<double>>(state.state_vec)); 
+        auto fut = thread_pool_->enqueue(update_control_cb_, std::ref<std::vector<double>>(state.state_vec_)); 
         fut_vec.emplace_back(std::move(fut)); 
-        // update_control_cb_(state.state_vec);
     }
     for(auto& fut : fut_vec) fut.get();
 
     fut_vec.clear(); 
 
     for (auto& state : states_){
-        auto fut = thread_pool_ -> enqueue(calc_observation_cb_, std::ref<double>(state.weight), std::ref<std::vector<double>>(state.state_vec));
+        auto fut = thread_pool_ -> enqueue(calc_observation_cb_, std::ref<double>(state.weight_), std::ref<std::vector<double>>(state.state_vec_));
         fut_vec.emplace_back(std::move(fut));
-        // calc_observation_cb_(state.weight, state.state_vec);
     }
 
     for(auto& fut : fut_vec) fut.get();
 
     // normalize the states
-    double sum = std::accumulate(states_.begin(), states_.end(), 0.0, [](double sum, const State& s){return sum + s.weight;});
-    std::for_each(states_.begin(), states_.end(),[sum](State& s){s.weight /= sum;});
+    double sum = std::accumulate(states_.begin(), states_.end(), 0.0, [](double sum, const State& s){return sum + s.weight_;});
+    std::for_each(states_.begin(), states_.end(),[sum](State& s){s.weight_ /= sum;});
   
     //send average belief
     return average_belief();
   }
+
+void Particle_Filter::reset_all_states_random(const std::vector<double>& upper_lims, const std::vector<double>& lower_lims){
+    for(auto& state : states_){
+      //TODO
+        state.state_vec_ = Util::generate_random_num_universal(upper_lims, lower_lims); 
+        state.weight_ = 1.0/states_.size(); 
+    }
+}
 
 }
 #endif /* end of include guard: __PARTICLE_FILTER_HPP__ */
