@@ -39,7 +39,6 @@ class FaceTrackerPF{
     void control_callback(std::vector<double>& states);
     // Given state estimate, return the likelihood of the current observation
     void observation_callback(double& output_weight, const std::vector<double>& state_estimate);
-    void adjust_belief(std::vector<double>& belief);
 
     void calc_region_hist (std::vector<double>& hist, int64_t x_center, int64_t y_center, int64_t w, int64_t h);
 
@@ -57,6 +56,7 @@ class FaceTrackerPF{
     const double delta_t_; 
     const double sigma_weight_; 
     const double sigma_control_; 
+    const double valid_weight_lower_limit_;
 
     uint8_t* image_; 
     std::vector<double> roi_dist_; 
@@ -69,6 +69,7 @@ inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) :
     delta_t_(1.0/inputs["FRAME_RATE"].cast<float>()), 
     sigma_weight_(inputs["SIGMA_WEIGHT"].cast<float>()), 
     sigma_control_(inputs["SIGMA_CONTROL"].cast<float>()),
+    valid_weight_lower_limit_(inputs["VALID_WEIGHT_LOWER_LIMIT"].cast<float>()), 
     image_(nullptr) 
 {
     // initialize ranges, ranges is [(upper_lim, lower_lim, standard_deviation_of_noise), ...]
@@ -198,19 +199,9 @@ inline py::array_t<double> FaceTrackerPF::run_one_iteration(const py::array_t<ui
    // particle_filter will launch a thread pool that calls the callbacks
    image_ = (uint8_t*) frame.request().ptr; 
    std::vector<double> belief = pf_ -> run(); 
-   adjust_belief(belief); 
    memcpy((double*)return_state_.request().ptr, belief.data(), sizeof(double) * belief.size()); 
    image_ = nullptr;
    return return_state_; 
 }
 
-// Making the estimated rectangle fall inside the frame.
-inline void FaceTrackerPF::adjust_belief(std::vector<double>& belief){
-     auto& x_ref = belief.at(X); 
-     x_ref = (ranges_vec_.at(X).first < x_ref ) ? x_ref : ranges_vec_.at(X).first; 
-     x_ref = (x_ref < ranges_vec_.at(X).second) ? x_ref : ranges_vec_.at(X).second -1; 
-     auto& y_ref = belief.at(Y);
-     y_ref = (ranges_vec_.at(Y).first < y_ref ) ? y_ref : ranges_vec_.at(Y).first;
-     y_ref = (y_ref < ranges_vec_.at(Y).second) ? y_ref : ranges_vec_.at(Y).second -1;
-}
 #pragma GCC visibility pop

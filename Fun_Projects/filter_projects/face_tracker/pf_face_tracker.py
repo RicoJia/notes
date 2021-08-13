@@ -44,7 +44,7 @@ def update_corner_points(corner_points, return_state):
 # set up video streaming
 cv2.namedWindow("face_tracker")
 cv2.setMouseCallback("face_tracker", mouse_drawing)
-cap = cv2.VideoCapture(2)
+cap = cv2.VideoCapture(0)
 
 # initialize face tracker
 ranges = get_state_ranges(cap)
@@ -53,7 +53,8 @@ SCALE_CHANGE_DISTURB = 0.001
 VELOCITY_DISTURB = 70
 FRAME_RATE = cap.get(cv2.CAP_PROP_FPS)
 SIGMA_WEIGHT = 0.01
-SIGMA_CONTROL = 2.0
+SIGMA_CONTROL = 3.0
+VALID_WEIGHT_LOWER_LIMIT = 0.00001
 
 while True:
     #TODO
@@ -71,7 +72,7 @@ while True:
     else: 
         if not SET_ROI: 
             SET_ROI = True
-            tracker_input = {"ranges":ranges, "PARTICLE_NUM":PARTICLE_NUM, "SCALE_CHANGE_DISTURB":SCALE_CHANGE_DISTURB, "VELOCITY_DISTURB":VELOCITY_DISTURB, "FRAME_RATE":FRAME_RATE, "ROI_corner_points":corner_points, "SIGMA_WEIGHT" : SIGMA_WEIGHT, "SIGMA_CONTROL" : SIGMA_CONTROL, "initial_frame" : frame}
+            tracker_input = {"ranges":ranges, "PARTICLE_NUM":PARTICLE_NUM, "SCALE_CHANGE_DISTURB":SCALE_CHANGE_DISTURB, "VELOCITY_DISTURB":VELOCITY_DISTURB, "FRAME_RATE":FRAME_RATE, "ROI_corner_points":corner_points, "SIGMA_WEIGHT" : SIGMA_WEIGHT, "SIGMA_CONTROL" : SIGMA_CONTROL, "VALID_WEIGHT_LOWER_LIMIT" : VALID_WEIGHT_LOWER_LIMIT, "initial_frame" : frame}
             tracker = face_tracker_pf(tracker_input)
 
         # after initializing ROI, run one iteration
