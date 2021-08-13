@@ -58,6 +58,8 @@ class FaceTrackerPF{
     const double sigma_control_; 
     const double valid_weight_lower_limit_;
 
+    double max_weight_;
+
     uint8_t* image_; 
     std::vector<double> roi_dist_; 
 }; 
@@ -70,6 +72,7 @@ inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) :
     sigma_weight_(inputs["SIGMA_WEIGHT"].cast<float>()), 
     sigma_control_(inputs["SIGMA_CONTROL"].cast<float>()),
     valid_weight_lower_limit_(inputs["VALID_WEIGHT_LOWER_LIMIT"].cast<float>()), 
+    max_weight_(0.0), 
     image_(nullptr) 
 {
     // initialize ranges, ranges is [(upper_lim, lower_lim, standard_deviation_of_noise), ...]
@@ -101,7 +104,6 @@ inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) :
     pf_ -> register_observation_callback(std::bind(&FaceTrackerPF::observation_callback, this, std::placeholders::_1, std::placeholders::_2));
 
     return_state_ = py::array_t<double>({NUM_DIM});
-
 }
 
 // adding 0-mean Gaussian Noise
@@ -135,6 +137,8 @@ inline void FaceTrackerPF::observation_callback(double& output_weight, const std
 
     // return unnormalized_weight, which will be normalized by the particle_filter framework.
     output_weight = exp((bc - 1)/sigma_weight_);
+
+    max_weight_ = std::max(max_weight_, output_weight);
 }
 
 // Store our custom pixel value in image_ into the histogram. custom pixel value = k_pixel * raw_pixel_value is in [0,NUM_BINS], and each value is composed of: [3bits_for_B | 3bits_for_G | 3bits_for_R]. K is the kernal function value. (x,y) is the center, (w, h) are the width and height of a region
@@ -201,6 +205,11 @@ inline py::array_t<double> FaceTrackerPF::run_one_iteration(const py::array_t<ui
    std::vector<double> belief = pf_ -> run(); 
    memcpy((double*)return_state_.request().ptr, belief.data(), sizeof(double) * belief.size()); 
    image_ = nullptr;
+
+   // reset states for next iteration if max_weight_ is too small - we might have lost target
+   if (max_weight_ < valid_weight_lower_limit_) pf_ -> reset_all_states_random(ranges_vec_);
+     max_weight_ = 0.0; 
+
    return return_state_; 
 }
 

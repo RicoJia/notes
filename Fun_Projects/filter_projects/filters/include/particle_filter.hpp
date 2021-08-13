@@ -56,10 +56,9 @@ namespace Filter{
       
       /**
        * @brief: Function user can call to reset all states to random, with uniform weight. This is good for quickly bring the focus back once the target gets back into the scene
-       * @param: upper_lims - upper limit of each state
-       * @param: lower_lims - lower limit of each state
+       * @param: range_vec - (upper limit, lower limit) of each state
        */
-      void reset_all_states_random(const std::vector<double>& upper_lims, const std::vector<double>& lower_lims);
+      void reset_all_states_random(const std::vector<std::pair<double, double>>& range_vec);
     private:
       struct State{
         std::vector<double> state_vec_;
@@ -169,7 +168,13 @@ inline std::vector<double> Particle_Filter::run(){
     return average_belief();
   }
 
-void Particle_Filter::reset_all_states_random(const std::vector<double>& upper_lims, const std::vector<double>& lower_lims){
+void Particle_Filter::reset_all_states_random(const std::vector<std::pair<double, double>>& range_vec){
+    std::vector<double> upper_lims, lower_lims; 
+    for (const auto& range : range_vec){
+      upper_lims.emplace_back(range.first); 
+      lower_lims.emplace_back(range.second); 
+    }
+    
     for(auto& state : states_){
       //TODO
         state.state_vec_ = Util::generate_random_num_universal(upper_lims, lower_lims); 
