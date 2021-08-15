@@ -56,9 +56,6 @@ class FaceTrackerPF{
     const double delta_t_; 
     const double sigma_weight_; 
     const double sigma_control_; 
-    const double valid_weight_lower_limit_;
-
-    double max_weight_;
 
     uint8_t* image_; 
     std::vector<double> roi_dist_; 
@@ -71,8 +68,6 @@ inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) :
     delta_t_(1.0/inputs["FRAME_RATE"].cast<float>()), 
     sigma_weight_(inputs["SIGMA_WEIGHT"].cast<float>()), 
     sigma_control_(inputs["SIGMA_CONTROL"].cast<float>()),
-    valid_weight_lower_limit_(inputs["VALID_WEIGHT_LOWER_LIMIT"].cast<float>()), 
-    max_weight_(0.0), 
     image_(nullptr) 
 {
     // initialize ranges, ranges is [(upper_lim, lower_lim, standard_deviation_of_noise), ...]
@@ -99,7 +94,7 @@ inline FaceTrackerPF::FaceTrackerPF(const py::dict& inputs) :
     image_ = nullptr; 
 
     // initialize pf_ with ROI and zero dynamics. 
-    pf_ = std::make_unique<Particle_Filter>(std::vector<double>{[X] = x_val, [Y] = y_val, [VX] = 0.0, [VY] = 0.0, [HX] = w, [HY] = h, [AT_DOT] = 0.0}, particle_num_); 
+    pf_ = std::make_unique<Particle_Filter>(std::vector<double>{[X] = x_val, [Y] = y_val, [VX] = 0.0, [VY] = 0.0, [HX] = w, [HY] = h, [AT_DOT] = 0.0}, ranges_vec_, inputs["VALID_WEIGHT_LOWER_LIMIT"].cast<float>(), particle_num_); 
     pf_ -> register_control_callback(std::bind(&FaceTrackerPF::control_callback, this, std::placeholders::_1)); 
     pf_ -> register_observation_callback(std::bind(&FaceTrackerPF::observation_callback, this, std::placeholders::_1, std::placeholders::_2));
 
@@ -137,18 +132,16 @@ inline void FaceTrackerPF::observation_callback(double& output_weight, const std
 
     // return unnormalized_weight, which will be normalized by the particle_filter framework.
     output_weight = exp((bc - 1)/sigma_weight_);
-
-    max_weight_ = std::max(max_weight_, output_weight);
 }
 
 // Store our custom pixel value in image_ into the histogram. custom pixel value = k_pixel * raw_pixel_value is in [0,NUM_BINS], and each value is composed of: [3bits_for_B | 3bits_for_G | 3bits_for_R]. K is the kernal function value. (x,y) is the center, (w, h) are the width and height of a region
 inline void FaceTrackerPF::calc_region_hist (std::vector<double>& hist, int64_t x_center, int64_t y_center, int64_t w, int64_t h){
   // initialize histogram to 0;
   hist = std::vector<double>(NUM_BINS, 0.0);
-  // return with empty histogram if (x,y) is outside the image, or if the dimension is <0.
+  // return with empty histogram if (x,y) is outside the image, or if the dimension is <0. If the whole region has width or height equal 1, then below it will be rounded down to 0, which should be avoided. 
   auto x_bound = (int64_t)ranges_vec_.at(X).second - 1; 
   auto y_bound = (int64_t)ranges_vec_.at(Y).second - 1; 
-  if (x_center < 0 || x_center > x_bound || y_center < 0 || y_center > y_bound || w <= 0 || h <= 0) return;
+  if (x_center < 0 || x_center > x_bound || y_center < 0 || y_center > y_bound || w <= 1 || h <= 1) return;
 
   // the actual starting and end points
   double half_diag = std::sqrt(w*w + h*h)/2.0;
@@ -201,15 +194,12 @@ inline double FaceTrackerPF::calc_bhattacharya_coefficient(const std::vector<dou
  */
 inline py::array_t<double> FaceTrackerPF::run_one_iteration(const py::array_t<uint8_t>& frame){
    // particle_filter will launch a thread pool that calls the callbacks
+   // TODO
+   cout<<"---------"<<endl;
    image_ = (uint8_t*) frame.request().ptr; 
    std::vector<double> belief = pf_ -> run(); 
    memcpy((double*)return_state_.request().ptr, belief.data(), sizeof(double) * belief.size()); 
    image_ = nullptr;
-
-   // reset states for next iteration if max_weight_ is too small - we might have lost target
-   if (max_weight_ < valid_weight_lower_limit_) pf_ -> reset_all_states_random(ranges_vec_);
-     max_weight_ = 0.0; 
-
    return return_state_; 
 }
 

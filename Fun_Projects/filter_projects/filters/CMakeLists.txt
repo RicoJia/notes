@@ -8,6 +8,4 @@ project(filters VERSION 1.0.0)
 #
 # target_include_directories(filters PUBLIC include)
 
-#gtest
-add_subdirectory(gtest)
 

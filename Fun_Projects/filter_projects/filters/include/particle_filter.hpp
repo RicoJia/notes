@@ -34,7 +34,7 @@ namespace Filter{
       /**
       * @brief: Constructor for particle filter, initial state is specified
       */
-      Particle_Filter(const std::vector<double> initial_state, const unsigned int particle_num); 
+      Particle_Filter(const std::vector<double>& initial_state, const std::vector<std::pair<double, double>>& ranges, double valid_weight_lower_limit, const unsigned int particle_num); 
 
       /**
       * @brief: Register function for send_relief callback, which updates the state with control input in place. See Particle_Filter::update_control_cb_;
@@ -54,17 +54,14 @@ namespace Filter{
       */
       std::vector<double> run(); 
       
-      /**
-       * @brief: Function user can call to reset all states to random, with uniform weight. This is good for quickly bring the focus back once the target gets back into the scene
-       * @param: range_vec - (upper limit, lower limit) of each state
-       */
-      void reset_all_states_random(const std::vector<std::pair<double, double>>& range_vec);
     private:
       struct State{
         std::vector<double> state_vec_;
         double weight_;
       };
       std::vector<State> states_;
+      std::vector<std::pair<double, double>> ranges_; 
+      const double valid_weight_lower_limit_;
 
       std::condition_variable observation_ready_; 
       std::unique_ptr<ThreadPool> thread_pool_; 
@@ -77,19 +74,22 @@ namespace Filter{
       // resampling using Russian Rollet
       void resampling(); 
 
+      /**
+       * @brief: Function user can call to reset all states to random, with uniform weight. This is good for quickly bring the focus back once the target gets back into the scene
+       */
+      void reset_all_states_random();
+
       // return the average accross all particles over each dimension 
       std::vector<double> average_belief(); 
   }; 
 
-inline Particle_Filter::Particle_Filter(const std::vector<double> initial_state, const unsigned int particle_num): 
-    states_(std::vector<State>(particle_num, State{initial_state, 1.0/particle_num}))
-
+inline Particle_Filter::Particle_Filter(const std::vector<double>& initial_state, const std::vector<std::pair<double, double>>& ranges, double valid_weight_lower_limit, const unsigned int particle_num): 
+    states_(std::vector<State>(particle_num, State{initial_state, 1.0/particle_num})), valid_weight_lower_limit_(valid_weight_lower_limit), ranges_(ranges)
   {
     // launch a thread pool for parallelism
     auto max_num_threads = std::thread::hardware_concurrency(); 
     auto num_threads = std::min( (max_num_threads < 2) ? 2: max_num_threads - 1, particle_num ); 
     thread_pool_ = std::make_unique<ThreadPool>(num_threads); 
-
   }
 
 inline void Particle_Filter::register_control_callback(std::function<void (std::vector<double>&)> update_control_cb){
@@ -120,13 +120,12 @@ inline void Particle_Filter::resampling(){
   }
 
 inline std::vector<double> Particle_Filter::average_belief(){
-
     auto num_dim = states_.at(0).state_vec_.size(); 
     std::vector<double> avg (num_dim);
     for (auto i = 0; i < num_dim; ++i){
-        avg.at(i) = std::accumulate(states_.begin(), states_.end(), 0.0, [&i](double sum, const State& s1){return sum + s1.weight_ * s1.state_vec_.at(i);});
+        avg.at(i) = std::accumulate(states_.begin(), states_.end(), 0.0, [&i](double sum, const State& s1){
+            return sum + s1.weight_ * s1.state_vec_.at(i);});
     }
-
     return avg;
   }
 
@@ -162,21 +161,28 @@ inline std::vector<double> Particle_Filter::run(){
 
     // normalize the states
     double sum = std::accumulate(states_.begin(), states_.end(), 0.0, [](double sum, const State& s){return sum + s.weight_;});
-    std::for_each(states_.begin(), states_.end(),[sum](State& s){s.weight_ /= sum;});
+    //TODO
+      cout<<"sum: "<<sum<<endl;
+    if (sum < valid_weight_lower_limit_){
+      cout<<"triggered----------"<<endl;
+      reset_all_states_random(); 
+    }
+    else{
+      std::for_each(states_.begin(), states_.end(),[sum](State& s){s.weight_ /= sum;});
+    }
   
     //send average belief
     return average_belief();
   }
 
-void Particle_Filter::reset_all_states_random(const std::vector<std::pair<double, double>>& range_vec){
+void Particle_Filter::reset_all_states_random(){
     std::vector<double> upper_lims, lower_lims; 
-    for (const auto& range : range_vec){
+    for (const auto& range : ranges_){
       upper_lims.emplace_back(range.first); 
       lower_lims.emplace_back(range.second); 
     }
     
     for(auto& state : states_){
-      //TODO
         state.state_vec_ = Util::generate_random_num_universal(upper_lims, lower_lims); 
         state.weight_ = 1.0/states_.size(); 
     }

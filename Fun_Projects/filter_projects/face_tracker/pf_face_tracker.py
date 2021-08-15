@@ -11,7 +11,7 @@ def draw_point(frame, coords):
     cv2.circle(frame, coords, radius=2, color=PINK, thickness=-1)
 
 def draw_box(frame, corners):
-    cv2.rectangle(frame, corners[0], corners[1], PINK, 1)
+    cv2.rectangle(frame, corners[0], corners[1], PINK, 3)
 
 def mouse_drawing(event, x_temp, y_temp, flags, params):
     if event == cv2.EVENT_LBUTTONDOWN:
@@ -48,13 +48,13 @@ cap = cv2.VideoCapture(0)
 
 # initialize face tracker
 ranges = get_state_ranges(cap)
-PARTICLE_NUM = 2000
-SCALE_CHANGE_DISTURB = 0.001
+PARTICLE_NUM = 3000
+SCALE_CHANGE_DISTURB = 0.0
 VELOCITY_DISTURB = 70
 FRAME_RATE = cap.get(cv2.CAP_PROP_FPS)
-SIGMA_WEIGHT = 0.01
-SIGMA_CONTROL = 3.0
-VALID_WEIGHT_LOWER_LIMIT = 0.00001
+SIGMA_WEIGHT = 0.05      #quite important, too big will not distinuguish the right state, too small will make output weight far from zero.
+SIGMA_CONTROL = 2.0     #should add enough randomness to the tracker
+VALID_WEIGHT_LOWER_LIMIT = 0.0/PARTICLE_NUM #should be decided based on total weight when target is lost. If set to zero, the tracker will never reset states randomly 
 
 while True:
     #TODO
