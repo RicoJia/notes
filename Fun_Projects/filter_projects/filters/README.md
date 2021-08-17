@@ -13,13 +13,11 @@ Since the particle filter is such a widely used baysian filtering technique, I e
 =======
 ## Particle_Filter
 1. Introduction
->>>>>>> parent of 64b4eba... README
     <p align="center">
     <img src="https://user-images.githubusercontent.com/77752418/128048513-1b1e405f-d3ff-46e4-9517-7795ede05908.png" height="500" width="width"/>
     <figcaption align="center">Workflow </figcaption>
     </p>
 
-<<<<<<< HEAD
 ### Step 3 Control Update
 The user of the framework is responsible to issue a control signal to each particle and update the state estimate accordingly. Also, noise should be added to account for the randomness from the real world. As a continuation of the above example, the robot's position will be updated with its ```speed*time``` and noise. The distribution of all states are effectively shifted and dispersed (from noise). [Image Source](https://www.youtube.com/watch?v=tvNPidFMY20)
 
