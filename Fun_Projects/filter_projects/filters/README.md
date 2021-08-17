@@ -1,5 +1,4 @@
-![](https://im2.ezgif.com/tmp/ezgif-2-9321254a011b.gif)
-# An Easy-To-Implement Face Tracker Using Particle Filtering
+# An Ea
 ## Part 1 Particle_Filter
 ### Introduction
 A particle is composed of a guess of the current state (e.g, the speed and location of a moving robot) and a weight (probability of the guess being the true state). The main idea of the particle filter is to iteratively generate a group of such "particles" to **describe the probability distribution of the true current state.** The higher probability a particle carries, the more likely that particle's state will appear in the final state estimate. Particles with lower weights will be filtered out.
@@ -36,6 +35,7 @@ The sum of all states' weights may not be one, on the otherhand, we **DO** need 
 
 ### Step 6 Return Average Belief
 Return the average of all states as the final belief of the iteration. 
+
     
 ## Tips For Implementation
 

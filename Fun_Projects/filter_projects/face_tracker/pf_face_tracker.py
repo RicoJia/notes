@@ -48,12 +48,12 @@ cap = cv2.VideoCapture(0)
 
 # initialize face tracker
 ranges = get_state_ranges(cap)
-PARTICLE_NUM = 50
+PARTICLE_NUM = 3000
 SCALE_CHANGE_DISTURB = 0.0
 VELOCITY_DISTURB = 70
 FRAME_RATE = cap.get(cv2.CAP_PROP_FPS)
 SIGMA_WEIGHT = 0.05      #quite important, too big will not distinuguish the right state, too small will make output weight far from zero.
-SIGMA_CONTROL = 0.2     #should add enough randomness to the tracker
+SIGMA_CONTROL = 2.0     #should add enough randomness to the tracker
 VALID_WEIGHT_LOWER_LIMIT = 0.0/PARTICLE_NUM #should be decided based on total weight when target is lost. If set to zero, the tracker will never reset states randomly 
 
 while True:
@@ -75,16 +75,10 @@ while True:
             tracker_input = {"ranges":ranges, "PARTICLE_NUM":PARTICLE_NUM, "SCALE_CHANGE_DISTURB":SCALE_CHANGE_DISTURB, "VELOCITY_DISTURB":VELOCITY_DISTURB, "FRAME_RATE":FRAME_RATE, "ROI_corner_points":corner_points, "SIGMA_WEIGHT" : SIGMA_WEIGHT, "SIGMA_CONTROL" : SIGMA_CONTROL, "VALID_WEIGHT_LOWER_LIMIT" : VALID_WEIGHT_LOWER_LIMIT, "initial_frame" : frame}
             tracker = face_tracker_pf(tracker_input)
 
-        #TODO
-        states = []
-        return_state = tracker.run_one_iteration(frame, states)
-        for ls in states: 
-            draw_point(frame, (int(ls[0]), int(ls[1])))
-
-
         # after initializing ROI, run one iteration
-        # return_state = tracker.run_one_iteration(frame)
+        return_state = tracker.run_one_iteration(frame)
         update_corner_points(corner_points, return_state)
+        print("state: ", return_state) #TODO
 
         draw_box(frame, corner_points)
 
