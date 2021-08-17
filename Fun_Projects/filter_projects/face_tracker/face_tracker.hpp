@@ -32,7 +32,7 @@ enum State_Index{
 class FaceTrackerPF{
   public: 
     explicit FaceTrackerPF(const py::dict& inputs); 
-    py::array_t<double> run_one_iteration(const py::array_t<uint8_t>& frame);
+    py::array_t<double> run_one_iteration(const py::array_t<uint8_t>& frame, py::list ls);
 
   protected: 
     //takes in a set of states, and apply control with noise.
@@ -192,7 +192,11 @@ inline double FaceTrackerPF::calc_bhattacharya_coefficient(const std::vector<dou
  * 3. With updated state predictions, Filter::Particle_Filter::run() calls observation_callback()
  * - Return all states in double
  */
-inline py::array_t<double> FaceTrackerPF::run_one_iteration(const py::array_t<uint8_t>& frame){
+
+//TODO
+#include<pybind11/stl.h> 
+
+inline py::array_t<double> FaceTrackerPF::run_one_iteration(const py::array_t<uint8_t>& frame, py::list ls){
    // particle_filter will launch a thread pool that calls the callbacks
    // TODO
    cout<<"---------"<<endl;
@@ -200,6 +204,12 @@ inline py::array_t<double> FaceTrackerPF::run_one_iteration(const py::array_t<ui
    std::vector<double> belief = pf_ -> run(); 
    memcpy((double*)return_state_.request().ptr, belief.data(), sizeof(double) * belief.size()); 
    image_ = nullptr;
+
+   //TODO
+   for (const auto& state: pf_->states_){
+    py::list lis = py::cast(state.state_vec_); 
+    ls.append(lis);
+   } 
    return return_state_; 
 }
 

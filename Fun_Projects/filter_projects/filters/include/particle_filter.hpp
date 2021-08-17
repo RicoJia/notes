@@ -54,12 +54,14 @@ namespace Filter{
       */
       std::vector<double> run(); 
       
-    private:
+      //TODO
       struct State{
         std::vector<double> state_vec_;
         double weight_;
       };
       std::vector<State> states_;
+    private:
+
       std::vector<std::pair<double, double>> ranges_; 
       const double valid_weight_lower_limit_;
 
