@@ -1,4 +1,5 @@
-# An Ea
+![](https://im2.ezgif.com/tmp/ezgif-2-9321254a011b.gif)
+# An Easy-To-Implement Face Tracker Using Particle Filtering
 ## Part 1 Particle_Filter
 ### Introduction
 A particle is composed of a guess of the current state (e.g, the speed and location of a moving robot) and a weight (probability of the guess being the true state). The main idea of the particle filter is to iteratively generate a group of such "particles" to **describe the probability distribution of the true current state.** The higher probability a particle carries, the more likely that particle's state will appear in the final state estimate. Particles with lower weights will be filtered out.
@@ -13,11 +14,13 @@ Since the particle filter is such a widely used baysian filtering technique, I e
 =======
 ## Particle_Filter
 1. Introduction
+>>>>>>> parent of 64b4eba... README
     <p align="center">
     <img src="https://user-images.githubusercontent.com/77752418/128048513-1b1e405f-d3ff-46e4-9517-7795ede05908.png" height="500" width="width"/>
     <figcaption align="center">Workflow </figcaption>
     </p>
 
+<<<<<<< HEAD
 ### Step 3 Control Update
 The user of the framework is responsible to issue a control signal to each particle and update the state estimate accordingly. Also, noise should be added to account for the randomness from the real world. As a continuation of the above example, the robot's position will be updated with its ```speed*time``` and noise. The distribution of all states are effectively shifted and dispersed (from noise). [Image Source](https://www.youtube.com/watch?v=tvNPidFMY20)
 
@@ -33,7 +36,6 @@ The sum of all states' weights may not be one, on the otherhand, we **DO** need 
 
 ### Step 6 Return Average Belief
 Return the average of all states as the final belief of the iteration. 
-
     
 ## Tips For Implementation
 
