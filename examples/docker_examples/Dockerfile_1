@@ -1,0 +1,10 @@
+# run this file docker build -t rico_test -f Dockerfile_1 .
+
+FROM ubuntu:focal
+#this is a key-value pair
+LABEL maintainer="Rico Jia"   
+#JSON array, executable to when starting container, can be overriden in docker run --entrypoint
+ENTRYPOINT ["/bin/bash"]      
+#also in JSON array. Arg to ENTRYPOINT
+#CMD ["my echoed msg"]        
+
