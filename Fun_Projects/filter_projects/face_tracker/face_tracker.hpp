@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2021 Rico Studio
+ * All rights reserved.
+ * License: BSD-0
+ * author: Rico Jia
+ */
+#ifndef __FACE_TRACKER_HPP__
+#define __FACE_TRACKER_HPP__
+
 #include <algorithm>
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
@@ -12,8 +21,6 @@
 namespace py = pybind11;
 
 using Filter::Particle_Filter; 
-//TODO
-using std::cout; using std::endl; using namespace std::chrono_literals;
 
 #define RIGHT_SHIFT 5   // We take the first 3 digits of a pixel value.
 #define NUM_BINS 512    // 8 * 8 * 8 bins
@@ -190,12 +197,10 @@ inline double FaceTrackerPF::calc_bhattacharya_coefficient(const std::vector<dou
  * - Filter::Particle_Filter::run() resamples states based on weights
  * 2. Filter::Particle_Filter::run() will call control_callback to predict states. 
  * 3. With updated state predictions, Filter::Particle_Filter::run() calls observation_callback()
- * - Return all states in double
+ * 4. Return all states in double
  */
 inline py::array_t<double> FaceTrackerPF::run_one_iteration(const py::array_t<uint8_t>& frame){
    // particle_filter will launch a thread pool that calls the callbacks
-   // TODO
-   cout<<"---------"<<endl;
    image_ = (uint8_t*) frame.request().ptr; 
    std::vector<double> belief = pf_ -> run(); 
    memcpy((double*)return_state_.request().ptr, belief.data(), sizeof(double) * belief.size()); 
@@ -204,3 +209,4 @@ inline py::array_t<double> FaceTrackerPF::run_one_iteration(const py::array_t<ui
 }
 
 #pragma GCC visibility pop
+#endif /* end of include guard: __FACE_TRACKER_HPP__ */

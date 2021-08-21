@@ -4,7 +4,6 @@
  * License: BSD-0
  * author: Rico Jia
  */
-/** @file */
 #ifndef __PARTICLE_FILTER_HPP__
 #define __PARTICLE_FILTER_HPP__
 
@@ -23,9 +22,6 @@
 
 #include "thread_pool.hpp"
 #include "filters_util.hpp"
-
-//TODO
-using std::cout; using std::endl;
 
 namespace Filter{
   class Particle_Filter{
@@ -161,10 +157,7 @@ inline std::vector<double> Particle_Filter::run(){
 
     // normalize the states
     double sum = std::accumulate(states_.begin(), states_.end(), 0.0, [](double sum, const State& s){return sum + s.weight_;});
-    //TODO
-      cout<<"sum: "<<sum<<endl;
     if (sum < valid_weight_lower_limit_){
-      cout<<"triggered----------"<<endl;
       reset_all_states_random(); 
     }
     else{

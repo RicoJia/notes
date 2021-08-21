@@ -48,25 +48,22 @@ cap = cv2.VideoCapture(0)
 
 # initialize face tracker
 ranges = get_state_ranges(cap)
-PARTICLE_NUM = 3000
+PARTICLE_NUM = 1000
 SCALE_CHANGE_DISTURB = 0.0
 VELOCITY_DISTURB = 70
 FRAME_RATE = cap.get(cv2.CAP_PROP_FPS)
 SIGMA_WEIGHT = 0.05      #quite important, too big will not distinuguish the right state, too small will make output weight far from zero.
 SIGMA_CONTROL = 2.0     #should add enough randomness to the tracker
-VALID_WEIGHT_LOWER_LIMIT = 0.0/PARTICLE_NUM #should be decided based on total weight when target is lost. If set to zero, the tracker will never reset states randomly 
+VALID_WEIGHT_LOWER_LIMIT = 0.0/PARTICLE_NUM # value should be decided based on total weight when target is lost. If set to zero, the tracker will never reset states randomly 
 
 while True:
-    #TODO
     rval, frame = cap.read()
     kernel = np.ones((5, 5), 'uint8')
-    #TODO - how to erode and dilate properly
     frame = cv2.erode(frame, kernel, iterations=1)
     frame = cv2.dilate(frame, kernel, iterations=1)
 
     # initialize ROI - we need two corner points
     if len(corner_points) < 2:  #for initialization
-        # rval, frame = cap.read()    #TODO
         for pt in corner_points: 
             draw_point(frame, pt)
     else: 
@@ -78,7 +75,7 @@ while True:
         # after initializing ROI, run one iteration
         return_state = tracker.run_one_iteration(frame)
         update_corner_points(corner_points, return_state)
-        print("state: ", return_state) #TODO
+        print("state: ", return_state) 
 
         draw_box(frame, corner_points)
 
