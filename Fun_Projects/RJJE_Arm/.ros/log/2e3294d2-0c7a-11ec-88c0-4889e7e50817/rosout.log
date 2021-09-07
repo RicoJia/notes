@@ -1,0 +1,4 @@
+
+
+1630647944.719609526  Node Startup
+1630648087.601347264 INFO /rviz_1630648087475306748 [/tmp/binarydeb/ros-melodic-rviz-1.13.15/src/rviz/ogre_helpers/render_system.cpp:226(RenderSystem::detectGlVersion)] [topics: /rosout] OpenGl version: 3.0 (GLSL 1.3).

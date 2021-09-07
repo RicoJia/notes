@@ -1,0 +1,6 @@
+
+
+1630785532.658923906  Node Startup
+1630785535.683881597 INFO /rviz_1630785535241294490 [/tmp/binarydeb/ros-noetic-rviz-1.14.8/src/rviz/ogre_helpers/render_system.cpp:467(RenderWindow* rviz::RenderSystem::makeRenderWindow)] [topics: /rosout] Stereo is NOT SUPPORTED
+1630785535.684014959 INFO /rviz_1630785535241294490 [/tmp/binarydeb/ros-noetic-rviz-1.14.8/src/rviz/ogre_helpers/render_system.cpp:181(RenderSystem::detectGlVersion)] [topics: /rosout] OpenGL device: Mesa Intel(R) UHD Graphics 620 (WHL GT2)
+1630785535.684051942 INFO /rviz_1630785535241294490 [/tmp/binarydeb/ros-noetic-rviz-1.14.8/src/rviz/ogre_helpers/render_system.cpp:221(RenderSystem::detectGlVersion)] [topics: /rosout] OpenGl version: 4.6 (GLSL 4.6) limited to GLSL 1.4 on Mesa system.

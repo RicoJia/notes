@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<robot name="rjje_arm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="m_link_mesh" params="name origin_xyz origin_rpy meshfile meshscale mass ixx ixy ixz iyy iyz izz">
+    <link name="${name}">
+      <inertial>
+        <mass value="${mass}" />
+        <origin rpy="${origin_rpy}" xyz="${origin_xyz}" />
+        <inertia ixx="${ixx}" ixy="${ixy}" ixz="${ixz}" iyy="${iyy}" iyz="${iyz}" izz="${izz}" />
+      </inertial>
+      <collision>
+        <origin rpy="${origin_rpy}" xyz="${origin_xyz}" />
+        <geometry>
+          <mesh filename="${meshfile}" scale="${meshscale}"/>
+        </geometry>
+      </collision>
+      <visual>
+        <origin rpy="${origin_rpy}" xyz="${origin_xyz}" />
+        <geometry>
+          <mesh filename="${meshfile}" scale="${meshscale}"/>
+        </geometry>
+        <material name="light_black"/>
+      </visual>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="m_joint" params="name type axis_xyz origin_rpy origin_xyz parent child limit_e limit_l limit_u limit_v">
+    <joint name="${name}" type="${type}">
+      <axis xyz="${axis_xyz}"/>
+      <limit effort="${limit_e}" lower="${limit_l}" upper="${limit_u}" velocity="${limit_v}" />
+      <origin rpy="${origin_rpy}" xyz="${origin_xyz}"/>
+      <parent link="${parent}" />
+      <child link="${child}"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Instances -->
+
+  <link name="world">
+  </link>
+  
+  <xacro:m_link_mesh 
+    name="base_link" 
+    origin_xyz="0.0 0.0 0.0" 
+    origin_rpy="0.0 0.0 0.0" 
+    meshfile="package://rjje_arm/meshes/cup_holder.stl" 
+    meshscale="0.1 0.1 0.1"
+    mass="157.633"
+    ixx="13.235" ixy="0" ixz="0"
+    iyy="13.235" iyz="0"
+    izz="9.655"
+    />
+
+  <xacro:m_joint name="$base_link_world" type="revolute"
+         axis_xyz="0 0 1"
+         origin_rpy="0 0 0" origin_xyz="0 0 0.0"
+         parent="world" child="base_link"
+         limit_e="1000" limit_l="0" limit_u="0.5" limit_v="0.5" />
+
+</robot>

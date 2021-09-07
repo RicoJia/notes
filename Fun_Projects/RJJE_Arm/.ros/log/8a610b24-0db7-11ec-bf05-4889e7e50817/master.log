@@ -1,0 +1,21 @@
+[rosmaster.main][INFO] 2021-09-04 19:37:30,100: initialization complete, waiting for shutdown
+[rosmaster.main][INFO] 2021-09-04 19:37:30,100: Starting ROS Master Node
+[xmlrpc][INFO] 2021-09-04 19:37:30,100: XML-RPC server binding to 0.0.0.0:11311
+[xmlrpc][INFO] 2021-09-04 19:37:30,101: Started XML-RPC server [http://RicoSUPERMACHINE:11311/]
+[rosmaster.master][INFO] 2021-09-04 19:37:30,101: Master initialized: port[11311], uri[http://RicoSUPERMACHINE:11311/]
+[xmlrpc][INFO] 2021-09-04 19:37:30,101: xml rpc node: starting XML-RPC server
+[rosmaster.master][INFO] 2021-09-04 19:37:30,168: +PARAM [/run_id] by /roslaunch
+[rosmaster.master][INFO] 2021-09-04 19:37:30,169: +PARAM [/roslaunch/uris/host_ricosupermachine__36201] by /roslaunch
+[rosmaster.master][INFO] 2021-09-04 19:37:30,192: +PARAM [/rosversion] by /roslaunch
+[rosmaster.master][INFO] 2021-09-04 19:37:30,192: +PARAM [/rosdistro] by /roslaunch
+[rosmaster.master][INFO] 2021-09-04 19:37:30,208: +SERVICE [/rosout/get_loggers] /rosout http://RicoSUPERMACHINE:37177/
+[rosmaster.master][INFO] 2021-09-04 19:37:30,208: +SERVICE [/rosout/set_logger_level] /rosout http://RicoSUPERMACHINE:37177/
+[rosmaster.master][INFO] 2021-09-04 19:37:30,209: +PUB [/rosout_agg] /rosout http://RicoSUPERMACHINE:37177/
+[rosmaster.master][INFO] 2021-09-04 19:37:30,211: +SUB [/rosout] /rosout http://RicoSUPERMACHINE:37177/
+[rosmaster.master][INFO] 2021-09-04 19:37:32,111: -PUB [/rosout_agg] /rosout http://RicoSUPERMACHINE:37177/
+[rosmaster.master][INFO] 2021-09-04 19:37:32,112: -SUB [/rosout] /rosout http://RicoSUPERMACHINE:37177/
+[rosmaster.master][INFO] 2021-09-04 19:37:32,118: -SERVICE [/rosout/get_loggers] /rosout rosrpc://RicoSUPERMACHINE:48763
+[rosmaster.master][INFO] 2021-09-04 19:37:32,118: -SERVICE [/rosout/set_logger_level] /rosout rosrpc://RicoSUPERMACHINE:48763
+[rosmaster.main][INFO] 2021-09-04 19:37:32,151: keyboard interrupt, will exit
+[rosmaster.main][INFO] 2021-09-04 19:37:32,151: stopping master...
+[rospy.core][INFO] 2021-09-04 19:37:32,151: signal_shutdown [atexit]

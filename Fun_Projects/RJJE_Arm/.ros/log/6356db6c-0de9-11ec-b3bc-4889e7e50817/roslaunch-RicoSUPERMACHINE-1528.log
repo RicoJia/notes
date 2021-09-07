@@ -1,0 +1,107 @@
+[roslaunch][INFO] 2021-09-05 04:03:52,818: Checking log directory for disk usage. This may take a while.
+Press Ctrl-C to interrupt
+[roslaunch][INFO] 2021-09-05 04:03:52,821: Done checking log file disk usage. Usage is <1GB.
+[roslaunch][INFO] 2021-09-05 04:03:52,821: roslaunch starting with args ['/opt/ros/noetic/bin/roslaunch', 'rjje_arm', 'rjje_arm.launch']
+[roslaunch][INFO] 2021-09-05 04:03:52,821: roslaunch env is environ({'ROS_VERSION': '1', 'PKG_CONFIG_PATH': '/home/ricojia/rjje_arm_ws/devel/lib/pkgconfig:/opt/ros/noetic/lib/pkgconfig:/opt/ros/noetic/lib/x86_64-linux-gnu/pkgconfig', 'ROS_PYTHON_VERSION': '3', 'HOSTNAME': 'RicoSUPERMACHINE', 'ROS_PACKAGE_PATH': '/home/ricojia/rjje_arm_ws/src:/opt/ros/noetic/share', 'ROSLISP_PACKAGE_DIRECTORIES': '/home/ricojia/rjje_arm_ws/devel/share/common-lisp', 'PWD': '/home/ricojia/rjje_arm_ws', 'HOME': '/home/ricojia', 'LANG': 'C.UTF-8', 'ROS_ETC_DIR': '/opt/ros/noetic/etc/ros', 'CMAKE_PREFIX_PATH': '/home/ricojia/rjje_arm_ws/devel:/opt/ros/noetic', 'PYTHONPATH': '/opt/ros/noetic/lib/python3/dist-packages', 'TERM': 'xterm', 'DISPLAY': ':0', 'SHLVL': '1', 'ROS_MASTER_URI': 'http://localhost:11311', 'LD_LIBRARY_PATH': '/home/ricojia/rjje_arm_ws/devel/lib:/opt/ros/noetic/lib:/opt/ros/noetic/lib/x86_64-linux-gnu', 'XDG_RUNTIME_DIR': '/run/user/1000', 'LC_ALL': 'C.UTF-8', 'PATH': '/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'ROS_ROOT': '/opt/ros/noetic/share/ros', 'ROS_DISTRO': 'noetic', 'QT_X11_NO_MITSHM': '1', 'OLDPWD': '/home/ricojia/rjje_arm_ws/src', '_': '/opt/ros/noetic/bin/roslaunch', 'ROS_LOG_FILENAME': '/home/ricojia/.ros/log/6356db6c-0de9-11ec-b3bc-4889e7e50817/roslaunch-RicoSUPERMACHINE-1528.log'})
+[roslaunch][INFO] 2021-09-05 04:03:52,822: starting in server mode
+[roslaunch.parent][INFO] 2021-09-05 04:03:52,822: starting roslaunch parent run
+[roslaunch][INFO] 2021-09-05 04:03:52,822: loading roscore config file /opt/ros/noetic/etc/ros/roscore.xml
+[roslaunch][INFO] 2021-09-05 04:03:53,186: Added core node of type [rosout/rosout] in namespace [/]
+[roslaunch.config][INFO] 2021-09-05 04:03:53,186: loading config file /home/ricojia/rjje_arm_ws/src/rjje_arm/launch/rjje_arm.launch
+[roslaunch][INFO] 2021-09-05 04:03:53,187: Added node of type [robot_state_publisher/robot_state_publisher] in namespace [/]
+[roslaunch][INFO] 2021-09-05 04:03:53,187: Added node of type [joint_state_publisher_gui/joint_state_publisher_gui] in namespace [/]
+[roslaunch][INFO] 2021-09-05 04:03:53,187: Added node of type [rviz/rviz] in namespace [/]
+[roslaunch][INFO] 2021-09-05 04:03:53,207: ... selected machine [] for node of type [robot_state_publisher/robot_state_publisher]
+[roslaunch][INFO] 2021-09-05 04:03:53,208: ... selected machine [] for node of type [joint_state_publisher_gui/joint_state_publisher_gui]
+[roslaunch][INFO] 2021-09-05 04:03:53,208: ... selected machine [] for node of type [rviz/rviz]
+[roslaunch.pmon][INFO] 2021-09-05 04:03:53,209: start_process_monitor: creating ProcessMonitor
+[roslaunch.pmon][INFO] 2021-09-05 04:03:53,209: created process monitor <ProcessMonitor(ProcessMonitor-1, initial daemon)>
+[roslaunch.pmon][INFO] 2021-09-05 04:03:53,210: start_process_monitor: ProcessMonitor started
+[roslaunch.parent][INFO] 2021-09-05 04:03:53,210: starting parent XML-RPC server
+[roslaunch.server][INFO] 2021-09-05 04:03:53,210: starting roslaunch XML-RPC server
+[roslaunch.server][INFO] 2021-09-05 04:03:53,210: waiting for roslaunch XML-RPC server to initialize
+[xmlrpc][INFO] 2021-09-05 04:03:53,210: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2021-09-05 04:03:53,210: Started XML-RPC server [http://RicoSUPERMACHINE:33941/]
+[xmlrpc][INFO] 2021-09-05 04:03:53,210: xml rpc node: starting XML-RPC server
+[roslaunch][INFO] 2021-09-05 04:03:53,221: started roslaunch server http://RicoSUPERMACHINE:33941/
+[roslaunch.parent][INFO] 2021-09-05 04:03:53,221: ... parent XML-RPC server started
+[roslaunch][INFO] 2021-09-05 04:03:53,222: master.is_running[http://localhost:11311]
+[roslaunch][INFO] 2021-09-05 04:03:53,223: master.is_running[http://localhost:11311]
+[roslaunch][INFO] 2021-09-05 04:03:53,224: ROS_MASTER_URI=http://localhost:11311
+[roslaunch][INFO] 2021-09-05 04:03:53,225: setting /roslaunch/uris/host_ricosupermachine__33941' to http://RicoSUPERMACHINE:33941/
+[roslaunch][INFO] 2021-09-05 04:03:53,226: load_parameters starting ...
+[roslaunch][INFO] 2021-09-05 04:03:53,228: ... load_parameters complete
+[roslaunch][INFO] 2021-09-05 04:03:53,228: launch_nodes: launching local nodes ...
+[roslaunch][INFO] 2021-09-05 04:03:53,229: ... preparing to launch node of type [robot_state_publisher/robot_state_publisher]
+[roslaunch][INFO] 2021-09-05 04:03:53,229: create_node_process: package[robot_state_publisher] type[robot_state_publisher] machine[Machine(name[] env_loader[None] address[localhost] ssh_port[22] user[None] assignable[True] timeout[10.0])] master_uri[http://localhost:11311]
+[roslaunch][INFO] 2021-09-05 04:03:53,229: process[robot_state_publisher-1]: env[{'ROS_VERSION': '1', 'PKG_CONFIG_PATH': '/home/ricojia/rjje_arm_ws/devel/lib/pkgconfig:/opt/ros/noetic/lib/pkgconfig:/opt/ros/noetic/lib/x86_64-linux-gnu/pkgconfig', 'ROS_PYTHON_VERSION': '3', 'HOSTNAME': 'RicoSUPERMACHINE', 'ROS_PACKAGE_PATH': '/home/ricojia/rjje_arm_ws/src:/opt/ros/noetic/share', 'ROSLISP_PACKAGE_DIRECTORIES': '/home/ricojia/rjje_arm_ws/devel/share/common-lisp', 'PWD': '/home/ricojia/rjje_arm_ws', 'HOME': '/home/ricojia', 'LANG': 'C.UTF-8', 'ROS_ETC_DIR': '/opt/ros/noetic/etc/ros', 'CMAKE_PREFIX_PATH': '/home/ricojia/rjje_arm_ws/devel:/opt/ros/noetic', 'PYTHONPATH': '/opt/ros/noetic/lib/python3/dist-packages', 'TERM': 'xterm', 'DISPLAY': ':0', 'SHLVL': '1', 'ROS_MASTER_URI': 'http://localhost:11311', 'LD_LIBRARY_PATH': '/home/ricojia/rjje_arm_ws/devel/lib:/opt/ros/noetic/lib:/opt/ros/noetic/lib/x86_64-linux-gnu', 'XDG_RUNTIME_DIR': '/run/user/1000', 'LC_ALL': 'C.UTF-8', 'PATH': '/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'ROS_ROOT': '/opt/ros/noetic/share/ros', 'ROS_DISTRO': 'noetic', 'QT_X11_NO_MITSHM': '1', 'OLDPWD': '/home/ricojia/rjje_arm_ws/src', '_': '/opt/ros/noetic/bin/roslaunch', 'ROS_LOG_FILENAME': '/home/ricojia/.ros/log/6356db6c-0de9-11ec-b3bc-4889e7e50817/roslaunch-RicoSUPERMACHINE-1528.log'}]
+[roslaunch][INFO] 2021-09-05 04:03:53,249: process[robot_state_publisher-1]: args[['/opt/ros/noetic/lib/robot_state_publisher/robot_state_publisher', '__name:=robot_state_publisher']]
+[roslaunch][INFO] 2021-09-05 04:03:53,250: ... created process [robot_state_publisher-1]
+[roslaunch.pmon][INFO] 2021-09-05 04:03:53,250: ProcessMonitor.register[robot_state_publisher-1]
+[roslaunch.pmon][INFO] 2021-09-05 04:03:53,250: ProcessMonitor.register[robot_state_publisher-1] complete
+[roslaunch][INFO] 2021-09-05 04:03:53,250: ... registered process [robot_state_publisher-1]
+[roslaunch][INFO] 2021-09-05 04:03:53,250: process[robot_state_publisher-1]: starting os process
+[roslaunch][INFO] 2021-09-05 04:03:53,250: process[robot_state_publisher-1]: start w/ args [['/opt/ros/noetic/lib/robot_state_publisher/robot_state_publisher', '__name:=robot_state_publisher', '__log:=/home/ricojia/.ros/log/6356db6c-0de9-11ec-b3bc-4889e7e50817/robot_state_publisher-1.log']]
+[roslaunch][INFO] 2021-09-05 04:03:53,250: process[robot_state_publisher-1]: cwd will be [/home/ricojia/.ros]
+[roslaunch][INFO] 2021-09-05 04:03:53,253: process[robot_state_publisher-1]: started with pid [1557]
+[roslaunch][INFO] 2021-09-05 04:03:53,253: ... successfully launched [robot_state_publisher-1]
+[roslaunch][INFO] 2021-09-05 04:03:53,254: ... preparing to launch node of type [joint_state_publisher_gui/joint_state_publisher_gui]
+[roslaunch][INFO] 2021-09-05 04:03:53,254: create_node_process: package[joint_state_publisher_gui] type[joint_state_publisher_gui] machine[Machine(name[] env_loader[None] address[localhost] ssh_port[22] user[None] assignable[True] timeout[10.0])] master_uri[http://localhost:11311]
+[roslaunch][INFO] 2021-09-05 04:03:53,254: process[joint_state_publisher_gui-2]: env[{'ROS_VERSION': '1', 'PKG_CONFIG_PATH': '/home/ricojia/rjje_arm_ws/devel/lib/pkgconfig:/opt/ros/noetic/lib/pkgconfig:/opt/ros/noetic/lib/x86_64-linux-gnu/pkgconfig', 'ROS_PYTHON_VERSION': '3', 'HOSTNAME': 'RicoSUPERMACHINE', 'ROS_PACKAGE_PATH': '/home/ricojia/rjje_arm_ws/src:/opt/ros/noetic/share', 'ROSLISP_PACKAGE_DIRECTORIES': '/home/ricojia/rjje_arm_ws/devel/share/common-lisp', 'PWD': '/home/ricojia/rjje_arm_ws', 'HOME': '/home/ricojia', 'LANG': 'C.UTF-8', 'ROS_ETC_DIR': '/opt/ros/noetic/etc/ros', 'CMAKE_PREFIX_PATH': '/home/ricojia/rjje_arm_ws/devel:/opt/ros/noetic', 'PYTHONPATH': '/opt/ros/noetic/lib/python3/dist-packages', 'TERM': 'xterm', 'DISPLAY': ':0', 'SHLVL': '1', 'ROS_MASTER_URI': 'http://localhost:11311', 'LD_LIBRARY_PATH': '/home/ricojia/rjje_arm_ws/devel/lib:/opt/ros/noetic/lib:/opt/ros/noetic/lib/x86_64-linux-gnu', 'XDG_RUNTIME_DIR': '/run/user/1000', 'LC_ALL': 'C.UTF-8', 'PATH': '/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'ROS_ROOT': '/opt/ros/noetic/share/ros', 'ROS_DISTRO': 'noetic', 'QT_X11_NO_MITSHM': '1', 'OLDPWD': '/home/ricojia/rjje_arm_ws/src', '_': '/opt/ros/noetic/bin/roslaunch', 'ROS_LOG_FILENAME': '/home/ricojia/.ros/log/6356db6c-0de9-11ec-b3bc-4889e7e50817/roslaunch-RicoSUPERMACHINE-1528.log'}]
+[roslaunch][INFO] 2021-09-05 04:03:53,254: process[joint_state_publisher_gui-2]: args[['/opt/ros/noetic/lib/joint_state_publisher_gui/joint_state_publisher_gui', '__name:=joint_state_publisher_gui']]
+[roslaunch][INFO] 2021-09-05 04:03:53,255: ... created process [joint_state_publisher_gui-2]
+[roslaunch.pmon][INFO] 2021-09-05 04:03:53,255: ProcessMonitor.register[joint_state_publisher_gui-2]
+[roslaunch.pmon][INFO] 2021-09-05 04:03:53,255: ProcessMonitor.register[joint_state_publisher_gui-2] complete
+[roslaunch][INFO] 2021-09-05 04:03:53,255: ... registered process [joint_state_publisher_gui-2]
+[roslaunch][INFO] 2021-09-05 04:03:53,255: process[joint_state_publisher_gui-2]: starting os process
+[roslaunch][INFO] 2021-09-05 04:03:53,255: process[joint_state_publisher_gui-2]: start w/ args [['/opt/ros/noetic/lib/joint_state_publisher_gui/joint_state_publisher_gui', '__name:=joint_state_publisher_gui', '__log:=/home/ricojia/.ros/log/6356db6c-0de9-11ec-b3bc-4889e7e50817/joint_state_publisher_gui-2.log']]
+[roslaunch][INFO] 2021-09-05 04:03:53,255: process[joint_state_publisher_gui-2]: cwd will be [/home/ricojia/.ros]
+[roslaunch][INFO] 2021-09-05 04:03:53,258: process[joint_state_publisher_gui-2]: started with pid [1558]
+[roslaunch][INFO] 2021-09-05 04:03:53,258: ... successfully launched [joint_state_publisher_gui-2]
+[roslaunch][INFO] 2021-09-05 04:03:53,258: ... preparing to launch node of type [rviz/rviz]
+[roslaunch][INFO] 2021-09-05 04:03:53,259: create_node_process: package[rviz] type[rviz] machine[Machine(name[] env_loader[None] address[localhost] ssh_port[22] user[None] assignable[True] timeout[10.0])] master_uri[http://localhost:11311]
+[roslaunch][INFO] 2021-09-05 04:03:53,259: process[rviz-3]: env[{'ROS_VERSION': '1', 'PKG_CONFIG_PATH': '/home/ricojia/rjje_arm_ws/devel/lib/pkgconfig:/opt/ros/noetic/lib/pkgconfig:/opt/ros/noetic/lib/x86_64-linux-gnu/pkgconfig', 'ROS_PYTHON_VERSION': '3', 'HOSTNAME': 'RicoSUPERMACHINE', 'ROS_PACKAGE_PATH': '/home/ricojia/rjje_arm_ws/src:/opt/ros/noetic/share', 'ROSLISP_PACKAGE_DIRECTORIES': '/home/ricojia/rjje_arm_ws/devel/share/common-lisp', 'PWD': '/home/ricojia/rjje_arm_ws', 'HOME': '/home/ricojia', 'LANG': 'C.UTF-8', 'ROS_ETC_DIR': '/opt/ros/noetic/etc/ros', 'CMAKE_PREFIX_PATH': '/home/ricojia/rjje_arm_ws/devel:/opt/ros/noetic', 'PYTHONPATH': '/opt/ros/noetic/lib/python3/dist-packages', 'TERM': 'xterm', 'DISPLAY': ':0', 'SHLVL': '1', 'ROS_MASTER_URI': 'http://localhost:11311', 'LD_LIBRARY_PATH': '/home/ricojia/rjje_arm_ws/devel/lib:/opt/ros/noetic/lib:/opt/ros/noetic/lib/x86_64-linux-gnu', 'XDG_RUNTIME_DIR': '/run/user/1000', 'LC_ALL': 'C.UTF-8', 'PATH': '/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'ROS_ROOT': '/opt/ros/noetic/share/ros', 'ROS_DISTRO': 'noetic', 'QT_X11_NO_MITSHM': '1', 'OLDPWD': '/home/ricojia/rjje_arm_ws/src', '_': '/opt/ros/noetic/bin/roslaunch', 'ROS_LOG_FILENAME': '/home/ricojia/.ros/log/6356db6c-0de9-11ec-b3bc-4889e7e50817/roslaunch-RicoSUPERMACHINE-1528.log'}]
+[roslaunch][INFO] 2021-09-05 04:03:53,260: process[rviz-3]: args[['/opt/ros/noetic/lib/rviz/rviz', '__name:=rviz']]
+[roslaunch][INFO] 2021-09-05 04:03:53,260: ... created process [rviz-3]
+[roslaunch.pmon][INFO] 2021-09-05 04:03:53,260: ProcessMonitor.register[rviz-3]
+[roslaunch.pmon][INFO] 2021-09-05 04:03:53,260: ProcessMonitor.register[rviz-3] complete
+[roslaunch][INFO] 2021-09-05 04:03:53,260: ... registered process [rviz-3]
+[roslaunch][INFO] 2021-09-05 04:03:53,260: process[rviz-3]: starting os process
+[roslaunch][INFO] 2021-09-05 04:03:53,260: process[rviz-3]: start w/ args [['/opt/ros/noetic/lib/rviz/rviz', '__name:=rviz', '__log:=/home/ricojia/.ros/log/6356db6c-0de9-11ec-b3bc-4889e7e50817/rviz-3.log']]
+[roslaunch][INFO] 2021-09-05 04:03:53,260: process[rviz-3]: cwd will be [/home/ricojia/.ros]
+[roslaunch][INFO] 2021-09-05 04:03:53,264: process[rviz-3]: started with pid [1559]
+[roslaunch][INFO] 2021-09-05 04:03:53,264: ... successfully launched [rviz-3]
+[roslaunch][INFO] 2021-09-05 04:03:53,264: ... launch_nodes complete
+[roslaunch.pmon][INFO] 2021-09-05 04:03:53,264: registrations completed <ProcessMonitor(ProcessMonitor-1, started daemon 140435342608128)>
+[roslaunch.parent][INFO] 2021-09-05 04:03:53,265: ... roslaunch parent running, waiting for process exit
+[roslaunch][INFO] 2021-09-05 04:03:53,265: spin
+[roslaunch][ERROR] 2021-09-05 04:03:53,525: [robot_state_publisher-1] process has died [pid 1557, exit code 1, cmd /opt/ros/noetic/lib/robot_state_publisher/robot_state_publisher __name:=robot_state_publisher __log:=/home/ricojia/.ros/log/6356db6c-0de9-11ec-b3bc-4889e7e50817/robot_state_publisher-1.log].
+log file: /home/ricojia/.ros/log/6356db6c-0de9-11ec-b3bc-4889e7e50817/robot_state_publisher-1*.log
+[roslaunch.pmon][INFO] 2021-09-05 04:03:53,526: ProcessMonitor.unregister[robot_state_publisher-1] starting
+[roslaunch.pmon][INFO] 2021-09-05 04:03:53,526: ProcessMonitor.unregister[robot_state_publisher-1] complete
+[roslaunch.pmon][INFO] 2021-09-05 04:04:30,157: ProcessMonitor.shutdown <ProcessMonitor(ProcessMonitor-1, started daemon 140435342608128)>
+[roslaunch.pmon][INFO] 2021-09-05 04:04:30,206: ProcessMonitor._post_run <ProcessMonitor(ProcessMonitor-1, started daemon 140435342608128)>
+[roslaunch.pmon][INFO] 2021-09-05 04:04:30,206: ProcessMonitor._post_run <ProcessMonitor(ProcessMonitor-1, started daemon 140435342608128)>: remaining procs are [<roslaunch.nodeprocess.LocalProcess object at 0x7fb98bdc3f40>, <roslaunch.nodeprocess.LocalProcess object at 0x7fb98bdc3d30>]
+[roslaunch.pmon][INFO] 2021-09-05 04:04:30,206: ProcessMonitor exit: killing rviz-3
+[roslaunch][INFO] 2021-09-05 04:04:30,207: [rviz-3] killing on exit
+[roslaunch.pmon][INFO] 2021-09-05 04:04:30,206: ProcessMonitor exit: killing joint_state_publisher_gui-2
+[roslaunch][INFO] 2021-09-05 04:04:30,207: process[rviz-3]: killing os process with pid[1559] pgid[1559]
+[roslaunch][INFO] 2021-09-05 04:04:30,207: [joint_state_publisher_gui-2] killing on exit
+[roslaunch][INFO] 2021-09-05 04:04:30,207: process[joint_state_publisher_gui-2]: killing os process with pid[1558] pgid[1558]
+[roslaunch][INFO] 2021-09-05 04:04:30,207: [rviz-3] sending SIGINT to pgid [1559]
+[roslaunch][INFO] 2021-09-05 04:04:30,208: [joint_state_publisher_gui-2] sending SIGINT to pgid [1558]
+[roslaunch][INFO] 2021-09-05 04:04:30,208: [rviz-3] sent SIGINT to pgid [1559]
+[roslaunch][INFO] 2021-09-05 04:04:30,208: [joint_state_publisher_gui-2] sent SIGINT to pgid [1558]
+[roslaunch][INFO] 2021-09-05 04:04:30,309: process[joint_state_publisher_gui-2]: SIGINT killed with return value -2
+[roslaunch][INFO] 2021-09-05 04:04:30,509: process[rviz-3]: SIGINT killed with return value 0
+[roslaunch.pmon][INFO] 2021-09-05 04:04:30,509: ProcessMonitor exit: cleaning up data structures and signals
+[roslaunch.pmon][INFO] 2021-09-05 04:04:30,509: ProcessMonitor exit: pmon has shutdown
+[roslaunch][INFO] 2021-09-05 04:04:30,510: process monitor is done spinning, initiating full shutdown
+[roslaunch][INFO] 2021-09-05 04:04:30,510: runner.stop()
+[roslaunch][INFO] 2021-09-05 04:04:30,510: shutting down processing monitor...
+[roslaunch][INFO] 2021-09-05 04:04:30,510: shutting down processing monitor <ProcessMonitor(ProcessMonitor-1, stopped daemon 140435342608128)>
+[roslaunch.pmon][INFO] 2021-09-05 04:04:30,510: ProcessMonitor.shutdown <ProcessMonitor(ProcessMonitor-1, stopped daemon 140435342608128)>
+[roslaunch][INFO] 2021-09-05 04:04:30,510: ... shutting down processing monitor complete
+[roslaunch][INFO] 2021-09-05 04:04:30,510: done
+[roslaunch.pmon][INFO] 2021-09-05 04:04:30,510: ProcessMonitor.shutdown <ProcessMonitor(ProcessMonitor-1, stopped daemon 140435342608128)>
+[rospy.core][INFO] 2021-09-05 04:04:30,510: signal_shutdown [atexit]

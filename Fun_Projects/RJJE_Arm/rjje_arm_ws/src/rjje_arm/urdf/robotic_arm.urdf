@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<robot name="rjje_arm">
+  <material name="blue">
+    <color rgba="0 0 0.8 1"/>
+  </material>
+  <material name="black">
+    <color rgba="0 0 0 0.6"/>
+  </material>
+
+  <link name="world">
+  </link>
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <cylinder radius="0.3" length="0.05"/>
+      </geometry>
+        <material name="black"/>
+        <origin xyz="0.0 0.0 0.025" rpy="0.0 0.0 0.0"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder radius="0.3" length="0.05"/>
+      </geometry>
+      <origin xyz="0.0 0.0 0.025" rpy="0.0 0.0 0.0"/>
+    </collision>
+
+    <inertial>
+      <mass value="1"/>
+      <origin xyz="0.0 0.0 0.0"/>
+      <inertia ixx="0.27" izz="0.005" iyy="0.0027" ixy="0.0" ixz="0.0" iyz="0.0"/>
+    </inertial>
+  </link>
+
+  <joint name="world" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+  </joint>
+
+</robot>

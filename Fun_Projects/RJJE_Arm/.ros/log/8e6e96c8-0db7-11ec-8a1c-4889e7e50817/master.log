@@ -1,0 +1,14 @@
+[rosmaster.main][INFO] 2021-09-04 19:37:36,890: initialization complete, waiting for shutdown
+[rosmaster.main][INFO] 2021-09-04 19:37:36,890: Starting ROS Master Node
+[xmlrpc][INFO] 2021-09-04 19:37:36,891: XML-RPC server binding to 0.0.0.0:11311
+[xmlrpc][INFO] 2021-09-04 19:37:36,891: Started XML-RPC server [http://RicoSUPERMACHINE:11311/]
+[xmlrpc][INFO] 2021-09-04 19:37:36,891: xml rpc node: starting XML-RPC server
+[rosmaster.master][INFO] 2021-09-04 19:37:36,891: Master initialized: port[11311], uri[http://RicoSUPERMACHINE:11311/]
+[rosmaster.master][INFO] 2021-09-04 19:37:36,957: +PARAM [/run_id] by /roslaunch
+[rosmaster.master][INFO] 2021-09-04 19:37:36,957: +PARAM [/roslaunch/uris/host_ricosupermachine__34355] by /roslaunch
+[rosmaster.master][INFO] 2021-09-04 19:37:36,994: +PARAM [/rosversion] by /roslaunch
+[rosmaster.master][INFO] 2021-09-04 19:37:36,994: +PARAM [/rosdistro] by /roslaunch
+[rosmaster.master][INFO] 2021-09-04 19:37:37,007: +SERVICE [/rosout/get_loggers] /rosout http://RicoSUPERMACHINE:34429/
+[rosmaster.master][INFO] 2021-09-04 19:37:37,008: +SERVICE [/rosout/set_logger_level] /rosout http://RicoSUPERMACHINE:34429/
+[rosmaster.master][INFO] 2021-09-04 19:37:37,009: +PUB [/rosout_agg] /rosout http://RicoSUPERMACHINE:34429/
+[rosmaster.master][INFO] 2021-09-04 19:37:37,010: +SUB [/rosout] /rosout http://RicoSUPERMACHINE:34429/
