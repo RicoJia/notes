@@ -10,8 +10,14 @@ void foo(const std::vector<int>& ls){
   cout<<ls.size()<<endl;
 }
 
+template<typename T>
+void bar(T t){}
+
 int main()
 {
-  for (auto i : {1,2,3})  cout<<i<<endl;
-  foo({1,2,3,4,5,6});
+  // for (auto i : {1,2,3})  cout<<i<<endl;
+  // foo({1,2,3,4,5,6});
+
+    // auto&& universal reference param
+    auto foo = [](auto&& func, auto&& params){};
 }

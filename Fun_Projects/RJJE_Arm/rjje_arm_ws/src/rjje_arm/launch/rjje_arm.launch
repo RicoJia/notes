@@ -5,6 +5,6 @@
     <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" if="$(arg use_jsp_gui)"/>
     <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find rjje_arm)/rviz/rjje_arm.rviz"/>
 
-    <param name="robot_description" command="cat '$(find rjje_arm)/urdf/box.xacro.urdf'" />
+    <param name="robot_description" command="cat '$(find rjje_arm)/urdf/rjje_arm.xacro.urdf'" />
 
 </launch>
