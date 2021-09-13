@@ -3,11 +3,14 @@
   <material name="blue">
     <color rgba="0 0 0.8 1"/>
   </material>
-  <material name="light_black">
+  <material name="yellow">
+    <color rgba="0.93 0.93 0.02 1.0"/>
+  </material>
+  <material name="dark_green">
     <color rgba="0.2 0.2 0.1 1.0"/>
   </material>
 
-  <xacro:macro name="m_link_mesh" params="name origin_xyz origin_rpy meshfile meshscale mass ixx ixy ixz iyy iyz izz">
+  <xacro:macro name="m_link_mesh" params="name origin_xyz origin_rpy meshfile meshscale mass ixx ixy ixz iyy iyz izz color">
     <link name="${name}">
       <inertial>
         <mass value="${mass}" />
@@ -25,13 +28,13 @@
         <geometry>
           <mesh filename="${meshfile}" scale="${meshscale}"/>
         </geometry>
-        <material name="light_black"/>
+        <material name="${color}"/>
       </visual>
     </link>
   </xacro:macro>
 
-  <xacro:macro name="m_joint" params="name type axis_xyz origin_rpy origin_xyz parent child limit_e limit_l limit_u limit_v">
-    <joint name="${name}" type="${type}">
+  <xacro:macro name="m_joint" params="type axis_xyz origin_rpy origin_xyz parent child limit_e limit_l limit_u limit_v">
+    <joint name="${parent}_${child}" type="${type}">
       <axis xyz="${axis_xyz}"/>
       <limit effort="${limit_e}" lower="${limit_l}" upper="${limit_u}" velocity="${limit_v}" />
       <origin rpy="${origin_rpy}" xyz="${origin_xyz}"/>

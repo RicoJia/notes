@@ -13,17 +13,56 @@
     origin_xyz="0.0 0.0 0.0" 
     origin_rpy="0.0 0.0 0.0" 
     meshfile="package://rjje_arm/meshes/base.stl" 
-    meshscale="0.1 0.1 0.1"
+    meshscale="1 1 1"
     mass="157.633"
     ixx="13.235" ixy="0" ixz="0"
     iyy="13.235" iyz="0"
     izz="9.655"
+    color="yellow"
     />
 
-  <xacro:m_joint name="$base_link_world" type="revolute"
+  <xacro:m_joint type="fixed"
          axis_xyz="0 0 1"
          origin_rpy="0 0 0" origin_xyz="0 0 0.0"
          parent="world" child="base_link"
          limit_e="1000" limit_l="0" limit_u="0.5" limit_v="0.5" />
+
+  <xacro:m_link_mesh
+    name="link1"
+    origin_xyz="0.0 0.0 0.0"
+    origin_rpy="0.0 0.0 0.0"
+    meshfile="package://rjje_arm/meshes/motor_and_frame.stl"
+    meshscale="1 1 1"
+    mass="157.633"
+    ixx="13.235" ixy="0" ixz="0"
+    iyy="13.235" iyz="0"
+    izz="9.655"
+    color="dark_green"
+    />
+
+  <xacro:m_joint type="fixed"
+     axis_xyz="0 0 1"
+     origin_rpy="0 0 0" origin_xyz="3.45 4.2 4.0"
+     parent="base_link" child="link1"
+     limit_e="1000" limit_l="0" limit_u="0.5" limit_v="0.5" />
+
+  <xacro:m_link_mesh
+    name="bracket_1"
+    origin_xyz="0.0 0.0 0.0"
+    origin_rpy="0.0 0.0 3.14"
+    meshfile="package://rjje_arm/meshes/thin_bracket.stl"
+    meshscale="1 1 1"
+    mass="157.633"
+    ixx="13.235" ixy="0" ixz="0"
+    iyy="13.235" iyz="0"
+    izz="9.655"
+    color="blue"
+    />
+
+  <xacro:m_joint type="revolute"
+   axis_xyz="0 0 1"
+   origin_rpy="0 0 0" origin_xyz="0 0 5.3"
+   parent="link1" child="bracket_1"
+   limit_e="1000" limit_l="-1.57" limit_u="1.57" limit_v="0.5" />
 
 </robot>
