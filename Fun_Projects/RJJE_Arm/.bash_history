@@ -221,3 +221,180 @@ exit
 cd /
 find -name rviz
 exit
+echo $ROS_PACKAGE_PATH
+rosrun rviz rviz
+roscore&
+rosrun rviz rviz
+apt update
+sudo apt update
+su
+groups
+id ricojia
+id -u ricojia
+cd /etc/sudoers.d/
+ls
+cd -
+ls
+cd /
+ls
+cd -
+ls
+cd rjje_arm_workspace/
+ls
+cd ..
+mv rjje_arm_workspace/ rjje_arm_ws/
+ls
+cd rjje_arm_ws/
+ls
+cd src/
+cd ..
+source devel/setup.bash 
+ls
+cd src/
+ls
+cd rjje_arm/
+ls
+cd meshes/
+ls
+cd ..
+cd /
+find -name rqt
+cd -
+cd ..
+ls
+cd ..
+source devel/setup.bash 
+catkin_make
+catkin_clean
+catkin clean
+rm -rf build/ devel/
+catkin_make
+source devel/setup.bash 
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+color
+color
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+roscd rjje_arm/
+ls
+cd urdf/
+xacro box.xacro box.xacro.urdf 
+xacro box.xacro>box.xacro.urdf 
+vim box.xacro.urdf 
+cd ../../..
+roslaunch rjje_arm rjje_arm.launch
+cd -
+vim 
+roslaunch rjje_arm rjje_arm.launch
+xacro box.xacro>box.xacro.urdf 
+cd -
+roslaunch rjje_arm rjje_arm.launch
+cd -
+xacro box.xacro>box.xacro.urdf 
+vim box.xacro.urdf 
+xacro box.xacro>box.xacro.urdf 
+vim box.xacro.urdf 
+cd -
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+cd -
+xacro box.xacro>box.xacro.urdf 
+cd -
+roslaunch rjje_arm rjje_arm.launch
+cd -
+xacro box.xacro>box.xacro.urdf 
+cd -
+roslaunch rjje_arm rjje_arm.launch
+cd -
+xacro box.xacro>box.xacro.urdf 
+cd -
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+cd -
+xacro box.xacro>box.xacro.urdf 
+cd -
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+cd -
+xacro box.xacro>box.xacro.urdf 
+cd -
+roslaunch rjje_arm rjje_arm.launch
+ls
+cd src/
+ls
+cd rjje_arm/
+ls
+touch Project_Notes.md
+vim Project_Notes.md 
+ls
+mkdir scripts
+cd scripts/
+touch ssh-tool.sh
+chmod +x ssh-tool.sh 
+ls
+ll
+ls -l
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+ls
+ls
+cd ..
+cd -
+ls
+vim ssh-tool.sh 
+cd ../urdf/
+ls
+xacro box.xacro>box.xacro.urdf 
+cd -
+roslaunch rjje_arm rjje_arm.launch
+cd -
+xacro rjje_arm.xacro > rjje_arm.xacro.urdf
+roslaunch rjje_arm rjje_arm.launch
+roslaunch rjje_arm rjje_arm.launch
+xacro rjje_arm.xacro > rjje_arm.xacro.urdf
+roslaunch rjje_arm rjje_arm.launch
+xacro rjje_arm.xacro > rjje_arm.xacro.urdf
+roslaunch rjje_arm rjje_arm.launch
+xacro rjje_arm.xacro > rjje_arm.xacro.urdf
+roslaunch rjje_arm rjje_arm.launch
+xacro rjje_arm.xacro > rjje_arm.xacro.urdf
+vim rjje_arm.xacro.urdf 
+xacro rjje_arm.xacro > rjje_arm.xacro.urdf
+vim rjje_arm.xacro.urdf 
+rm -rf rjje_arm.xacro.urdf 
+xacro rjje_arm.xacro > rjje_arm.xacro.urdf
+vim rjje_arm.xacro.urdf 
+roslaunch rjje_arm rjje_arm.launch
+cd ../scripts/
+./build_and_launch.sh 
+./build_and_launch.sh 
+./build_and_launch.sh 
+./build_and_launch.sh 
+./build_and_launch.sh 
+./build_and_launch.sh 
+./build_and_launch.sh 
+./build_and_launch.sh 
+./build_and_launch.sh 
+./build_and_launch.sh 
+./build_and_launch.sh 
+./build_and_launch.sh 
+./build_and_launch.sh 
+./build_and_launch.sh 
+exit
+ls
+exit

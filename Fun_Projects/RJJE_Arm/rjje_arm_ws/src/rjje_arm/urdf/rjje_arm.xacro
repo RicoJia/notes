@@ -22,10 +22,10 @@
     />
 
   <xacro:m_joint type="fixed"
-         axis_xyz="0 0 1"
-         origin_rpy="0 0 0" origin_xyz="0 0 0.0"
-         parent="world" child="base_link"
-         limit_e="1000" limit_l="0" limit_u="0.5" limit_v="0.5" />
+    axis_xyz="0 0 1"
+    origin_rpy="0 0 0" origin_xyz="0 0 0.0"
+    parent="world" child="base_link"
+    limit_e="1000" limit_l="0" limit_u="0.5" limit_v="0.5" />
 
   <xacro:m_link_mesh
     name="link1"
@@ -41,10 +41,10 @@
     />
 
   <xacro:m_joint type="fixed"
-     axis_xyz="0 0 1"
-     origin_rpy="0 0 0" origin_xyz="3.45 4.2 4.0"
-     parent="base_link" child="link1"
-     limit_e="1000" limit_l="0" limit_u="0.5" limit_v="0.5" />
+    axis_xyz="0 0 1"
+    origin_rpy="0 0 0" origin_xyz="3.45 4.2 4.0"
+    parent="base_link" child="link1"
+    limit_e="1000" limit_l="0" limit_u="0.5" limit_v="0.5" />
 
   <xacro:m_link_mesh
     name="bracket_1"
@@ -60,9 +60,211 @@
     />
 
   <xacro:m_joint type="revolute"
-   axis_xyz="0 0 1"
-   origin_rpy="0 0 0" origin_xyz="0 0 5.3"
-   parent="link1" child="bracket_1"
-   limit_e="1000" limit_l="-1.57" limit_u="1.57" limit_v="0.5" />
+    axis_xyz="0 0 1"
+    origin_rpy="0 0 0" origin_xyz="0 0 5.3"
+    parent="link1" child="bracket_1"
+    limit_e="1000" limit_l="-1.57" limit_u="1.57" limit_v="0.5" />
+
+  <xacro:m_link_mesh
+    name="link_2"
+    origin_xyz="0.0 0.0 0.0"
+    origin_rpy="0.0 0.0 0.0"
+    meshfile="package://rjje_arm/meshes/motor_and_frame.stl"
+    meshscale="1 1 1"
+    mass="157.633"
+    ixx="13.235" ixy="0" ixz="0"
+    iyy="13.235" iyz="0"
+    izz="9.655"
+    color="dark_green"
+    />
+
+  <xacro:m_joint type="fixed"
+    axis_xyz="0 0 1"
+    origin_xyz="2.2 0.0 1.4" origin_rpy="1.57 0.0 -1.57"
+    parent="bracket_1" child="link_2"
+    limit_e="1000" limit_l="-1.57" limit_u="1.57" limit_v="0.5" />
+
+  <xacro:m_link_mesh
+    name="bracket_2_1"
+    origin_xyz="0.0 0.0 0.0"
+    origin_rpy="0.0 0.0 0.0"
+    meshfile="package://rjje_arm/meshes/thin_bracket.stl"
+    meshscale="1 1 1"
+    mass="157.633"
+    ixx="13.235" ixy="0" ixz="0"
+    iyy="13.235" iyz="0"
+    izz="9.655"
+    color="blue"
+    />
+
+  <xacro:m_joint type="revolute"
+    axis_xyz="0 0 1"
+    origin_xyz="0.0 0.0 5.3" origin_rpy="0.0 0.0 0.0"
+    parent="link_2" child="bracket_2_1"
+    limit_e="1000" limit_l="-1.57" limit_u="1.57" limit_v="0.5" />
+
+  <xacro:m_link_mesh
+    name="bracket_2_2"
+    origin_xyz="0.0 0.0 0.0"
+    origin_rpy="0.0 0.0 0.0"
+    meshfile="package://rjje_arm/meshes/thin_bracket.stl"
+    meshscale="1 1 1"
+    mass="157.633"
+    ixx="13.235" ixy="0" ixz="0"
+    iyy="13.235" iyz="0"
+    izz="9.655"
+    color="blue"
+    />
+
+  <xacro:m_joint type="fixed"
+    axis_xyz="0 0 1"
+    origin_xyz="0.0 10.5 0.0" origin_rpy="0.0 0.0 3.14"
+    parent="bracket_2_1" child="bracket_2_2"
+    limit_e="1000" limit_l="-1.57" limit_u="1.57" limit_v="0.5" />
+
+  <xacro:m_link_mesh
+    name="link_3"
+    origin_xyz="0.0 0.0 0.0"
+    origin_rpy="0.0 0.0 0.0"
+    meshfile="package://rjje_arm/meshes/motor_and_frame.stl"
+    meshscale="1 1 1"
+    mass="157.633"
+    ixx="13.235" ixy="0" ixz="0"
+    iyy="13.235" iyz="0"
+    izz="9.655"
+    color="dark_green"
+    />
+
+  <xacro:m_joint type="revolute"
+    axis_xyz="0 0 1"
+    origin_xyz="0.0 0.0 -5.3" origin_rpy="0.0 0.0 3.14"
+    parent="bracket_2_2" child="link_3"
+    limit_e="1000" limit_l="-1.57" limit_u="1.57" limit_v="0.5" />
+
+  <!-- This is a "fake" link that represents attachment to link 3 -->
+  <xacro:m_fake_link
+    name="bracket_3_1"
+    color="pink"
+    origin_xyz="0.0 0.0 0.75"
+    origin_rpy="0.0 0.0 0.0"
+    length="1.5"
+    radius="0.5"
+    />
+
+  <xacro:m_joint type="fixed"
+    axis_xyz="0 0 1"
+    origin_xyz="4.0 0.0 2.0" origin_rpy="0.0 1.57 0.0"
+    parent="link_3" child="bracket_3_1"
+    limit_e="1000" limit_l="-1.57" limit_u="1.57" limit_v="0.5" />
+
+  <xacro:m_link_mesh
+    name="bracket_3_2"
+    origin_xyz="0.0 0.0 0.0"
+    origin_rpy="0.0 0.0 0.0"
+    meshfile="package://rjje_arm/meshes/thin_bracket.stl"
+    meshscale="1 1 1"
+    mass="157.633"
+    ixx="13.235" ixy="0" ixz="0"
+    iyy="13.235" iyz="0"
+    izz="9.655"
+    color="blue"
+    />
+
+  <xacro:m_joint type="fixed"
+    axis_xyz="0 0 1"
+    origin_xyz="-2.65 0.0 6.75" origin_rpy="-1.57 0.0 1.57"
+    parent="bracket_3_1" child="bracket_3_2"
+    limit_e="1000" limit_l="-1.57" limit_u="1.57" limit_v="0.5" />
+
+  <xacro:m_link_mesh
+    name="link_4"
+    origin_xyz="0.0 0.0 0.0"
+    origin_rpy="0.0 0.0 0.0"
+    meshfile="package://rjje_arm/meshes/motor_and_frame.stl"
+    meshscale="1 1 1"
+    mass="157.633"
+    ixx="13.235" ixy="0" ixz="0"
+    iyy="13.235" iyz="0"
+    izz="9.655"
+    color="dark_green"
+    />
+
+  <xacro:m_joint type="revolute"
+    axis_xyz="0 0 1"
+    origin_xyz="0.0 0.0 -5.3" origin_rpy="0.0 0.0 -1.57"
+    parent="bracket_3_2" child="link_4"
+    limit_e="1000" limit_l="-1.57" limit_u="0.43" limit_v="0.5" />
+
+  <xacro:m_link_mesh
+    name="link_5"
+    origin_xyz="0.0 0.0 0.0"
+    origin_rpy="0.0 0.0 0.0"
+    meshfile="package://rjje_arm/meshes/motor_and_frame.stl"
+    meshscale="1 1 1"
+    mass="157.633"
+    ixx="13.235" ixy="0" ixz="0"
+    iyy="13.235" iyz="0"
+    izz="9.655"
+    color="dark_green"
+    />
+
+  <xacro:m_joint type="fixed"
+    axis_xyz="0 0 1"
+    origin_xyz="0.0 2.4 2.2" origin_rpy="0.0 1.57 0.0"
+    parent="link_4" child="link_5"
+    limit_e="1000" limit_l="-1.57" limit_u="1.57" limit_v="0.5" />
+
+  <xacro:m_link_mesh
+    name="left_gripper"
+    origin_xyz="0.0 0.0 0.0"
+    origin_rpy="0.0 0.0 0.0"
+    meshfile="package://rjje_arm/meshes/left_gripper.stl"
+    meshscale="1 1 1"
+    mass="157.633"
+    ixx="13.235" ixy="0" ixz="0"
+    iyy="13.235" iyz="0"
+    izz="9.655"
+    color="yellow"
+    />
+
+  <xacro:m_joint type="revolute"
+    axis_xyz="0 1 0"
+    origin_xyz="0.0 0.0 5.2" origin_rpy="0.0 0.0 0.0"
+    parent="link_5" child="left_gripper"
+    limit_e="1000" limit_l="-0.61" limit_u="0.0" limit_v="0.5" />
+
+  <xacro:m_link_mesh
+    name="right_gripper"
+    origin_xyz="0.0 0.0 0.0"
+    origin_rpy="0.0 0.0 0.0"
+    meshfile="package://rjje_arm/meshes/right_gripper.stl"
+    meshscale="1 1 1"
+    mass="157.633"
+    ixx="13.235" ixy="0" ixz="0"
+    iyy="13.235" iyz="0"
+    izz="9.655"
+    color="yellow"
+    />
+
+    <!-- TODO -->
+  <!-- <xacro:m_joint  -->
+  <!--   type="revolute" -->
+  <!--   axis_xyz="0 1 0" -->
+  <!--   origin_xyz="0.0 0.0 5.2" origin_rpy="0.0 0.0 0.0" -->
+  <!--   parent="link_5" child="right_gripper" -->
+  <!--   limit_e="1000" limit_l="0.65" limit_u="&#45;0.15" limit_v="0.5" /> -->
+
+  <xacro:m_mimic_joint 
+    joint_parent="link_5"
+    joint_child="left_gripper"
+    type="revolute"
+    axis_xyz="0 1 0"
+    origin_xyz="0.0 0.0 5.2" origin_rpy="0.0 0.0 0.0"
+    parent="link_5" child="right_gripper"
+    limit_e="1000" limit_l="0.61" limit_u="0.0" limit_v="0.5" 
+    multiplier="-1"
+    offset="0"
+    />
+
 
 </robot>

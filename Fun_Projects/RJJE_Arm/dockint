@@ -5,6 +5,7 @@ usage=\
 "Usage: 
     1. dockint build <base_image_tag>  [PATH/URL] 
         - If PATH/URL to \"Dockerfile\"is specified, two images are built: base_image_tag and base_image_tag_img from the provided Dockerfile and context.
+        - E.g., \$(pwd)
         - If PATH/URL is not specified, we assume base_image_tag has been created, and only base_image_tag_img will be built based on the existing base_image_tag
     2. dockint run <base_image_tag> <homedir> <cmd>
         - homedir is the directory on the host machine, to be mounted onto /home/$USER inside container

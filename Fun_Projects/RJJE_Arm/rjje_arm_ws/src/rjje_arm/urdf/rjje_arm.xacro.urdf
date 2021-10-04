@@ -7,6 +7,9 @@
   <material name="blue">
     <color rgba="0 0 0.8 1"/>
   </material>
+  <material name="pink">
+    <color rgba="1.0 0.71 0.76 1.0"/>
+  </material>
   <material name="yellow">
     <color rgba="0.93 0.93 0.02 1.0"/>
   </material>
@@ -96,6 +99,283 @@
     <origin rpy="0 0 0" xyz="0 0 5.3"/>
     <parent link="link1"/>
     <child link="bracket_1"/>
+  </joint>
+  <link name="link_2">
+    <inertial>
+      <mass value="157.633"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="13.235" ixy="0" ixz="0" iyy="13.235" iyz="0" izz="9.655"/>
+    </inertial>
+    <collision>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/motor_and_frame.stl" scale="1 1 1"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/motor_and_frame.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="dark_green"/>
+    </visual>
+  </link>
+  <joint name="bracket_1_link_2" type="fixed">
+    <axis xyz="0 0 1"/>
+    <limit effort="1000" lower="-1.57" upper="1.57" velocity="0.5"/>
+    <origin rpy="1.57 0.0 -1.57" xyz="2.2 0.0 1.4"/>
+    <parent link="bracket_1"/>
+    <child link="link_2"/>
+  </joint>
+  <link name="bracket_2_1">
+    <inertial>
+      <mass value="157.633"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="13.235" ixy="0" ixz="0" iyy="13.235" iyz="0" izz="9.655"/>
+    </inertial>
+    <collision>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/thin_bracket.stl" scale="1 1 1"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/thin_bracket.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+  </link>
+  <joint name="link_2_bracket_2_1" type="revolute">
+    <axis xyz="0 0 1"/>
+    <limit effort="1000" lower="-1.57" upper="1.57" velocity="0.5"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 5.3"/>
+    <parent link="link_2"/>
+    <child link="bracket_2_1"/>
+  </joint>
+  <link name="bracket_2_2">
+    <inertial>
+      <mass value="157.633"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="13.235" ixy="0" ixz="0" iyy="13.235" iyz="0" izz="9.655"/>
+    </inertial>
+    <collision>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/thin_bracket.stl" scale="1 1 1"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/thin_bracket.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+  </link>
+  <joint name="bracket_2_1_bracket_2_2" type="fixed">
+    <axis xyz="0 0 1"/>
+    <limit effort="1000" lower="-1.57" upper="1.57" velocity="0.5"/>
+    <origin rpy="0.0 0.0 3.14" xyz="0.0 10.5 0.0"/>
+    <parent link="bracket_2_1"/>
+    <child link="bracket_2_2"/>
+  </joint>
+  <link name="link_3">
+    <inertial>
+      <mass value="157.633"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="13.235" ixy="0" ixz="0" iyy="13.235" iyz="0" izz="9.655"/>
+    </inertial>
+    <collision>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/motor_and_frame.stl" scale="1 1 1"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/motor_and_frame.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="dark_green"/>
+    </visual>
+  </link>
+  <joint name="bracket_2_2_link_3" type="revolute">
+    <axis xyz="0 0 1"/>
+    <limit effort="1000" lower="-1.57" upper="1.57" velocity="0.5"/>
+    <origin rpy="0.0 0.0 3.14" xyz="0.0 0.0 -5.3"/>
+    <parent link="bracket_2_2"/>
+    <child link="link_3"/>
+  </joint>
+  <link name="bracket_3_1">
+    <visual>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.75"/>
+      <geometry>
+        <cylinder length="1.5" radius="0.5"/>
+      </geometry>
+      <material name="pink"/>
+    </visual>
+    <collision>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.75"/>
+      <geometry>
+        <cylinder length="1.5" radius="0.5"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.03" ixy="0.0" ixz="0.0" iyy="0.03" iyz="0.0" izz="0.03"/>
+    </inertial>
+  </link>
+  <joint name="link_3_bracket_3_1" type="fixed">
+    <axis xyz="0 0 1"/>
+    <limit effort="1000" lower="-1.57" upper="1.57" velocity="0.5"/>
+    <origin rpy="0.0 1.57 0.0" xyz="4.0 0.0 2.0"/>
+    <parent link="link_3"/>
+    <child link="bracket_3_1"/>
+  </joint>
+  <link name="bracket_3_2">
+    <inertial>
+      <mass value="157.633"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="13.235" ixy="0" ixz="0" iyy="13.235" iyz="0" izz="9.655"/>
+    </inertial>
+    <collision>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/thin_bracket.stl" scale="1 1 1"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/thin_bracket.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+  </link>
+  <joint name="bracket_3_1_bracket_3_2" type="fixed">
+    <axis xyz="0 0 1"/>
+    <limit effort="1000" lower="-1.57" upper="1.57" velocity="0.5"/>
+    <origin rpy="-1.57 0.0 1.57" xyz="-2.65 0.0 6.75"/>
+    <parent link="bracket_3_1"/>
+    <child link="bracket_3_2"/>
+  </joint>
+  <link name="link_4">
+    <inertial>
+      <mass value="157.633"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="13.235" ixy="0" ixz="0" iyy="13.235" iyz="0" izz="9.655"/>
+    </inertial>
+    <collision>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/motor_and_frame.stl" scale="1 1 1"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/motor_and_frame.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="dark_green"/>
+    </visual>
+  </link>
+  <joint name="bracket_3_2_link_4" type="revolute">
+    <axis xyz="0 0 1"/>
+    <limit effort="1000" lower="-1.57" upper="0.43" velocity="0.5"/>
+    <origin rpy="0.0 0.0 -1.57" xyz="0.0 0.0 -5.3"/>
+    <parent link="bracket_3_2"/>
+    <child link="link_4"/>
+  </joint>
+  <link name="link_5">
+    <inertial>
+      <mass value="157.633"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="13.235" ixy="0" ixz="0" iyy="13.235" iyz="0" izz="9.655"/>
+    </inertial>
+    <collision>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/motor_and_frame.stl" scale="1 1 1"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/motor_and_frame.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="dark_green"/>
+    </visual>
+  </link>
+  <joint name="link_4_link_5" type="fixed">
+    <axis xyz="0 0 1"/>
+    <limit effort="1000" lower="-1.57" upper="1.57" velocity="0.5"/>
+    <origin rpy="0.0 1.57 0.0" xyz="0.0 2.4 2.2"/>
+    <parent link="link_4"/>
+    <child link="link_5"/>
+  </joint>
+  <link name="left_gripper">
+    <inertial>
+      <mass value="157.633"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="13.235" ixy="0" ixz="0" iyy="13.235" iyz="0" izz="9.655"/>
+    </inertial>
+    <collision>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/left_gripper.stl" scale="1 1 1"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/left_gripper.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="yellow"/>
+    </visual>
+  </link>
+  <joint name="link_5_left_gripper" type="revolute">
+    <axis xyz="0 1 0"/>
+    <limit effort="1000" lower="-0.61" upper="0.0" velocity="0.5"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 5.2"/>
+    <parent link="link_5"/>
+    <child link="left_gripper"/>
+  </joint>
+  <link name="right_gripper">
+    <inertial>
+      <mass value="157.633"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="13.235" ixy="0" ixz="0" iyy="13.235" iyz="0" izz="9.655"/>
+    </inertial>
+    <collision>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/right_gripper.stl" scale="1 1 1"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/right_gripper.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="yellow"/>
+    </visual>
+  </link>
+  <!-- TODO -->
+  <!-- <xacro:m_joint  -->
+  <!--   type="revolute" -->
+  <!--   axis_xyz="0 1 0" -->
+  <!--   origin_xyz="0.0 0.0 5.2" origin_rpy="0.0 0.0 0.0" -->
+  <!--   parent="link_5" child="right_gripper" -->
+  <!--   limit_e="1000" limit_l="0.65" limit_u="&#45;0.15" limit_v="0.5" /> -->
+  <joint name="link_5_right_gripper" type="revolute">
+    <axis xyz="0 1 0"/>
+    <limit effort="1000" lower="0.61" upper="0.0" velocity="0.5"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 5.2"/>
+    <parent link="link_5"/>
+    <child link="right_gripper"/>
+    <mimic joint="link_5_left_gripper" multiplier="-1" offset="0"/>
   </joint>
 </robot>
 

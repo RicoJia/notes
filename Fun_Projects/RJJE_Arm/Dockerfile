@@ -57,6 +57,7 @@ RUN apt update \
     && apt upgrade -y \
     && apt install ros-noetic-joint-state-publisher-gui ; exit 0
 
+# Source the system's setup.bash
 # need /bin/bash to make the container long running
 CMD /bin/bash -c "source /opt/ros/noetic/setup.bash && /bin/bash"
 
