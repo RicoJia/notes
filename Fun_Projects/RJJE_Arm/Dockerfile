@@ -20,12 +20,14 @@ RUN apt update && \
       gdb-multiarch \
       libarmadillo-dev \
       liblapack-dev \
+      libc6:i386 \
       libopenblas-dev \
       libnewlib-arm-none-eabi \
       libv4l-dev \
       libstdc++-arm-none-eabi-newlib \
       minicom \
       openocd \
+      libxcb-xinerama0 \
       python3-pip \
       python3-colcon-common-extensions \
       python3-rosdep \

@@ -96,7 +96,10 @@ function interactive_start {
       # --host is the hostname a container uses for itself. 
       $DOCKER run -it --rm --name "$container" \
          --hostname "$HOST" \
+         --env="DISPLAY" \
+         --env="QT_X11_NO_MITSHM=1" \
          -v $homedir:/home/$USER \
+         -v /tmp/.X11-unix:/tmp/.X11-unix \
          -v /etc/machine-id:/etc/machine-id \
          -v /var/run/dbus:/var/run/dbus \
          --device /dev/dri \

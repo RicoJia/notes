@@ -1,7 +1,29 @@
-## Part 1 STL Files
-1. example - https://create.arduino.cc/projecthub/danny-van-den-heuvel/6dof-robotic-arm-50eab6
+# RJJE Arm
 
-## Mechanical Design
+## Setup
+### Hardware Setup
+1. Motor Testing: [Adafruit_PCA9685](https://learn.adafruit.com/16-channel-pwm-servo-driver?view=all)
+    - channel-board-pinout mapping
+    - servo_min-servo_max mapping. 
+        - [How to calibrate servos](https://create.arduino.cc/projecthub/jeremy-lindsay/calibrating-my-servos-fa27ce)
+
+### Software Setup
+1. Docker Container Setup 
+    1. Pull Docker image: ```docker pull ricojia/rjje_arm``` 
+    2. Build container ```./dockint build ricojia/rjje_arm $(pwd)```
+    3. Start container ```./dockint run ricojia/rjje_arm $(pwd)/rjje_arm_ws bash```
+        - this is an ephemeral container so it doesn't need to be removed 
+2. Build project
+    ```bash
+    catkin_make
+    source devel/setup.bash
+    roscd rjje_arm/
+    cd scripts
+    ./build_and_launch.sh
+    ```
+
+## Development Notes
+### Mechanical Design
 1. Servo Motors
     - The rudder on top of a servo motor has holes that need to be rethreaded. One can use a "tap" for rethreading. 
     - Before installing a servo, the servo's orientation needs to be adjusted to 90 degrees. The orientation of a servo (from 0 to 180 degrees) is shown below
@@ -19,10 +41,13 @@
         - Working near the range limits
         - Motors are cheap so that parts don't work properly.
 
-2. Modelling 
-    - First, obtain the STL files of major parts created by Rico Jia. Note that these STL files were created using Onshape, and some not-important details are omitted. 
-    - When assembling STL models into a full 3D model of the robot, special attention should be paid to: 
-        1. In general, ROS follows multiple ways to express rrotation with angles. [See here](https://www.ros.org/reps/rep-0103.html). In URDF, it's **Z-Y-X** Euler angle
+2. 3D CAD Modelling
+    1. STL file example - https://create.arduino.cc/projecthub/danny-van-den-heuvel/6dof-robotic-arm-50eab6
+    2. Modelling 
+        - First, obtain the STL files of major parts created by Rico Jia. Note that these STL files were created using Onshape, and some not-important details are omitted. 
+        - When assembling STL models into a full 3D model of the robot, special attention should be paid to: 
+            1. In general, ROS follows multiple ways to express rrotation with angles. [See here](https://www.ros.org/reps/rep-0103.html). In URDF, it's **Z-Y-X** Euler angle
+
 ## Objectives
 - Build Docker and Tools 
 - STL and Collada files 
