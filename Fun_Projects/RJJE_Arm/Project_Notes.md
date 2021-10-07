@@ -37,9 +37,9 @@
     - Servos take PWM signals as inputs. The output torque rating goes higher if the input voltage is higher. 
 
     - **If you have a servo that vibrates, here are some possible reasons: ** [Source](https://electronicguidebook.com/reasons-why-a-servo-motor-vibrates/)
-        -  Power is instable, or not adequate. So get a larger power supply, or power cable
+        - Power is instable, or not adequate. So get a larger power supply, or power cable
         - Working near the range limits
-        - Motors are cheap so that parts don't work properly.
+        - Motors are cheap so that parts don't work properly. **In my case, some motors did work better than others. I think that's because the good ones have better correspondence to the internal PID control loop**
 
 2. 3D CAD Modelling
     1. STL file example - https://create.arduino.cc/projecthub/danny-van-den-heuvel/6dof-robotic-arm-50eab6
