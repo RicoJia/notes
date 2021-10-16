@@ -246,14 +246,6 @@
     color="yellow"
     />
 
-    <!-- TODO -->
-  <!-- <xacro:m_joint  -->
-  <!--   type="revolute" -->
-  <!--   axis_xyz="0 1 0" -->
-  <!--   origin_xyz="0.0 0.0 5.2" origin_rpy="0.0 0.0 0.0" -->
-  <!--   parent="link_5" child="right_gripper" -->
-  <!--   limit_e="1000" limit_l="0.65" limit_u="&#45;0.15" limit_v="0.5" /> -->
-
   <xacro:m_mimic_joint 
     joint_parent="link_5"
     joint_child="left_gripper"
@@ -265,6 +257,5 @@
     multiplier="-1"
     offset="0"
     />
-
 
 </robot>

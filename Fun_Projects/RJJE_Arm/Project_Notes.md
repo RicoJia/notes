@@ -3,9 +3,15 @@
 ## Setup
 ### Hardware Setup
 1. Motor Testing: [Adafruit_PCA9685](https://learn.adafruit.com/16-channel-pwm-servo-driver?view=all)
+    - Electrical: 
+        - Jack plug for external power 
+        - Vcc is positive for signal, V+ is the positive supply. 
+    - switching directions will cause a lot of noise on the supply. 
+    - may need a cap, like 470 uF for many motors.  
     - channel-board-pinout mapping
     - servo_min-servo_max mapping. 
         - [How to calibrate servos](https://create.arduino.cc/projecthub/jeremy-lindsay/calibrating-my-servos-fa27ce)
+    - [Raspberry Pi I2C config](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c). I2C Tool can scan I2C devices. Or SMBus devices (protocal based on I2C, a two wire communication). Here's [a video](https://www.youtube.com/watch?v=1sSmTWue2Sw&t=2281s&ab_channel=HomeBrewRoboticsClub) on how to set this up, too. 
 
 ### Software Setup
 1. Docker Container Setup 

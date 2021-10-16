@@ -7,13 +7,14 @@ usage=\
         - If PATH/URL to \"Dockerfile\"is specified, two images are built: base_image_tag and base_image_tag_img from the provided Dockerfile and context.
         - E.g., \$(pwd)
         - If PATH/URL is not specified, we assume base_image_tag has been created, and only base_image_tag_img will be built based on the existing base_image_tag
-    2. dockint run <base_image_tag> <homedir> <cmd>
+    2. dockint run <base_image_tag> <homedir> <cmd> <root>
         - homedir is the directory on the host machine, to be mounted onto /home/$USER inside container
         - cmd can be bash if bash is going to run
+        - root: if empty, then base_image_tag_img will be run (user privilege). if "root", then base_image_tag will be run as root.
     3. dockint stop <base_image_tag>
         - stop a container with tag <base_image_tag>_img
-    4. dockint join <base_image_tag>
-        - join the running container <base_image_tag>_img
+    4. dockint join <CONTAINER_NAME>
+        - join the running container. Note CONTAINER_NAME should be the part of \"CONTAINER_NAME_dockint\"
 "
 
 dockerfile=\
@@ -77,10 +78,16 @@ function docker_build_image {
 
 #home directory to mount (where applicable)
 homedir=$3
+run_as_root=$4
 function interactive_start {
     # check if homedir exists
     if [ -z $homedir ]; then
         echo "The directory \"$homedir\", to be mounted in the container at /home/$USER, does not exist. Please provide a valid directory to be mounted "
+    fi
+
+    if [ run_as_root=="root" ]; then 
+      new_image_tag=$base_image_tag
+      echo "$new_image_tag"
     fi
 
     # check if the base_image_tag_img has been created and if not create one

@@ -20,7 +20,7 @@ RUN apt update && \
       gdb-multiarch \
       libarmadillo-dev \
       liblapack-dev \
-      libc6:i386 \
+      # libc6:i386 \
       libopenblas-dev \
       libnewlib-arm-none-eabi \
       libv4l-dev \
@@ -32,6 +32,8 @@ RUN apt update && \
       python3-colcon-common-extensions \
       python3-rosdep \
     ros-noetic-camera-info-manager \
+      ros-noetic-gazebo-ros-pkgs \
+      ros-noetic-gazebo-ros-control \
       ros-noetic-catch-ros \
       ros-noetic-diagnostic-updater \
       ros-noetic-joint-state-controller \
@@ -48,6 +50,8 @@ RUN apt update && \
       ros-noetic-xacro \
     ros-noetic-moveit-simple-controller-manager \
     ros-noetic-moveit \
+    ros-noetic-moveit-resources-prbt-moveit-config \
+    ros-noetic-pilz-industrial-motion-planner \
       v4l-utils \
       vim && \
     apt clean \

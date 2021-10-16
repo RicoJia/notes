@@ -362,13 +362,6 @@
       <material name="yellow"/>
     </visual>
   </link>
-  <!-- TODO -->
-  <!-- <xacro:m_joint  -->
-  <!--   type="revolute" -->
-  <!--   axis_xyz="0 1 0" -->
-  <!--   origin_xyz="0.0 0.0 5.2" origin_rpy="0.0 0.0 0.0" -->
-  <!--   parent="link_5" child="right_gripper" -->
-  <!--   limit_e="1000" limit_l="0.65" limit_u="&#45;0.15" limit_v="0.5" /> -->
   <joint name="link_5_right_gripper" type="revolute">
     <axis xyz="0 1 0"/>
     <limit effort="1000" lower="0.61" upper="0.0" velocity="0.5"/>
