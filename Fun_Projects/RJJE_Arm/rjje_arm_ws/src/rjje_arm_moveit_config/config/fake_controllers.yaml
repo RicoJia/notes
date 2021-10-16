@@ -1,0 +1,15 @@
+controller_list:
+  - name: fake_rjje_arm_controller
+    type: $(arg execution_type)
+    joints:
+      - link1_bracket_1
+      - link_2_bracket_2_1
+      - bracket_2_2_link_3
+      - bracket_3_2_link_4
+  - name: fake_gripper_controller
+    type: $(arg execution_type)
+    joints:
+      - link_5_left_gripper
+initial:  # Define initial robot poses.
+  - group: rjje_arm
+    pose: neutral
