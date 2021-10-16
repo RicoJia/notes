@@ -67,4 +67,8 @@ RUN apt update \
 # need /bin/bash to make the container long running
 CMD /bin/bash -c "source /opt/ros/noetic/setup.bash && /bin/bash"
 
-
+# nvidia-container-runtime
+ENV NVIDIA_VISIBLE_DEVICES \
+    ${NVIDIA_VISIBLE_DEVICES:-all}
+ENV NVIDIA_DRIVER_CAPABILITIES \
+    ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}graphics
