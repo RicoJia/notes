@@ -39,6 +39,9 @@
       <material name="yellow"/>
     </visual>
   </link>
+  <gazebo reference="base_link">
+    <material>Gazebo/Yellow</material>
+  </gazebo>
   <joint name="world_base_link" type="fixed">
     <axis xyz="0 0 1"/>
     <limit effort="1000" lower="0" upper="0.5" velocity="0.5"/>
@@ -95,7 +98,7 @@
   </link>
   <joint name="link1_bracket_1" type="revolute">
     <axis xyz="0 0 1"/>
-    <limit effort="1000" lower="-1.57" upper="1.57" velocity="0.5"/>
+    <limit effort="1000" lower="-1.57" upper="1.57" velocity="1.5"/>
     <origin rpy="0 0 0" xyz="0 0 5.3"/>
     <parent link="link1"/>
     <child link="bracket_1"/>
@@ -149,7 +152,7 @@
   </link>
   <joint name="link_2_bracket_2_1" type="revolute">
     <axis xyz="0 0 1"/>
-    <limit effort="1000" lower="-1.57" upper="1.57" velocity="0.5"/>
+    <limit effort="1000" lower="-1.57" upper="1.57" velocity="1.5"/>
     <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 5.3"/>
     <parent link="link_2"/>
     <child link="bracket_2_1"/>
@@ -203,7 +206,7 @@
   </link>
   <joint name="bracket_2_2_link_3" type="revolute">
     <axis xyz="0 0 1"/>
-    <limit effort="1000" lower="-1.57" upper="1.57" velocity="0.5"/>
+    <limit effort="1000" lower="-1.57" upper="1.57" velocity="1.5"/>
     <origin rpy="0.0 0.0 3.14" xyz="0.0 0.0 -5.3"/>
     <parent link="bracket_2_2"/>
     <child link="link_3"/>
@@ -283,7 +286,7 @@
   </link>
   <joint name="bracket_3_2_link_4" type="revolute">
     <axis xyz="0 0 1"/>
-    <limit effort="1000" lower="-1.57" upper="0.43" velocity="0.5"/>
+    <limit effort="1000" lower="-1.57" upper="0.43" velocity="1.5"/>
     <origin rpy="0.0 0.0 -1.57" xyz="0.0 0.0 -5.3"/>
     <parent link="bracket_3_2"/>
     <child link="link_4"/>
@@ -315,6 +318,33 @@
     <parent link="link_4"/>
     <child link="link_5"/>
   </joint>
+  <link name="link_6">
+    <inertial>
+      <mass value="157.633"/>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <inertia ixx="13.235" ixy="0" ixz="0" iyy="13.235" iyz="0" izz="9.655"/>
+    </inertial>
+    <collision>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/motor_and_frame.stl" scale="0 0 0"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://rjje_arm/meshes/motor_and_frame.stl" scale="0 0 0"/>
+      </geometry>
+      <material name="dark_green"/>
+    </visual>
+  </link>
+  <joint name="link_5_link_6" type="revolute">
+    <axis xyz="0 0 1"/>
+    <limit effort="1000" lower="-1.57" upper="1.57" velocity="1.5"/>
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    <parent link="link_5"/>
+    <child link="link_6"/>
+  </joint>
   <link name="left_gripper">
     <inertial>
       <mass value="157.633"/>
@@ -335,11 +365,11 @@
       <material name="yellow"/>
     </visual>
   </link>
-  <joint name="link_5_left_gripper" type="revolute">
+  <joint name="link_6_left_gripper" type="revolute">
     <axis xyz="0 1 0"/>
-    <limit effort="1000" lower="-0.61" upper="0.0" velocity="0.5"/>
+    <limit effort="1000" lower="-0.61" upper="0.0" velocity="1.5"/>
     <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 5.2"/>
-    <parent link="link_5"/>
+    <parent link="link_6"/>
     <child link="left_gripper"/>
   </joint>
   <link name="right_gripper">
@@ -362,13 +392,13 @@
       <material name="yellow"/>
     </visual>
   </link>
-  <joint name="link_5_right_gripper" type="revolute">
+  <joint name="link_6_right_gripper" type="revolute">
     <axis xyz="0 1 0"/>
-    <limit effort="1000" lower="0.61" upper="0.0" velocity="0.5"/>
+    <limit effort="1000" lower="0.61" upper="0.0" velocity="1.5"/>
     <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 5.2"/>
-    <parent link="link_5"/>
+    <parent link="link_6"/>
     <child link="right_gripper"/>
-    <mimic joint="link_5_left_gripper" multiplier="-1" offset="0"/>
+    <mimic joint="link_6_left_gripper" multiplier="-1" offset="0"/>
   </joint>
 </robot>
 

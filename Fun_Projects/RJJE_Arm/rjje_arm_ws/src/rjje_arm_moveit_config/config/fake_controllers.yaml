@@ -6,10 +6,11 @@ controller_list:
       - link_2_bracket_2_1
       - bracket_2_2_link_3
       - bracket_3_2_link_4
+      - link_5_link_6
   - name: fake_gripper_controller
     type: $(arg execution_type)
     joints:
-      - link_5_left_gripper
+      - link_6_left_gripper
 initial:  # Define initial robot poses.
   - group: rjje_arm
     pose: neutral

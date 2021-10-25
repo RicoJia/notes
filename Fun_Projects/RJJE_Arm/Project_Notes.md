@@ -2,6 +2,7 @@
 
 ## Setup
 ### Hardware Setup
+
 1. Motor Testing: [Adafruit_PCA9685](https://learn.adafruit.com/16-channel-pwm-servo-driver?view=all)
     - Electrical: 
         - Jack plug for external power 
@@ -11,7 +12,16 @@
     - channel-board-pinout mapping
     - servo_min-servo_max mapping. 
         - [How to calibrate servos](https://create.arduino.cc/projecthub/jeremy-lindsay/calibrating-my-servos-fa27ce)
-    - [Raspberry Pi I2C config](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c). I2C Tool can scan I2C devices. Or SMBus devices (protocal based on I2C, a two wire communication). Here's [a video](https://www.youtube.com/watch?v=1sSmTWue2Sw&t=2281s&ab_channel=HomeBrewRoboticsClub) on how to set this up, too. 
+
+2. Servo Motor Control: There are (at least) two ways to do this: Raspberry Pi, or Arduino (nano, uno, etc.)
+    1. [Raspberry Pi I2C config](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c). 
+    2. [Arduino setup](https://wiki.keyestudio.com/Ks0173_keyestudio_Nano_ch340)
+        - Power: 1. VIN 7v-12v 2. Mini-B USB
+        - In Arduino IDE, select NANO as the board
+        - Bootloader: choose ATMega328P (old bootloader)
+        - Select USB port
+
+    3. I2C Tool can scan I2C devices. Or SMBus devices (protocal based on I2C, a two wire communication). 
 
 ### Software Setup
 1. Docker Container Setup 
@@ -19,7 +29,14 @@
     2. Build container ```./dockint build ricojia/rjje_arm $(pwd)```
     3. Start container ```./dockint run ricojia/rjje_arm $(pwd)/rjje_arm_ws bash```
         - this is an ephemeral container so it doesn't need to be removed 
-2. Build project
+
+2. Install adafruit library 
+    - Open Arduino IDE, select ```rjje_arm/arduino_files/servo_control/``` as sketch folder (under file->preferences)
+    - follow [this link](https://learn.adafruit.com/16-channel-pwm-servo-driver?view=all#install-adafruit-pca9685-library-1825143-2)
+
+3. Install rosserial_arduino for arduino work space. [Follow this link](http://wiki.ros.org/rosserial_arduino/Tutorials/Arduino%20IDE%20Setup)
+
+4. Build project
     ```bash
     catkin_make
     source devel/setup.bash

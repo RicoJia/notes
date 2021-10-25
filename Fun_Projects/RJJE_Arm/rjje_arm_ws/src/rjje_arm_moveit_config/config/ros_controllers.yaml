@@ -13,7 +13,8 @@ hardware_interface:
     - link_2_bracket_2_1
     - bracket_2_2_link_3
     - bracket_3_2_link_4
-    - link_5_left_gripper
+    - link_5_link_6
+    - link_6_left_gripper
   sim_control_mode: 1  # 0: position, 1: velocity
 # Publish all joint states
 # Creates the /joint_states topic necessary in ROS

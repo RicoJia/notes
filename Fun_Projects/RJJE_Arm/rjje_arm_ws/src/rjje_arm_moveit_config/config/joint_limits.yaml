@@ -28,12 +28,17 @@ joint_limits:
     max_velocity: 0.5
     has_acceleration_limits: false
     max_acceleration: 0
-  link_5_left_gripper:
+  link_5_link_6:
     has_velocity_limits: true
     max_velocity: 0.5
     has_acceleration_limits: false
     max_acceleration: 0
-  link_5_right_gripper:
+  link_6_left_gripper:
+    has_velocity_limits: true
+    max_velocity: 0.5
+    has_acceleration_limits: false
+    max_acceleration: 0
+  link_6_right_gripper:
     has_velocity_limits: true
     max_velocity: 0.5
     has_acceleration_limits: false

@@ -52,6 +52,7 @@ RUN apt update && \
     ros-noetic-moveit \
     ros-noetic-moveit-resources-prbt-moveit-config \
     ros-noetic-pilz-industrial-motion-planner \
+    ros-noetic-rosserial \ 
       v4l-utils \
       vim && \
     apt clean \
