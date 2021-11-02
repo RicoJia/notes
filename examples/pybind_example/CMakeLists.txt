@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(example)
 
-find_package(PythonInterp REQUIRED)
+find_package(PythonInterp 3.6 REQUIRED)
 include_directories(${PYTHON_INCLUDE_DIRS})
 
+set(CMAKE_CXX_STANDARD 14)        # works for 3.1!!
 add_subdirectory(pybind11)
 pybind11_add_module(example example.cpp)
 
