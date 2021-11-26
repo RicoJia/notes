@@ -177,6 +177,8 @@ int main(){
         cout<<nn.state_<<endl;
     }
 
+    for(auto [i, thing]: enumerate(min_neighbors)){}
+
 }
 
 
