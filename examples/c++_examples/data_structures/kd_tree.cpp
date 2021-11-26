@@ -1,3 +1,4 @@
+// KD tree: time complexity o(log(n)) for insert, remove, lookup 
 #include <numeric>
 #include <algorithm>
 #include <iostream>

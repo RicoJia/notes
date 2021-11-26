@@ -19,9 +19,18 @@ std::vector<double> generate_random_num_gaussian(const double& mean, const doubl
   return ret; 
 }  
 
+void generate_uniform_dist_int(){
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist6(1,6); // distribution in range [1, 6]
+    // std::uniform_real_distribution for float
+    // std::uniform_real_distribution<double> x(lower_bound_corner_(0), upper_bound_corner_(0));
+    std::cout << dist6(rng) << std::endl;
+}
 int main(){
-  for (int i = 0; i < 10; ++i){
-    auto ran_vec = generate_random_num_gaussian(0.0, 0.1, 1); 
-    for (auto i : ran_vec) cout<<i<<" "<<endl;
-  }
+  // for (int i = 0; i < 10; ++i){
+  //   auto ran_vec = generate_random_num_gaussian(0.0, 0.1, 1); 
+  //   for (auto i : ran_vec) cout<<i<<" "<<endl;
+  // }
+  generate_uniform_dist_int();
 }
