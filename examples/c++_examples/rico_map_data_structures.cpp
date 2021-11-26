@@ -4,6 +4,7 @@
 #include <vector>
 #include <Eigen/Dense>
 #include <memory>
+#include <cmath>
 
 using namespace Eigen; 
 
@@ -15,18 +16,25 @@ struct Node {
     Node* parent_ = nullptr; 
 };
 
+// Find the shortest distance from target to the boounding box defined by upper_lims, and lower_lims
 double best_possible_dist(const Eigen::VectorXd& target, const Eigen::VectorXd& upper_lims, const Eigen::VectorXd& lower_lims){
-    VectorXd diff = Eigen::VectorXd::Zero(target.size());
-    auto origin = diff; 
-    for (unsigned int i = 0; i < target.size(); ++i) {
-        if(lower_lims(i) < target(i) && target(i) < upper_lims(i)){
-            diff(i) = 0.0; 
+    double dist;
+    for (unsigned int dim = 0; dim < upper_lims.size(); ++dim) {
+        double closest_bound_current_dim; 
+        if (lower_lims(dim) < target(dim) && target(dim) < upper_lims(dim)){
+            // bounding box in the current dimension encloses the target
+            closest_bound_current_dim = 0; 
         }
         else{
-            diff(i) = std::min(std::abs(lower_lims(i) - target(i)), std::abs((upper_lims(i) - target(i))));
+           // bounding box in the current dimension is outside of the target: just care about which bound is closer to the target
+           closest_bound_current_dim = std::min(std::abs(lower_lims(dim) - target(dim)), std::abs(upper_lims(dim) - target(dim)));
         }
+
+        dist += std::pow(closest_bound_current_dim,2); 
     }
-    return (diff - origin).norm(); 
+    
+    dist = std::sqrt(dist); 
+    return dist; 
 }
 
 class KdTree{
@@ -111,17 +119,18 @@ class KdTree{
           } 
       }
 
-      //          find_nearest_neighbor(point, ptr_best, root_ptr, 0, VectorXd::Constant(sz, std::numeric_limits<double>::max()), VectorXd::Constant(sz, std::numeric_limits<double>::min()));
 
+      // Update the bounding box for subtrees with the current nodes dimension. 
       void find_nearest_neighbor(const Node& point, KdTreeNode** ptr_best, KdTreeNode* node, int dim, const Eigen::VectorXd& upper_lims, const Eigen::VectorXd& lower_lims) const {
           if (node == nullptr) return;
           // So far, the best distance to the point 
           double best_dist = ((*ptr_best)->point_->state_ - point.state_).norm();
           // predict the best possible distance from the current point
           double best_possible_distance = best_possible_dist(point.state_, upper_lims,lower_lims);
-
           if (best_possible_distance > best_dist) return; 
-          if ((point.state_ - node->point_->state_).norm() < best_dist){
+
+          // If the current node to the point is better than best_dist
+          if ((point.state_ - node->point_->state_).norm() <= best_dist){
               *ptr_best = node; 
           }
 
@@ -135,10 +144,8 @@ class KdTree{
           right_lower_lims(dim) = node->point_->state_(dim); 
           left_upper_lims(dim) = node->point_->state_(dim); 
 
-          if(point.state_(dim) < node->point_->state_(dim)){
-              find_nearest_neighbor(point, ptr_best, (node->left_).get(), next_dim, left_upper_lims, left_lower_lims);
-              find_nearest_neighbor(point, ptr_best, (node->right_).get(), next_dim, right_upper_lims, right_lower_lims);
-          }
+          find_nearest_neighbor(point, ptr_best, (node->left_).get(), next_dim, left_upper_lims, left_lower_lims);
+          find_nearest_neighbor(point, ptr_best, (node->right_).get(), next_dim, right_upper_lims, right_lower_lims);
 
       }
 };
