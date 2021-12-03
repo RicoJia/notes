@@ -14,8 +14,13 @@
  *          - static lib: copied to the binary
  *          - dynamic lib, by default. Just the name in the binary.
  */
+
+
+#include <stdio.h>
+
 int main(int argc, char *argv[])
 {
-    
+    setbuf(stdout, NULL); // print to stdout  without buffering, stdio
+    printf("%s", "STM32 is great");
     return 0;
 }
