@@ -13,14 +13,29 @@
  *      2. Link function calls with definitions, including theiry libs.
  *          - static lib: copied to the binary
  *          - dynamic lib, by default. Just the name in the binary.
+ *  5. to run this program: 
+ *      gcc inter_process_c.c && ./a.out
  */
 
 
 #include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
+
+void h1(int st){
+    printf("%s", ____PRETTY_FUNCTION__); 
+}
+void h2(int st){
+    printf("%s", __PRETTY_FUNCTION__);
+}
 
 int main(int argc, char *argv[])
 {
+    signal(SIGUSR1, h1); 
+    signal(SIGUSR2, h2); 
     setbuf(stdout, NULL); // print to stdout  without buffering, stdio
     printf("%s", "STM32 is great");
+    // wakes up when you receive a signal 
+    pause(); 
     return 0;
 }
