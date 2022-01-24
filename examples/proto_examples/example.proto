@@ -1,0 +1,6 @@
+syntax = "proto2";
+
+message Pen{
+    required string first_name=1;
+    required string asdf =2; 
+}

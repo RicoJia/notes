@@ -10,6 +10,10 @@ public:
   {
     return value;
   }
+
+  int baz(){
+    return 1; 
+  }
 };
 
 #include <memory>
