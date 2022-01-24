@@ -1,5 +1,6 @@
 #include <memory>
 #include <iostream>
+using std::cout; using std::endl; 
 
 struct Foo{
   Foo(){
@@ -7,11 +8,14 @@ struct Foo{
   }
 };
 
+struct Bar{
+  int i_;
+};
+
 int main()
 {
-  std::unique_ptr<Foo> i; 
-  {
-  }
+  auto ptr = std::unique_ptr<Bar>(new Bar{2}); 
+  cout<<ptr->i_<<endl;
   
 }
 
