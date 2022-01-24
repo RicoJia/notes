@@ -53,6 +53,15 @@ void pybind_test(){
   PickleConverter pc; // Note python modules are singletons, GIL must be required. 
   single_threaded_test(pc, "hee.txt"); 
 
+              // throw std::runtime_error("hehe");// call decoder here since all packets should go to the decoder to update its state.
+                // allocating memory to ptr
+
+  std::vector<int> vec(100, 0); 
+  int cnt = 0; 
+  for (unsigned int i = 0; i < 110; ++i) {
+      std::cout << cnt << std::endl;
+      vec[cnt++] = 3;
+  }
 }
 
 
