@@ -20,8 +20,13 @@ constexpr auto enumerate(T&& iterable){
         }
 
         auto operator *(){
-            if (std::is_lvalue_reference<decltype(std::declval<int>())>::value) cout<<"is lvalue"<<endl;
-            else cout<<"not lvalue"<<endl;
+            // std::declval returs an "added rvalue reference": https://www.cplusplus.com/reference/type_traits/add_rvalue_reference/
+            // Also, there's reference collapsing 
+            // here, if we pass in vector, then it's passed in as lvalue ref &
+            // that's why std::declval<T>() returns lvalue ref
+            if (std::is_lvalue_reference<decltype(std::declval<T>())>::value) 
+                cout<<"is lvalue ref"<<endl;
+            else cout<<"not lvalue ref"<<endl;
 
             return std::tie(i, *iter);
         }
@@ -44,12 +49,12 @@ int main()
 
     std::vector<int> vec {1,2,3,4};
     for (const auto&[index, item]: enumerate(vec)){
-        item = 100; 
+        // item = 100; 
     }
     
-    for(auto i: vec){
-        cout<<i<<endl;
-    }
+    // for(auto i: vec){
+    //     cout<<i<<endl;
+    // }
 
     // foo(vec);
 }
