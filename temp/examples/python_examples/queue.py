@@ -8,3 +8,4 @@ q.append('c')
 q.append('d')
 print(q)    #see only b, c, d
 print(q.popleft())  #see b
+print(q[-1])
