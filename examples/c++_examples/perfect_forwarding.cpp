@@ -4,7 +4,7 @@ using std::cout; using std::endl;
 #include <type_traits>
 #include <vector>
 
-// 1. type deduction
+// 1. type deduction =========================
 template <typename T>
 void f(T&& param){
   foo(std::forward<T> (param));
@@ -15,10 +15,10 @@ void foo(const std::vector<int>& v){
 }
 void type_deduction(){
         // Error: does not get type-deducted for templated functions.
-        f({1}); 
+        // f({1}); 
 }
 
-// 2. rvalue ref functions
+// 2. rvalue ref functions =========================
 class Foo{
     public:
         Foo() = default;		//default constructor won't be generated automatically
@@ -49,6 +49,28 @@ void rvalue_ref_func(){
     //r_foo is move-constructed
     auto r_foo = Bar().getFoo();
 }
+
+// Function overloading with func pointers, and with template functions =========================
+// int pf(int) is actually function pointer
+void f2 (int pf(int)){}   //function trying to forward a function pointer. 
+int processVal(int){return 0;}; 
+int processVal(int, int){return 0;};      // We have two overloaded functions
+
+//Tricky
+template <typename T>
+int someFunc(T param){
+    return 0;
+}
+
+using FuncType = int (*)(int);
+
+void forward_func_ptr_works(){
+    f2(processVal);    // fine, because function signature is clear
+    // f2(someFunc);      //Error: You need to specify the signature of someFunc!
+    f2(static_cast<FuncType>(someFunc));     
+}
+
+
 
 int main()
 {
