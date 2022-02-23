@@ -33,3 +33,6 @@ with ZipFile(file_name, 'r') as f:
         print(f.read(info.filename))
     f.close()
 
+
+# print file name
+print(__file__)
