@@ -26,6 +26,9 @@ double dist(const Point& p1, const Point& p2){
     return sqrt(std::accumulate(diff.begin(), diff.end(), 0.0, [](double ss, double i){return ss + i*i;}));
 }
 
+/**
+* @brief: Find min distance from edges of a bounding box to a point
+*/
 double best_possible_dist(const Point& target, const Point& upper_lims, const Point& lower_lims){
     auto diff = Point(target.size(), 0.0);
     auto origin = diff; 

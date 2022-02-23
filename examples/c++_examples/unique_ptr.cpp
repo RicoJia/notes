@@ -34,11 +34,22 @@ void test_fnc_ptr(void (*ptr)()){
    ptr(); 
 }
 
+void test_uniq_ptr_ctor(){
+    auto ptr1 = std::unique_ptr<int>(new int(1));
+    if (ptr1) cout<<"ptr1"<<endl;
+    {
+        // freed ptr1's resource, though after this ptr1 still not null
+        auto ptr2 = std::unique_ptr<int>(ptr1.get());
+    }
+    if (ptr1) cout<<*ptr1<<endl;
+}
+
 int main()
 {
     // test_initialization();
     // test_raw_ptr(); 
-    test_fnc_ptr(test_uniq_ptr);
+    // test_fnc_ptr(test_uniq_ptr);
+    test_uniq_ptr_ctor();
 }
 
 

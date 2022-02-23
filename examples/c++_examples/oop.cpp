@@ -1,98 +1,80 @@
 #include <iostream>
-#include
 using namespace std;
 
-class classroom
-{public: 
- virtual void display() = 0; 
-};
-
-class student : public classroom {
-	c
+// Test 1, conversion constructor (ctor can take 1 arg)
+class oop
+{
 public:
-  const string name;
-  const int score;
-  const string foo = "superclass foo";
-  student(int i, string nom)
-      : name(nom), score(i) // This is the constructor function.
-  {
-    cout << "name: " << name << " score: " << score << endl;
-  }
-  void display() { cout << "I am superclass" << endl; }
-  int haha;
-
+    // this is actually a conversion ctor. Can convert because we can pass in 1 arg
+    oop (int i = 3, int j = 4.0): i_(i), j_(j){}
+    bool operator == (const oop& rhs){ return (rhs.i_ == i_) & (rhs.j_ == j_); }
 private:
-  int num;
+    int i_; 
+    int j_;
 };
 
-// I'm funcking student
-class student_info:public student
-{public:
- const int student_num; 			// you have to declare public here. otherwise, it is by default private
- const string foo = "subclass foo";
-student_info(string nombre, int numero, int cantidad):student_num(numero),student(cantidad, nombre)
-{cout<<"student number: "<<student_num<<endl;
-}
-
-student_info(int numero, int cantidad):student_num(numero), student (cantidad,"Unknown")
-	{
-	cout<<"student number: "<<student_num<<endl;
-	  }
-student_info():student_num(0),student(0,"unknown"){cout<<"student number: "<<student_num<<endl;}
- void display()
-{cout<<"I AM Derived class"<<endl;}
-};           // don't forget ; here
+// Test 1, conversion constructor (ctor can take 1 arg)
+class oop_explicit
+{
+public:
+    // this is actually a conversion ctor. Can convert because we can pass in 1 arg
+    explicit oop_explicit (int i = 3, int j = 4.0): i_(i), j_(j){}
+    bool operator == (const oop_explicit& rhs){ return (rhs.i_ == i_) & (rhs.j_ == j_); }
+private:
+    int i_; 
+    int j_;
+};
 
 int main()
 {
-/*  student_info Rico_info("Rico",45173135,99);
- //student Rico (70,"Rico");
- Rico_info.display();		// accessing parent's disp(). USE THE RIGHT NAME HERE, RICO_INFO
- student_info unknown_info(111111,50);
- unknown_info.display();  */
+    oop o;
+    // this is real conversion. Will not happen if ctor is explicit
+    cout<<(o == 1)<<endl;
 
-student_info stu[3] = {student_info("Rico",45173135,99),student_info(1212111,70)};
-stu[2].display();
-student *ptr = stu+2;
-ptr->display();
-//cout<<stu[2].foo<<endl;
- }
-
-/*
-class fibonacci
-{public: 
-	int num;
-	static fibonacci cal(fibonacci a, fibonacci b)
-		{fibonacci c;
-		  c.num = a.num+b.num;}
-	~fibonacci()					//don't forget the brackets!!
-		{cout<<"bye fibonacci"<<endl;}
-} a,b;
-
-int main()
-{a.num = 10;
-b.num= 11;
-fibonacci c = fibonacci::cal(a,b);        // passing an object to a function, then get an object back. 
-cout<<c.num; 
-}
-*/
-
-/*
-struct student
-{
-  string name;
-  int score;
-}; 
-
-void foo(struct student *n)
-{
- cout<<n->name; 
+    oop_explicit oe; 
+    // Explicit prohibits this
+    // oe = 4;
+    oe = (oop_explicit)4;
 }
 
-int main()
-{
-  struct student Rico = {"Rico",99};
-  foo(&Rico);
-}
-*/
+// Test - cp ctor synthesized, , explicit
+// class regex{
+//     public:
+//         regex(char*){};  // direct initialization permits this
+// }; 
+//
+// int main()
+// {
+//   regex rx = nullptr;    //won't compile, as = is copy initialization
+// }
 
+
+
+// // Test 3 - enclosed class is actually a friend class.
+// class Enclosing {
+//     private:
+//        int x = 30;
+//
+//     public:
+//        class Nested {
+//            public:
+//               void nested_func(Enclosing *e) {
+//                 cout<<e->x;  // works fine: nested class can access
+//                              // private members of Enclosing class, if placed in
+//                              // either private or public
+//               }
+//        }; 
+//
+//        Nested n_;   // Nested must have been declared
+//        void func(){
+//            n_.nested_func(this); 
+//        }
+//
+// }; // declaration Enclosing class ends here
+//
+// int main()
+// {
+//     Enclosing e; 
+//     e.func();
+//     
+// }
