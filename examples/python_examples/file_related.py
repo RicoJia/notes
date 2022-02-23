@@ -53,14 +53,13 @@ DOC = f"""
     - Assume src_dir contains newer spoofs of the exact same store geometry as dst_dir
     - If the two directories exist, we will append 'requests/GET/snapshot' from each spoof in src_dir, to each spoof in dst_dir
     """
+# - add positional args, so you can do python file.py SRC DIR, no need for --src_dir
+parser.add_argument("src_dir", type=str, default=None)
+parser.add_argument("dst_dir", type=str, default=None)
 # will show a "flat" version of the DOC, with the usage already
 parser.add_argument('-h', '--help', action='help', default=argparse.SUPPRESS,
                     help=DOC)
 args = parser.parse_args()
-
-# - add positional args, so you can do python file.py SRC DIR, no need for --src_dir
-# parser.add_argument("src_dir", type=str, default=None)
-# parser.add_argument("dst_dir", type=str, default=None)
 
 
 # - exclusive argparse
