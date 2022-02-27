@@ -7,6 +7,7 @@ add_compile_options(-std=c++14)
 find_package(catkin REQUIRED COMPONENTS 
     roscpp  # need this for everything
     geometry_msgs
+    tf2
     )
 
 # catkin_package is what your packages in find_package() depends on (e.g., boost)
@@ -23,4 +24,8 @@ add_executable(${PROJECT_NAME}_pub_sub_node src/test_pubsub.cpp)
 target_link_libraries(${PROJECT_NAME}_pub_sub_node
   ${catkin_LIBRARIES}
 )
-
+add_executable(${PROJECT_NAME}_tf_node src/test_tf.cpp)
+# Linking executable to packages in find_package
+target_link_libraries(${PROJECT_NAME}_tf_node
+  ${catkin_LIBRARIES}
+)
