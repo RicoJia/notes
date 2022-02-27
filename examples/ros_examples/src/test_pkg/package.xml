@@ -13,10 +13,7 @@
   <!-- Here we need packages both for compilation and run time -->
   <build_depend>roscpp</build_depend>
   <exec_depend>roscpp</exec_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <exec_depend>geometry_msgs</exec_depend>
 
-  <!-- The export tag contains other, unspecified, tags -->
-  <export>
-    <!-- Other tools can request additional information be placed here -->
-
-  </export>
 </package>
