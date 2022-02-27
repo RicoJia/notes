@@ -63,15 +63,30 @@ void cb1(const geometry_msgs::Twist::ConstPtr& msg){
     ROS_INFO_STREAM(__PRETTY_FUNCTION__<<": sub - "<<msg->linear.x); 
 }
 
+// Subscriber callback, note we have the constptr
+void cb2(const geometry_msgs::Twist::ConstPtr& msg){
+    ROS_INFO_STREAM(__PRETTY_FUNCTION__<<": sub - "<<msg->linear.x); 
+}
 /**
  * Notes: 
  *  1. I tried lambda, do not work here!
+ *  2. ros::spinOnce() is for single threaded. Therefore, the subscribers work single-threaded model
 */
-void sub_and_bind(ros::NodeHandle& nh)
+void sub_bind_spin(ros::NodeHandle& nh)
 {
     ros::Subscriber sub1 = nh.subscribe<geometry_msgs::Twist>("/sub_cmd_vel", 1000, cb1); 
+    ros::Subscriber sub2 = nh.subscribe<geometry_msgs::Twist>("/sub_cmd_vel", 1000, cb2); 
     // std::bind no problem here
     auto dummy_func = std::bind(cb1, nullptr);
+
+    // have 2 threads processing callbacks, a thread pool servicing callbacks
+    ros::MultiThreadedSpinner spinner(2); 
+    spinner.spin(); 
+
+    // More useful since you can start the spinner later
+    // ros::AsyncSpinner spinner(4); // Use 4 threads
+    // spinner.start();
+    // ros::waitForShutdown();
 }
 
 
@@ -91,7 +106,7 @@ int main(int argc, char**argv)
 
     // logging_and_sleep();
     // pub(nh); 
-    sub_and_bind(nh); 
+    sub_bind_spin(nh); 
 
 
     // shutdown the node
