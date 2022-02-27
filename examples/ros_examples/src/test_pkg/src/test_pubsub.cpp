@@ -80,8 +80,8 @@ void sub_bind_spin(ros::NodeHandle& nh)
     auto dummy_func = std::bind(cb1, nullptr);
 
     // have 2 threads processing callbacks, a thread pool servicing callbacks
-    ros::MultiThreadedSpinner spinner(2); 
-    spinner.spin(); 
+    // ros::MultiThreadedSpinner spinner(2); 
+    // spinner.spin(); 
 
     // More useful since you can start the spinner later
     // ros::AsyncSpinner spinner(4); // Use 4 threads
@@ -89,7 +89,31 @@ void sub_bind_spin(ros::NodeHandle& nh)
     // ros::waitForShutdown();
 }
 
+/**
+ * Notes: 
+ *  1. rosparam set var_name value 
+ *  2. rosparam get parameter_name
+ *  3. rosparam delete parameter_name 
+ *  4. set params 
+ *      
+*/
+void set_get_param(ros::NodeHandle& nh){
+    std::string test_var, global_test_var, default_test_var;
+    // 1. use nh
+    nh.getParam("test_var", test_var); 
+    ROS_INFO_STREAM("get test_var: "<<test_var);
+    nh.getParam("/global_test_var", global_test_var); 
+    ROS_INFO_STREAM("get global test_var: "<<global_test_var);
+    nh.param<std::string>("default_test_var", default_test_var, "default string"); 
+    ROS_INFO_STREAM("default_test_var"<<default_test_var);
 
+    // 2. use baremetal, but names are still relative to node's namespace
+    ros::param::get("test_var", test_var); 
+    ROS_INFO_STREAM("get test_var baremetal: "<<test_var);
+
+    // 3. checks - namespace is relative here
+    if (nh.hasParam("test_var")) ROS_INFO_STREAM("Yeehaw"); 
+}
 
 int main(int argc, char**argv)
 {
@@ -99,14 +123,18 @@ int main(int argc, char**argv)
     // node name is hello
     ros::init(argc, argv, "Hello"); 
     // establish this as a ros node
-    // will make everything (topic, etc) global_namespace/topic
-    ros::NodeHandle nh("global_namespace"); 
-    // will make everything (topic, etc) <node_name>/private_namespace/topic
+    // 1. will make everything (topic, etc) global_namespace/topic
+    // ros::NodeHandle nh("global_namespace"); 
+    // 2. will make everything (topic, etc) <node_name>/private_namespace/topic
     // ros::NodeHandle nh("~private_namespace"); 
+    // 3. will make everything (topic, etc) <node_name>/topic
+    ros::NodeHandle nh("~"); 
 
     // logging_and_sleep();
     // pub(nh); 
-    sub_bind_spin(nh); 
+    // sub_bind_spin(nh); 
+    //
+    set_get_param(nh);
 
 
     // shutdown the node

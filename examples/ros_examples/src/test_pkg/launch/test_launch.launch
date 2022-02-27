@@ -1,0 +1,7 @@
+<launch>
+    <!-- type is the most important here. Name here will override the name in cpp file-->
+    <!-- DO NOT FORGET ABOUT output here! -->
+    <node name="penguin" pkg="test_pkg" type="test_pkg_pub_sub_node" output="screen">
+        <param name="test_var" value="Putin" />
+    </node>
+</launch>
