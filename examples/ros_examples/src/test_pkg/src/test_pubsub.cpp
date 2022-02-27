@@ -105,7 +105,7 @@ void set_get_param(ros::NodeHandle& nh){
     nh.getParam("/global_test_var", global_test_var); 
     ROS_INFO_STREAM("get global test_var: "<<global_test_var);
     nh.param<std::string>("default_test_var", default_test_var, "default string"); 
-    ROS_INFO_STREAM("default_test_var"<<default_test_var);
+    ROS_INFO_STREAM("default_test_var: "<<default_test_var);
 
     // 2. use baremetal, but names are still relative to node's namespace
     ros::param::get("test_var", test_var); 
