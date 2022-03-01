@@ -38,6 +38,7 @@ def dict_to_list():
     print(list(filter(lambda x: x[0] < 5, ls)))
     # dict_items() type, not supporting filter() directly on dict.items(). Must use list
     print(type(di.items()))
+    print(di.values())
 
 def set_funcs(): 
     s = set()
@@ -56,6 +57,14 @@ def set_funcs():
     # shows S2 - (s2 & s)
     print("s2 - s", s2 - s)
 
+    # will see TypeError: unhashable type: 'set'
+    # because this is set is a mutable, so once it's changed, its hash has to change
+    # use frozenset
+    # s2.add({"12", "32"})
+    s2.add(frozenset({"12", "32"}))
+
+    print(f"union: {s | s2}")
+
 if __name__ == "__main__": 
-    # dict_to_list()
-    set_funcs()
+    dict_to_list()
+    # set_funcs()
