@@ -5,26 +5,32 @@
 using namespace std::chrono_literals;
 using namespace std; 
 
-void func(){
-    for (int i = 0; i < 10; ++i){
-        cout<<"func"<<endl;
-        // std::this_thread::sleep_for(10ms); 
-        
-    }
+// there's no nested functions in cpp other than lambda. 
+// But there's struct and operator (), and we can put a structin a function
+void test_thread_move(){
+    struct {
+        void operator()(){
+            for (int i = 0; i < 10; ++i){
+                cout<<"func"<<endl;
+                std::this_thread::sleep_for(0.6s); 
+            }            
+        }
+    }func;
+
+    std::thread t1(func);
+    std::this_thread::sleep_for(0.5s); 
+    // the program will keep running! 
+    std::thread t2 = std::move(t1);
+    std::cout<<__FUNCTION__<<": moved"<<std::endl; 
+    t2.join(); 
+    // don't need this since t1 is moved from
+    // t1.join();
 }
 
-std::thread ret_th(){
-    std::thread t3(func); 
-    return t3; 
-}
 
 int main()
 {
-    std::thread t1(func);
-    // std::this_thread::sleep_for(2s); 
-    std::thread t2 = std::move(t1);
-    // auto t3 = ret_th();
-    // t2.join(); 
+    test_thread_move();
     return 0;
 }
 
