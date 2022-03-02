@@ -40,6 +40,19 @@ def dict_to_list():
     print(type(di.items()))
     print(di.values())
 
+
+def deep_copy(): 
+    di = {1:"a", 2:"b"}
+    di2 = di.copy()
+    di3 = di
+    di[1] = "ccc"
+    print(di, di2, di3)
+
+    ls1 = ["a", "b"]
+    ls2 = ls1.copy()
+    ls1[0] = "ccc"
+    print(ls1, ls2)
+
 def set_funcs(): 
     s = set()
     s = {1,2,3}
@@ -62,9 +75,14 @@ def set_funcs():
     # use frozenset
     # s2.add({"12", "32"})
     s2.add(frozenset({"12", "32"}))
-
     print(f"union: {s | s2}")
 
+    # frozen set does NOT support indexing. This is how you retrive elements: 
+    s3 = frozenset({"a", "b"})
+    str1, str2 = s3
+    print(str1, " ", str2)
+
 if __name__ == "__main__": 
-    dict_to_list()
+    # dict_to_list()
     # set_funcs()
+    deep_copy()
