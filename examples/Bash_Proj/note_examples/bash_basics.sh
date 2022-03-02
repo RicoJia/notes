@@ -11,3 +11,9 @@ function show_addition_and_func_name(){
     echo "${FUNCNAME[0]}" $((1+2))
 }
 # show_addition_and_func_name
+
+function delete(){
+    # note we have - instead of --. This method is not like xargs rm -rf, which has a max of 1000 something
+    find $pwd -type f -name *log -delete
+}
+delete
