@@ -13,6 +13,14 @@ def test_nested_func():
     f = Foo()
     f.nested_func()
 
+def test_another_nested_func(): 
+    name = 10
+    def worker():
+        # nonlocal is needed here
+        nonlocal name
+        name += 1
+        print(name)
+    worker()
 
 def np_masking(): 
     arr = np.random.rand(4,3,3)
