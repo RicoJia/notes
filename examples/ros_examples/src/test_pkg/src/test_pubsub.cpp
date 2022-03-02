@@ -94,7 +94,8 @@ void sub_bind_spin(ros::NodeHandle& nh)
  *  1. rosparam set var_name value 
  *  2. rosparam get parameter_name
  *  3. rosparam delete parameter_name 
- *  4. set params 
+ *  4. rosparam load src/nav_libraries/nuslam/config/params.yaml EKF_Odometer. EKF_Odometer is the node name
+ *
  *      
 */
 void set_get_param(ros::NodeHandle& nh){
@@ -113,6 +114,10 @@ void set_get_param(ros::NodeHandle& nh){
 
     // 3. checks - namespace is relative here
     if (nh.hasParam("test_var")) ROS_INFO_STREAM("Yeehaw"); 
+
+    // 4. set params 
+    nh.setParam("/global_param", 5);
+    ros::param::set("/global_param", 5);
 }
 
 int main(int argc, char**argv)
