@@ -40,6 +40,18 @@ def dict_to_list():
     print(type(di.items()))
     print(di.values())
 
+def dictionary_basics(): 
+    # using np array as a key in dictionary, have to use to_bytes
+    my_array = np.array([1,2,3])
+    my_dict = {}
+    my_dict[my_array.tobytes()] = None
+
+    # if no value is found, get() will return default value (like None), dict[key]will raise an error
+    person = {}
+    person.get("key")   #get None
+    person.get("key", "hehe")   #get hehe, default value
+    # get KeyError
+    # person["key"]
 
 def deep_copy(): 
     di = {1:"a", 2:"b"}
@@ -51,7 +63,10 @@ def deep_copy():
     ls1 = ["a", "b"]
     ls2 = ls1.copy()
     ls1[0] = "ccc"
-    print(ls1, ls2)
+    # Not all objects have copy. use deep copy
+    import copy
+    ls3 = copy.deepcopy(ls1)
+    print(ls1, ls2, ls3)
 
 def set_funcs(): 
     s = set()
@@ -82,7 +97,18 @@ def set_funcs():
     str1, str2 = s3
     print(str1, " ", str2)
 
+def list_basics(): 
+    # None in list
+    ls = [1, None]
+    if None in ls:
+        print("lol")
+
+    #sort
+    ls = [(1,2), (2,-90), (3, 90)]
+    sorted(ls)  # see [(1, 2), (2, -90), (3, 90)], always compares the first element!
+
 if __name__ == "__main__": 
     # dict_to_list()
     # set_funcs()
-    deep_copy()
+    # deep_copy()
+    dictionary_basics()

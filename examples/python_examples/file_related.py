@@ -1,68 +1,67 @@
 ########### Zip file ###########
 # writing and reading from zip file
-from zipfile import ZipFile
-file_name = "mi_archivo.zip"
-hello_file = "hello.txt"
-with ZipFile(file_name, 'w') as f: 
-    f.writestr(hello_file, "hello".encode("utf-8"))
-    f.close()
+def zip_file_related(): 
+    from zipfile import ZipFile
+    file_name = "mi_archivo.zip"
+    hello_file = "hello.txt"
+    with ZipFile(file_name, 'w') as f: 
+        f.writestr(hello_file, "hello".encode("utf-8"))
+        f.close()
 
-# append another file
-another_file = "another_file.txt"
-with ZipFile(file_name, 'a') as f: 
-    f.writestr(another_file, "another file~!!!")
-    f.close()
+    # append another file
+    another_file = "another_file.txt"
+    with ZipFile(file_name, 'a') as f: 
+        f.writestr(another_file, "another file~!!!")
+        f.close()
 
-# print all info and zip content
-with ZipFile(file_name, 'r') as f: 
-    for info in f.infolist(): 
-        if (info.filename == hello_file): 
-            another_hello_file_content = f.read(hello_file)
-    f.close()
-
-# append a file in the zip under another name. Just append, not removing
-another_hello_file = "another_hello_file.txt"
-with ZipFile(file_name, 'w') as f:
-    f.writestr(another_hello_file, another_hello_file_content)
-    f.close()
-
-
-def print_zip(file_name):
+    # print all info and zip content
     with ZipFile(file_name, 'r') as f: 
         for info in f.infolist(): 
-            print(info.filename)
-            print(f.read(info.filename))
+            if (info.filename == hello_file): 
+                another_hello_file_content = f.read(hello_file)
+        f.close()
+
+    # append a file in the zip under another name. Just append, not removing
+    another_hello_file = "another_hello_file.txt"
+    with ZipFile(file_name, 'w') as f:
+        f.writestr(another_hello_file, another_hello_file_content)
         f.close()
 
 
+    def print_zip(file_name):
+        with ZipFile(file_name, 'r') as f: 
+            for info in f.infolist(): 
+                print(info.filename)
+                print(f.read(info.filename))
+            f.close()
 
-# update just one file - we have to recompress and delete
-import os
-def update_one_file(src_name, target_name, replacement_content): 
-    """
-    Add or update target in a zip file with replacement_content
-    src_name: zip file to be updated
-    target_name: file inside src_name to be added/replaced
-    replacement_content: string to be substituted in
-    """
-    tmp = src_name+"tmp"
-    with ZipFile(src_name, "r") as infile, ZipFile(tmp, "w") as outfile: 
-        for info in infile.infolist(): 
-            if info.filename != target_name: 
-                outfile.writestr(info.filename, infile.read(info.filename))
-            else: 
-                outfile.writestr(info.filename, replacement_content)
-        infile.close()
-        outfile.close()
-    os.remove(src_name)
-    # os.rename(old_name, new_name)
-    os.rename(tmp, src_name)
+    # update just one file - we have to recompress and delete
+    import os
+    def update_one_file(src_name, target_name, replacement_content): 
+        """
+        Add or update target in a zip file with replacement_content
+        src_name: zip file to be updated
+        target_name: file inside src_name to be added/replaced
+        replacement_content: string to be substituted in
+        """
+        tmp = src_name+"tmp"
+        with ZipFile(src_name, "r") as infile, ZipFile(tmp, "w") as outfile: 
+            for info in infile.infolist(): 
+                if info.filename != target_name: 
+                    outfile.writestr(info.filename, infile.read(info.filename))
+                else: 
+                    outfile.writestr(info.filename, replacement_content)
+            infile.close()
+            outfile.close()
+        os.remove(src_name)
+        # os.rename(old_name, new_name)
+        os.rename(tmp, src_name)
 
-print("before updating")
-print_zip(file_name)
-print("now let's update just one file")
-update_one_file(file_name, another_hello_file, "around the world")
-print_zip(file_name)
+    print("before updating")
+    print_zip(file_name)
+    print("now let's update just one file")
+    update_one_file(file_name, another_hello_file, "around the world")
+    print_zip(file_name)
 
 ########## argparse ###########
 import argparse
@@ -107,4 +106,23 @@ import argparse
 # ########## Misc ###########
 # print(__file__)
 
+def os_basics(): 
+    # TODO: to organize
+    import os
+    os.path.join("/path_a", "dir_without_/")
+    os.chdir(persistence_folder)    #change directory to that file.
+    # check if dir exists, remove (remove dir has to use shutil.rmtree())
+    os.path.isdir("")
+    if not os.path.exists('my_folder'):
+        os.remove(file_path)
+        os.makedirs('my_folder')
+        os.rmdir(dir_path)  # empty dir
+        shutil.rmtree(folder)   #folder and content
 
+    #write to file
+    with open("file.txt", 'w') as file:   #open is a context manager
+       file.write("Hello World")
+
+    # list all files
+    os.listdir(path)
+    os.rename(name)
