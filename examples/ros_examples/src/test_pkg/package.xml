@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>test_pkg</name>
+  <version>0.0.1</version>
+  <description>test package with basic ros examples</description>
+
+  <maintainer email="ruotongjia2020@u.northwestern.edu">ricojia</maintainer>
+  <license>BSD</license>
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Dependencies of all languages (roscpp, rospy, rosrust), that you do not necessarily need for find_package() cuz it's just a dependency from another package -->
+  <!-- Dependencies declared here are not part of the build process. If you omit them, and you don't have these packages install, then you will see error msgs -->
+  <!-- Here we need packages both for compilation and run time -->
+  <build_depend>roscpp</build_depend>
+  <exec_depend>roscpp</exec_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <build_depend>tf2</build_depend>
+  <exec_depend>tf2</exec_depend>
+
+</package>

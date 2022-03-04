@@ -1,0 +1,11 @@
+<launch>
+    <!-- type is the most important here. Name here will override the name in cpp file-->
+    <!-- DO NOT FORGET ABOUT output="screen" here! -->
+    <!-- load is basically set, dump is get for params -->
+    <node name="penguin" pkg="test_pkg" type="test_pkg_pub_sub_node" output="screen">
+        <!-- <param> tag in launch file does not have the ns attribute. So to specify ns, you need name="namespace/name,  -->
+        <!-- but in <rosparam> there is. See wiki. -->
+        <param name="test_var" value="Putin" />
+        <rosparam file="$(find test_pkg)/config/params.yaml" command="load"/> 
+    </node>
+</launch>

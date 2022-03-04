@@ -22,9 +22,14 @@ int main()
 stringstream a("980int");
 int main()
 {
-string type;
-int num;
-a>>num>>type;
-cout<<a.str();
-return 0;
+    string type;
+    int num;
+    a>>num>>type;
+    cout<<a.str();
+
+    //clear
+    a.clear();  // this modifies some state flags? 
+    a.str("")
+    cout<<a.str();
+    return 0;
 }

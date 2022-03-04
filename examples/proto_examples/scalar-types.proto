@@ -1,0 +1,6 @@
+syntax = "proto2";
+
+message Person {
+    required int32 age = 1;
+    required float height = 6;
+}

@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <iterator>
+#include <algorithm>
 
 using namespace std;
 void print1vec(const vector<int> & vec);
@@ -13,16 +14,17 @@ int main(){
   vector<int> a = {
       1, 2, 3,
       4, 5, 6}; // this is how you initialize a vector. you don't need size.
+  std::sort(a.begin(), a.end(), [](int a, int b){return a>b; });
   print1vec(a);
-
-  vector<int> b;
-  vec_b(b, a);
-  vec_a(a);
-  vec_swap(b, a);
-
-  vector<int> c(5, 0); // another way to initialize a vector!
-  vector<int> d(c.begin(), c.end());
-  vec_c(c, d);
+  //
+  // vector<int> b;
+  // vec_b(b, a);
+  // vec_a(a);
+  // vec_swap(b, a);
+  //
+  // vector<int> c(5, 0); // another way to initialize a vector!
+  // vector<int> d(c.begin(), c.end());
+  // vec_c(c, d);
 }
 //------------------------------------------------------------------------------------------------
 void vec_c(vector<int> & c, vector<int> & d)
@@ -95,3 +97,4 @@ void print1vec(const vector<int> &vec) // use const & to print a vector
                            // to it tho. it's like adding two pointers together.
   cout << "the middle entries are: " << *(j - 1) << " " << *j << endl;
 }
+
