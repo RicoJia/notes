@@ -13,12 +13,12 @@ void make_unique_crash()
 
    // 1. Never use {} because make_unique is a function
    // auto ptr = std::make_unique<crash_t>{1,2}; 
-   // 2. make_unique does NOT work with list intialization
+   // 2. make_unique, make_shared does NOT work with list intialization
    // auto ptr = std::make_unique<crash_t>(1,2);
+   // auto shared_ptr = std::make_shared<crash_t>(1,2); 
    // 3. list initializer should use {}, not ()
    // auto ptr = std::unique_ptr<crash_t>(new crash_t(1,2)); 
    auto ptr = std::unique_ptr<crash_t>(new crash_t{1,2}); 
-   auto shared_ptr = std::make_shared<crash_t>(1,2); 
 }
 
 int main()
