@@ -21,7 +21,16 @@ void make_unique_crash()
    auto ptr = std::unique_ptr<crash_t>(new crash_t{1,2}); 
 }
 
+#include <mutex>
+void mtx_ptr_in_struct()
+{
+    struct crash_t {
+        std::mutex* mtx_; 
+    };    
+}
+
 int main()
 {
-    make_unique_crash();
+    // make_unique_crash();
+    mtx_ptr_in_struct();
 }
