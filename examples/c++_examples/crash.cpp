@@ -18,6 +18,7 @@ void make_unique_crash()
    // 3. list initializer should use {}, not ()
    // auto ptr = std::unique_ptr<crash_t>(new crash_t(1,2)); 
    auto ptr = std::unique_ptr<crash_t>(new crash_t{1,2}); 
+   auto shared_ptr = std::make_shared<crash_t>(1,2); 
 }
 
 int main()
