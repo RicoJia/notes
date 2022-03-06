@@ -80,18 +80,18 @@ void test_future_and_shared_future(){
     std::cout<<__FUNCTION__<<": sum promise: "<<sumFuture.get()<<std::endl;
     t1.join();
     
-    // 2. shared future: you can access it on multiple threads. It's copyable
-    // You can get only one std::future/std::shared_future from std::promise
+    /* 2. shared future: you can access it on multiple threads. It's copyable. std::future::valid() == false 
+     * 3. [!] multiple threads can access the same promisem but you must have multiple shared_future. one single std::shared_future accessed by different threads will have data race 
+     * 4. You can get only one std::future/std::shared_future from std::promise
+     */
     std::promise<int> sumPromise2;
     std::shared_future<int> sf3 = sumPromise2.get_future();    //imlicit conversion from std::future
     // std::shared_future<int> sf4 = sumPromise2.get_future();    // Illegal, can't retrieve from future twice
     // std::shared_future<int> sf1 = sumFuture.share(); // Legal, if you already have future
     std::shared_future<int> sf4 = sf3; // Legal
-
-    // 3. you can push function accessing the same std::shared_future
     auto func = [&](std::shared_future<int> sf){
-        // future::wait(): blocks until result becomes available, then get() will have no wait
-        // - ```valid() == true``` (shared_state)
+        // std::future::wait(): blocks until result becomes available, then get() will have no wait
+        // std::future::valid() == true (shared_state)
         sf.wait(); 
         std::cout<<__FUNCTION__<<": sf: "<<sf.get()<<std::endl;
     }; 
