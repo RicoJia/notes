@@ -14,7 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
 add_service_files(
     FILES
     Add2Nums.srv
-) 
+)
+# still need this for srv
 generate_messages(
     # DEPENDENCIES
     # std_msgs
