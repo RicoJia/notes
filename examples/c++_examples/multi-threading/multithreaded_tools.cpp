@@ -72,6 +72,7 @@ void test_future_exceptions(){
 
 void test_future_and_shared_future(){
     // 1. cannonical future
+    // **Each promise has one associated future**
     std::promise<int> sumPromise;
     //(set up the setter-getter data channel)
     std::future<int> sumFuture = sumPromise.get_future(); 
@@ -85,17 +86,17 @@ void test_future_and_shared_future(){
     std::shared_future<int> sf3 = sumPromise2.get_future();    //imlicit conversion from std::future
     // std::shared_future<int> sf4 = sumPromise2.get_future();    // Illegal, can't retrieve from future twice
     // std::shared_future<int> sf1 = sumFuture.share(); // Legal, if you already have future
-    // std::shared_future<int> sf4 = sf3; // Legal
+    std::shared_future<int> sf4 = sf3; // Legal
 
     // 3. you can push function accessing the same std::shared_future
-    auto func = [&](){
+    auto func = [&](std::shared_future<int> sf){
         // future::wait(): blocks until result becomes available, then get() will have no wait
         // - ```valid() == true``` (shared_state)
-        sf3.wait(); 
-        std::cout<<__FUNCTION__<<": sf: "<<sf3.get()<<std::endl;
+        sf.wait(); 
+        std::cout<<__FUNCTION__<<": sf: "<<sf.get()<<std::endl;
     }; 
-    auto result_fut_1 = std::async (std::launch::async, func);
-    auto result_fut_2 = std::async (std::launch::async, func);
+    auto result_fut_1 = std::async (std::launch::async, func, sf3);
+    auto result_fut_2 = std::async (std::launch::async, func, sf4);
     // This will never cause hanging, like conditional_variable notify_one
     sumPromise2.set_value(99); 
     result_fut_1.get(); 
@@ -110,6 +111,6 @@ void test_async(){
 
 int main() {
     // test_packaged_task_basic();
-    // test_future_and_shared_future();
-    test_future_exceptions();
+    test_future_and_shared_future();
+    // test_future_exceptions();
 }
