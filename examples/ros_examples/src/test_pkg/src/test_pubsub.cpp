@@ -1,6 +1,7 @@
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
 #include <functional>
+#include <test_pkg/Add2Nums.h>
 
 /**
  * Notes: 
@@ -53,6 +54,7 @@ void pub(ros::NodeHandle& nh)
         // use ctrl-c, or rosnode kill
         if (ros::ok()){
             vel_pub.publish(twist_msg);
+            std::cout<<__FUNCTION__<<": 1"<<std::endl;
             r.sleep();
         }
     }
@@ -80,13 +82,37 @@ void sub_bind_spin(ros::NodeHandle& nh)
     auto dummy_func = std::bind(cb1, nullptr);
 
     // have 2 threads processing callbacks, a thread pool servicing callbacks
-    // ros::MultiThreadedSpinner spinner(2); 
-    // spinner.spin(); 
+    ros::MultiThreadedSpinner spinner(2); 
+    spinner.spin(); 
 
     // More useful since you can start the spinner later
     // ros::AsyncSpinner spinner(4); // Use 4 threads
     // spinner.start();
     // ros::waitForShutdown();
+}
+
+// To see ros service: rossrv show `rosservice type /Hello/add_2_nums`
+void test_server(ros::NodeHandle& nh){
+    class ServerHelper{
+        public: 
+            ServerHelper(int n): n_(n){}
+            bool add_2_nums(test_pkg::Add2Nums::Request& req, test_pkg::Add2Nums::Response& res){
+                int sum = n_ + req.num1; 
+                if (sum > 127){res.success = false;}
+                else{
+                    res.res = sum; 
+                    res.success = true;
+                }
+                return true;
+            }
+        private: 
+            int n_; 
+    }; 
+
+    ServerHelper sh(100); 
+    ros::ServiceServer server = nh.advertiseService("add_2_nums", &ServerHelper::add_2_nums, &sh); 
+    
+    ros::spin(); 
 }
 
 /**
@@ -95,7 +121,6 @@ void sub_bind_spin(ros::NodeHandle& nh)
  *  2. rosparam get parameter_name
  *  3. rosparam delete parameter_name 
  *  4. rosparam load src/nav_libraries/nuslam/config/params.yaml EKF_Odometer. EKF_Odometer is the node name
- *
  *      
 */
 void set_get_param(ros::NodeHandle& nh){
@@ -120,6 +145,19 @@ void set_get_param(ros::NodeHandle& nh){
     ros::param::set("/global_param", 5);
 }
 
+/**
+ * theory:
+     1. nodes will not try to contact roscore if this connection has been lost. The node won't show, but if you restart roscore again, you wouldn't be able to see it.
+     2. /rosout start by roscore, like std::cout so you can see outputs clearly
+         - can be used to generate textual logs
+     3. rosnode info node: lists pid, topics, services, etc. 
+     4. How to start multiple instances of a node? 
+         - rosrun turtlesim turtlesim_node __name="node_A"
+         - rosrun turtlesim turtlesim_node __name="node_B"
+         - topics are many-to-many (pub-sub), but services are 1-many
+    5. roswtf: loaded plugins, rosdep process, anynode is hanging/have died
+*/
+
 int main(int argc, char**argv)
 {
     /**
@@ -138,9 +176,8 @@ int main(int argc, char**argv)
     // logging_and_sleep();
     // pub(nh); 
     // sub_bind_spin(nh); 
-    //
-    set_get_param(nh);
-
+    // set_get_param(nh);
+    test_server(nh);
 
     // shutdown the node
     // ros::shutdown();

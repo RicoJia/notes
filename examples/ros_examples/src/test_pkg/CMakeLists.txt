@@ -8,7 +8,18 @@ find_package(catkin REQUIRED COMPONENTS
     roscpp  # need this for everything
     geometry_msgs
     tf2
+    message_generation
     )
+
+add_service_files(
+    FILES
+    Add2Nums.srv
+) 
+generate_messages(
+    # DEPENDENCIES
+    # std_msgs
+)
+
 
 # catkin_package is what your packages in find_package() depends on (e.g., boost)
 catkin_package(
