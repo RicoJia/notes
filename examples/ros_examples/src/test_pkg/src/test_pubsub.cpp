@@ -91,7 +91,11 @@ void sub_bind_spin(ros::NodeHandle& nh)
     // ros::waitForShutdown();
 }
 
-// To see ros service: rossrv show `rosservice type /Hello/add_2_nums`
+// To see ros service: rossrv show `rosservice type /Hello/add_2_nums`, or rosservice type spawn | rossrv show
+//     rosservice list
+//     rosservice type /service_name
+//     rosservice type /service_name | rossrc show.
+
 void test_server(ros::NodeHandle& nh){
     class ServerHelper{
         public: 
@@ -154,7 +158,7 @@ void set_get_param(ros::NodeHandle& nh){
      4. How to start multiple instances of a node? 
          - rosrun turtlesim turtlesim_node __name="node_A"
          - rosrun turtlesim turtlesim_node __name="node_B"
-         - topics are many-to-many (pub-sub), but services are 1-many
+         - topics are many-to-many (pub-sub), but services are 1-many. In service you get a response with persistent connection. 
     5. roswtf: loaded plugins, rosdep process, anynode is hanging/have died
 */
 
