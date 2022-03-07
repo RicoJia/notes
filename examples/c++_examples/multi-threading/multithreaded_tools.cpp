@@ -125,9 +125,15 @@ void test_async(){
     f3.get();
     auto f4 = std::async(&Foo::bar, Foo());     // after default ctor, then move ctor is used, then another move because of internal implementation
     f4.get();
-    
 
-    // launch::deferred may never get executed 
+    // 2. launch::deferred may never get executed 
+    auto asyncLazy=std::async(std::launch::deferred,[]{ return  std::chrono::system_clock::now();});
+    auto asyncEager=std::async( std::launch::async,[]{ return  std::chrono::system_clock::now();});
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    auto lazyStart= asyncLazy.get();      // start when you call .get(), or wait()
+    auto eagerStart= asyncEager.get();    // already done
+
     // thread local storage, 
 }
 
