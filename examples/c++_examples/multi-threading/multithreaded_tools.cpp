@@ -165,7 +165,8 @@ void test_async_launch(){
 /**
 * Theory: 
 * 1. ```std::thread``` cannot handle exceptions from the function. you will get ```std::terminate``` 
-* 2. If you create too many ```std::threads```, you'll get ```std::system_error```, even tho the function is **noexcept**
+* 2. ```std::async(func)``` when func throws an exception, the exception will be stored in the stored value, the future becomes ready. A ```.get()``` will rethrow that exception.
+    - Same thing with ```std::packaged_task```
 */
 void test_async_exception(){
     auto fut = std::async([](){throw "lol";}); 
