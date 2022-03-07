@@ -10,7 +10,7 @@ struct {
     void operator()(){
       std::packaged_task<int(int, int)> pt(addNumbers);
       std::future<int> fut = pt.get_future();
-      //You have to launch it on a thread
+      //You have to launch it on a thread, which is THE GREATEST ADVANTAGE OF packaged_task
       std::thread t(std::move(pt), 1, 2);     
       std::cout << "The result is: " << fut.get() << "\n";
       t.join();
