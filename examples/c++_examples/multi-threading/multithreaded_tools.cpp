@@ -103,7 +103,12 @@ void test_future_and_shared_future(){
     result_fut_2.get(); 
 }
 
-void test_async(){
+/**
+ * Theory 
+ * 1. if args are passed in as rvalues, the copies are created by **moving**, just like std::thread. 
+ * 2. Can be implemented on top of std::packaged_task
+*/
+void test_async_construct(){
     // std::future std::async (T...) // it's a template function
     // 1. contstruction
     class Foo
@@ -125,22 +130,60 @@ void test_async(){
     f3.get();
     auto f4 = std::async(&Foo::bar, Foo());     // after default ctor, then move ctor is used, then another move because of internal implementation
     f4.get();
+}
 
-    // 2. launch::deferred may never get executed 
+/**
+ * Theory: 
+ * 1. std::async by default will randomly start running the function immediately / defer its start, on a separate thread. But you have control over when this will be run
+ * 2. launch::deferred may never get executed, or in this case, depends on the scheduling of the thread it runs on.
+ * 3. ```std::launch::deferred``` and ```std::launch::async``` are in the enum ```launch```
+ * 4. You can check if the ```std::future_status::deferred```
+*/
+void test_async_launch(){
     auto asyncLazy=std::async(std::launch::deferred,[]{ return  std::chrono::system_clock::now();});
     auto asyncEager=std::async( std::launch::async,[]{ return  std::chrono::system_clock::now();});
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    using namespace std::chrono_literals;
+    switch (asyncLazy.wait_for(std::chrono::seconds(0))) {
+        case std::future_status::timeout:
+        std::cout << "thread still running\n";
+        break;
+        case std::future_status::ready:
+        std::cout << "thread done, outcome available\n";
+        break;
+        case std::future_status::deferred:
+        std::cout << "thread was deferred\n";
+        break;
+    }
 
-    auto lazyStart= asyncLazy.get();      // start when you call .get(), or wait()
-    auto eagerStart= asyncEager.get();    // already done
+    std::this_thread::sleep_for(std::chrono::seconds(2));
 
-    // thread local storage, 
+    std::cout<<__FUNCTION__<<": eager start: "<<(asyncEager.get().time_since_epoch().count())/1000000000<<std::endl;
+    std::cout<<__FUNCTION__<<": lazy start: "<<(asyncLazy.get().time_since_epoch().count())/1000000000<<std::endl;
 }
+
+
+/**
+* Theory: 
+* 1. ```std::thread``` cannot handle exceptions from the function. you will get ```std::terminate``` 
+* 2. If you create too many ```std::threads```, you'll get ```std::system_error```, even tho the function is **noexcept**
+*/
+void test_async_exception(){
+    auto fut = std::async([](){throw "lol";}); 
+    try{
+        fut.get(); 
+    }
+    catch (char const* str){
+        std::cout<<__FUNCTION__<<": exception: "<<str<<std::endl;
+    }
+}
+
 
 int main() {
     // test_packaged_task_basic();
     // test_future_and_shared_future();
     // test_future_exceptions();
 
-    test_async();
+    // test_async_construct();
+    test_async_launch();
+    // test_async_exception();
 }
