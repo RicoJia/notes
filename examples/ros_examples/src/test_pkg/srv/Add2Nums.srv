@@ -1,0 +1,9 @@
+# ways to do service call 
+# rosservice call /Hello/add_2_nums "12"
+# int num1 = 100 doesn't seem to work
+int8 num1
+--- 
+#response
+# note: no default value here
+int8 res
+bool success

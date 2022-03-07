@@ -26,6 +26,91 @@ struct {
     }
 }test_packaged_task_basic;
 
+void set_promise(std::promise<int> p){
+    p.set_value(12); 
+}
+
+void test_future_exceptions(){
+    // 1. set exception as we wish
+    auto promise_set_exception = [](){
+        std::promise<int> p; 
+        std::future<int> fut = p.get_future();
+        std::thread t1(
+            [&](){
+                p.set_exception(std::make_exception_ptr(std::runtime_error("mine")));
+            }
+                // but a canonical use of std::promise::set_exception is 
+                // try{
+                //   throw std::runtime_error("hehe");
+                // }
+                // catch(...)    //... in C++ will tell compiler NOT to check arg number and types
+                // {
+                //   // exception_ptr current_exception() noexcept;
+                //   p.set_exception(std::current_exception());    // returns the current exception_ptr
+                // }
+                );
+        try{
+            std::cout<<__FUNCTION__<<fut.get()<<std::endl;
+        }
+        catch(...){
+            std::cout<<__FUNCTION__<<": exception comes"<<std::endl;
+        }
+        t1.join(); 
+    }; 
+    promise_set_exception();
+
+    // 2. broken_promise, because promise is destroyed before setting value
+    auto broken_promise_exception = [](){
+        std::future<int> fut;
+        {
+            std::promise<int> p;
+            fut = p.get_future();
+        }
+        fut.get();
+    }; 
+}
+
+void test_future_and_shared_future(){
+    // 1. cannonical future
+    // **Each promise has one associated future**
+    std::promise<int> sumPromise;
+    //(set up the setter-getter data channel)
+    std::future<int> sumFuture = sumPromise.get_future(); 
+    std::thread t1 (set_promise, std::move(sumPromise)); 
+    std::cout<<__FUNCTION__<<": sum promise: "<<sumFuture.get()<<std::endl;
+    t1.join();
+    
+    /* 2. shared future: you can access it on multiple threads. It's copyable. std::future::valid() == false 
+     * 3. [!] multiple threads can access the same promisem but you must have multiple shared_future. one single std::shared_future accessed by different threads will have data race 
+     * 4. You can get only one std::future/std::shared_future from std::promise
+     */
+    std::promise<int> sumPromise2;
+    std::shared_future<int> sf3 = sumPromise2.get_future();    //imlicit conversion from std::future
+    // std::shared_future<int> sf4 = sumPromise2.get_future();    // Illegal, can't retrieve from future twice
+    // std::shared_future<int> sf1 = sumFuture.share(); // Legal, if you already have future
+    std::shared_future<int> sf4 = sf3; // Legal
+    auto func = [&](std::shared_future<int> sf){
+        // std::future::wait(): blocks until result becomes available, then get() will have no wait
+        // std::future::valid() == true (shared_state)
+        sf.wait(); 
+        std::cout<<__FUNCTION__<<": sf: "<<sf.get()<<std::endl;
+    }; 
+    auto result_fut_1 = std::async (std::launch::async, func, sf3);
+    auto result_fut_2 = std::async (std::launch::async, func, sf4);
+    // This will never cause hanging, like conditional_variable notify_one
+    sumPromise2.set_value(99); 
+    result_fut_1.get(); 
+    result_fut_2.get(); 
+}
+
+void test_async(){
+    // std::future std::async (T...) // template function
+    // launch::deferred may never get executed 
+    // thread local storage, 
+}
+
 int main() {
-    test_packaged_task_basic();
+    // test_packaged_task_basic();
+    test_future_and_shared_future();
+    // test_future_exceptions();
 }

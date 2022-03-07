@@ -30,6 +30,7 @@ int main(){
   cout<<std::chrono::system_clock::period::num<<" | "<<std::chrono::system_clock::period::den<<endl;
 
   // 7
+  // uses ```std::chrono::steady_clock```, which cannot be adjusted, so it might drift, due to scheduling, and maybe OS precision.
   cout<<std::chrono::system_clock::is_steady<<endl;
 
   //8

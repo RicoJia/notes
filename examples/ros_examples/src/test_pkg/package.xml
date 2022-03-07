@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
+    <!-- ROS code is part of one package or another.  -->
+    <!-- a package is any dir that ROS can find has a package.xml -->
+    <!-- package containing packages is a meta-package, in the older term, a stack -->
   <name>test_pkg</name>
   <version>0.0.1</version>
   <description>test package with basic ros examples</description>
@@ -17,5 +20,9 @@
   <exec_depend>geometry_msgs</exec_depend>
   <build_depend>tf2</build_depend>
   <exec_depend>tf2</exec_depend>
+
+  <!-- needed for ros topics and srvs -->
+    <exec_depend>message_runtime</exec_depend>
+    <build_depend>message_generation</build_depend>
 
 </package>
