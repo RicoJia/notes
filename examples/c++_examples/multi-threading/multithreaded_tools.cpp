@@ -104,13 +104,37 @@ void test_future_and_shared_future(){
 }
 
 void test_async(){
-    // std::future std::async (T...) // template function
+    // std::future std::async (T...) // it's a template function
+    // 1. contstruction
+    class Foo
+    {
+    public:
+        Foo () = default;
+        Foo(Foo&&){ std::cout<<__FUNCTION__<<": move ctor"<<std::endl; }
+        Foo(const Foo&){ std::cout<<__FUNCTION__<<": copy ctor"<<std::endl; }
+        void bar(){
+            std::cout<<__FUNCTION__<<": bar ================"<<std::endl;
+        } 
+    };
+    Foo x; 
+    auto f1 = std::async(&Foo::bar, x);   // creates a copy of x inside async, then move because of internal implementation
+    f1.get();
+    auto f2 = std::async(&Foo::bar, &x);    // pointer, no copy/move
+    f2.get();
+    auto f3 = std::async(&Foo::bar, std::ref(x));     //reference, no copy, move. Not you have to use std::ref!
+    f3.get();
+    auto f4 = std::async(&Foo::bar, Foo());     // after default ctor, then move ctor is used, then another move because of internal implementation
+    f4.get();
+    
+
     // launch::deferred may never get executed 
     // thread local storage, 
 }
 
 int main() {
     // test_packaged_task_basic();
-    test_future_and_shared_future();
+    // test_future_and_shared_future();
     // test_future_exceptions();
+
+    test_async();
 }
