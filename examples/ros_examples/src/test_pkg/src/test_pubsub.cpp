@@ -184,7 +184,7 @@ void set_get_param(ros::NodeHandle& nh){
      2. /rosout start by roscore, like std::cout so you can see outputs clearly
          - can be used to generate textual logs
      3. rosnode info node: lists pid, topics, services, etc. 
-     4. How to start multiple instances of a node? 
+     4. How to start multiple instances of a node? (using remapping)
          - rosrun turtlesim turtlesim_node __name="node_A"
          - rosrun turtlesim turtlesim_node __name="node_B"
          - topics are many-to-many (pub-sub), but services are 1-many. In service you get a response with persistent connection. 
