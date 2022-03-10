@@ -1,9 +1,12 @@
-def test_str():
-    string = "123"
-    # see a123b123c
-    print(string.join("abc"))
-    # {} is called the placeholder 
-    print('{}'.format(string)) 
+def test_warning():
+    import warnings
+    def fxn():
+        warnings.warn("deprecated", DeprecationWarning)
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        fxn()
 
 if __name__=="__main__":
-    test_str()
+    test_warning()
+
