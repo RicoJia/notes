@@ -19,9 +19,17 @@ def kwargs_test():
     func_w = partial(func, b = 12)
     func_w(a = 13)
 
+def test_tuples():
+    tup = (1,2,3)
+    print(type(tup), tup[1])
+    # tuple has no deletion
+    try: 
+        del tup[1]
+    except: 
+        print("no delete for tuple")
+    
 
 # vidb, ddd, debugger for python 
-
 def dict_to_list():
     di = {1:"a", 2:"b"}
     ls = list(di.items())
@@ -106,4 +114,5 @@ if __name__ == "__main__":
     # dict_to_list()
     # set_funcs()
     # deep_copy()
-    dictionary_basics()
+    # dictionary_basics()
+    test_tuples()
