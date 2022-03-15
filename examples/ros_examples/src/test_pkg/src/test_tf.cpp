@@ -1,6 +1,8 @@
 #include <ros/ros.h>
 #include <tf2/LinearMath/Quaternion.h>
 
+#include "tf/message_filter.h"
+
 /**
  * Notes:
  *  q.w = cr * cp * cy + sr * sp * sy;

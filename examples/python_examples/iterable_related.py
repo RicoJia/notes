@@ -98,17 +98,23 @@ def set_funcs():
     print(str1, " ", str2)
 
 def list_basics(): 
-    # None in list
-    ls = [1, None]
-    if None in ls:
-        print("lol")
+    # # None in list
+    # ls = [1, None]
+    # if None in ls:
+    #     print("lol")
+    #
+    # #sort
+    # ls = [(1,2), (2,-90), (3, 90)]
+    # sorted(ls)  # see [(1, 2), (2, -90), (3, 90)], always compares the first element!
 
-    #sort
-    ls = [(1,2), (2,-90), (3, 90)]
-    sorted(ls)  # see [(1, 2), (2, -90), (3, 90)], always compares the first element!
+    # has to be used this way
+    ls = [1,2,3]
+    ls.reverse()
+    print(ls)
 
 if __name__ == "__main__": 
     # dict_to_list()
     # set_funcs()
     # deep_copy()
-    dictionary_basics()
+    # dictionary_basics()
+    list_basics()
