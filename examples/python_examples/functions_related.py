@@ -1,4 +1,25 @@
 import numpy as np
+def test_scope():
+    """
+    1. Function and local scopes are the same as cpp
+    2. If doesn't count as a "new scope", since it's checked only at run time. But you can create new var
+    """
+    if True: 
+        x=123
+    print("test is: ", x)
+
+    def create_global():
+        # create global var
+        global global_var 
+        global_var = 78
+
+    def read_global(): 
+        global global_var
+        print(global_var)
+        # then you can modify the global var as well
+
+    create_global()
+    read_global()
 
 def test_nested_func(): 
     class Foo(object):
@@ -31,7 +52,6 @@ def np_masking():
 def property_test():
     class foo: 
         pass
-        
     f = foo()
     f.temperature = 800
     print(f.temperature)
@@ -39,4 +59,5 @@ def property_test():
     print(f.__class__.__name__)
 
 if __name__ == "__main__": 
-    test_nested_func()
+    # test_nested_func()
+    test_scope()

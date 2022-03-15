@@ -19,19 +19,17 @@ def kwargs_test():
     func_w = partial(func, b = 12)
     func_w(a = 13)
 
+def test_tuples():
+    tup = (1,2,3)
+    print(type(tup), tup[1])
+    # tuple has no deletion
+    try: 
+        del tup[1]
+    except: 
+        print("no delete for tuple")
+    
 
 # vidb, ddd, debugger for python 
-
-def np_filter(): 
-    arr = np.ones((4,3))
-    arr[0,:] *= np.NINF
-
-    not_inf = ~np.isinf(arr)   #matrix shows true for elements that're not inf
-    a = not_inf.any(axis=1)     #examine each row? False if any element in the row is false
-    arr[[True,False, False, False]] # shows first row. Different than arr[[1,0,0,0]]?
-    filtered = arr[a]       # the last result we want
-
-
 def dict_to_list():
     di = {1:"a", 2:"b"}
     ls = list(di.items())
@@ -52,6 +50,11 @@ def dictionary_basics():
     person.get("key", "hehe")   #get hehe, default value
     # get KeyError
     # person["key"]
+
+    # delete an element
+    my_dict["lol"] = "lol"
+    del my_dict["lol"]
+    print(my_dict)
 
 def deep_copy(): 
     di = {1:"a", 2:"b"}
@@ -118,3 +121,4 @@ if __name__ == "__main__":
     # deep_copy()
     # dictionary_basics()
     list_basics()
+    # test_tuples()
