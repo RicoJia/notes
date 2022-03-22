@@ -119,6 +119,23 @@ def list_basics():
     ls.reverse()
     print(ls)
 
+    #### Create object with identical elements
+    # see 'aaaa'. * in python will create APPEND the object with 1. identical elements for immutables, and references for mutables
+    str_ = 'a'*4
+    _str = 'a'*4
+    print(str_)
+
+    # * is no good in this case
+    ls = [2 * [0]] * 3
+    ls[0][0] = 1
+    ls[1][1] = 100
+    print(ls)
+
+    # so USE LIST  comprehension
+    ls = [[0 for j in range (3)] for i in range(2)]
+    ls[0][0] = 1
+    print(ls)
+
 if __name__ == "__main__": 
     # dict_to_list()
     # set_funcs()
