@@ -71,6 +71,10 @@ def deep_copy():
     ls3 = copy.deepcopy(ls1)
     print(ls1, ls2, ls3)
 
+    # 'Pickling an AuthenticationString object is ' 
+    # TypeError: Pickling an AuthenticationString object is disallowed for security reasons
+    # that means you may have something that has unpicklable string, like a process object
+
 def set_funcs(): 
     s = set()
     s = {1,2,3}
