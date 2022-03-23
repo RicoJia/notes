@@ -4,35 +4,38 @@
 #include <algorithm>
 
 using namespace std;
-void print1vec(const vector<int> & vec);
-void vec_b(vector<int> & b,const vector<int> & a); 
-void vec_a(vector<int> & a);
-void vec_swap(vector<int> & b, vector<int> & a);
-void vec_c(vector<int> & c,vector<int> & d);
-//------------------------------------------------------------------------------------------------
-int main(){
-  vector<int> a = {
-      1, 2, 3,
-      4, 5, 6}; // this is how you initialize a vector. you don't need size.
-  std::sort(a.begin(), a.end(), [](int a, int b){return a>b; });
-  print1vec(a);
-  //
-  // vector<int> b;
-  // vec_b(b, a);
-  // vec_a(a);
-  // vec_swap(b, a);
-  //
-  // vector<int> c(5, 0); // another way to initialize a vector!
-  // vector<int> d(c.begin(), c.end());
-  // vec_c(c, d);
+
+void print1vec(const vector<int> &vec) // use const & to print a vector
+{
+
+  cout << "_____________________________" << endl << endl;
+  for (auto i = vec.begin(); i != vec.end();
+       i++) // this i show you use iterator. it is similar to a pointer.
+            // ALTERNATIVELY: you can use for each loop as well.
+  {
+    cout << *i << " "; // you need to dereference the iterator!!   pay attention
+                       // to the sequence of * and i!
+  }
+  cout << endl;
+  cout << "the front is: \n";
+  cout << vec.front() << endl
+       << "the back is:\n"; // this is how u use front() and back(). u get the
+                            // element directly.
+  cout << vec.back() << endl << endl;
+
+  auto j = vec.begin() +
+           vec.size() / 2; // you can't add two iterators together: auto j =
+                           // (vec.begin()+vec.end()+1)/2; you can add a number
+                           // to it tho. it's like adding two pointers together.
+  cout << "the middle entries are: " << *(j - 1) << " " << *j << endl;
 }
-//------------------------------------------------------------------------------------------------
+
 void vec_c(vector<int> & c, vector<int> & d)
 {
  cout<<"d is: \n";
  int e[] = {5,4,3,2,1,0,-1,-2};		  // to copy an array to a std::array
- d.assign(e,*(&e+1));			  // MAGIC!! e is the address of the first element, while &e is the address of the whole array!!in this case, &e+1 equivalent to e+8. 
- cout<<"the address of e:"<<e<<endl<<"the address of the unknown"<<*(&e+1)<<endl; 
+ d.assign(e,*(&e+1));			  // MAGIC!! e is the address of the first element, while &e is the address of the whole array!!in this case, &e+1 equivalent to e+8.
+ cout<<"the address of e:"<<e<<endl<<"the address of the unknown"<<*(&e+1)<<endl;
  //print1vec(d);
 }
 //------------------------------------------------------------------------------------------------
@@ -72,29 +75,34 @@ void vec_b(vector<int> & b,const vector<int> & a)
   b.push_back(8);
   print1vec(b);
 }
-//------------------------------------------------------------------------------------------------
-void print1vec(const vector<int> &vec) // use const & to print a vector
-{
 
-  cout << "_____________________________" << endl << endl;
-  for (auto i = vec.begin(); i != vec.end();
-       i++) // this i show you use iterator. it is similar to a pointer.
-            // ALTERNATIVELY: you can use for each loop as well.
-  {
-    cout << *i << " "; // you need to dereference the iterator!!   pay attention
-                       // to the sequence of * and i!
-  }
-  cout << endl;
-  cout << "the front is: \n";
-  cout << vec.front() << endl
-       << "the back is:\n"; // this is how u use front() and back(). u get the
-                            // element directly.
-  cout << vec.back() << endl << endl;
-
-  auto j = vec.begin() +
-           vec.size() / 2; // you can't add two iterators together: auto j =
-                           // (vec.begin()+vec.end()+1)/2; you can add a number
-                           // to it tho. it's like adding two pointers together.
-  cout << "the middle entries are: " << *(j - 1) << " " << *j << endl;
+// No promotion in std::vector, so std::vector<int>, std::vector<float> cannot be used here
+void test_float_to_double(std::vector<double> float_vec){
+    for (auto i: float_vec) cout<<i<<" "; 
+    cout<<endl;
 }
 
+int main(){
+  // vector<int> a = {
+  //     1, 2, 3,
+  //     4, 5, 6}; // this is how you initialize a vector. you don't need size.
+  // std::sort(a.begin(), a.end(), [](int a, int b){return a>b; });
+  // print1vec(a);
+  //
+  // vector<int> b;
+  // vec_b(b, a);
+  // vec_a(a);
+  // vec_swap(b, a);
+  //
+  // vector<int> c(5, 0); // another way to initialize a vector!
+  // vector<int> d(c.begin(), c.end());
+  // vec_c(c, d);
+
+    std::vector<int> int_vec {1,2,3}; 
+    // test_float_to_double(int_vec);       // illegal 
+    // test_float_to_double({1,2,3});      // legal
+    // also {begin(), end()} is also allowed, since
+    std::vector<float> double_vec {int_vec.begin(), int_vec.end()}; 
+    test_float_to_double({int_vec.begin(), int_vec.end()}); 
+
+}
