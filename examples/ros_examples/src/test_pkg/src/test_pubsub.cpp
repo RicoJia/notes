@@ -63,9 +63,11 @@ void pub(ros::NodeHandle& nh)
     }
 }
 
-// Subscriber callback, note we have the constptr
+// Subscriber callback, note we have the constptr. A const ptr is a boost::shared_ptr
+boost::shared_ptr<geometry_msgs::Twist const> another_msg; 
 void cb1(const geometry_msgs::Twist::ConstPtr& msg){
     ROS_INFO_STREAM(__PRETTY_FUNCTION__<<": sub - "<<msg->linear.x); 
+    another_msg = msg;
 }
 
 // Subscriber callback, note we have the constptr

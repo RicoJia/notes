@@ -58,6 +58,20 @@ def property_test():
 
     print(f.__class__.__name__)
 
+def test_optional_arg(): 
+    from typing import Optional, Union
+    # telling the type checker that an object of the specific type is required
+    # this is called type hints 
+    # Python doesn't enforce type hints, but mypy, pycharm will. 
+    def func(arg: Union[int]): 
+        print(type(arg))
+    # Optional is Union(..., None)
+    def func2(arg: Optional[int]): 
+        print(type(arg))
+    func(None)
+    func2(2)
+
 if __name__ == "__main__": 
     # test_nested_func()
-    test_scope()
+    # test_scope()
+    test_optional_arg()
