@@ -71,6 +71,10 @@ def deep_copy():
     ls3 = copy.deepcopy(ls1)
     print(ls1, ls2, ls3)
 
+    # 'Pickling an AuthenticationString object is ' 
+    # TypeError: Pickling an AuthenticationString object is disallowed for security reasons
+    # that means you may have something that has unpicklable string, like a process object
+
 def set_funcs(): 
     s = set()
     s = {1,2,3}
@@ -113,6 +117,23 @@ def list_basics():
     # has to be used this way
     ls = [1,2,3]
     ls.reverse()
+    print(ls)
+
+    #### Create object with identical elements
+    # see 'aaaa'. * in python will create APPEND the object with 1. identical elements for immutables, and references for mutables
+    str_ = 'a'*4
+    _str = 'a'*4
+    print(str_)
+
+    # * is no good in this case
+    ls = [2 * [0]] * 3
+    ls[0][0] = 1
+    ls[1][1] = 100
+    print(ls)
+
+    # so USE LIST  comprehension
+    ls = [[0 for j in range (3)] for i in range(2)]
+    ls[0][0] = 1
     print(ls)
 
 if __name__ == "__main__": 

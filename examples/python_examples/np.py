@@ -9,3 +9,19 @@ def np_filter():
     arr[[True,False, False, False]] # shows first row. Different than arr[[1,0,0,0]]?
     filtered = arr[a]       # the last result we want
 
+def test_empty_arr(): 
+    arr = np.array([])
+    print("arr is None", arr is None)   # see false. 
+    def ret_arr() -> np.ndarray:
+        pass
+
+    something = ret_arr()
+    print(something.shape)      # see None
+
+def test_math(): 
+    # see cube root 
+    print(np.cbrt([1,8,27]))
+
+if __name__=="__main__":
+    # test_empty_arr()
+    test_math()
