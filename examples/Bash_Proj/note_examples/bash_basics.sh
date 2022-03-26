@@ -22,7 +22,9 @@ function delete(){
 # delete
 
 function test_if(){
-    # 1. need spacing after if, before [[. ]]. Spacing matters, else it won't evaluate properly!!
+    # - need spacing after if, before [[. ]]. Spacing matters, else it won't evaluate properly!!
+    # [[ is a **bash-only keyword. old way is [**. [[]] is an alias for test, a shell built-in command. So it's equivalent to having 3 arguments ```test ${VAR} == 'B'```
+    # /newline is a command separate, same as ;**
     if [[ 1 ]]
     then 
         echo "hehe"
@@ -31,6 +33,7 @@ function test_if(){
     # - "" is used whenever the variable might contain space or is empty. This way, the entire thing is treated as a single argument. Else, the string might be broken into many. So, always wrap string with ""
     # - UID is 0 if you execute the script as root, UID is a **shell built-in variable, not an environment variable**.  
     # -eq for equal, = for comparing strings, == is for bash only. -ne is not equal. != for strings. -le is less than or equal to
+    # You also need space for -eq, so it is a separate word.
     if [[ ${UID} -eq 0 ]]; then echo "UID is 0"; fi
 }
 test_if
