@@ -42,6 +42,12 @@ void test_affine()
     // tf::transformEigenToTF(transform_eigen, transform_tf);
 }
 
+/**
+* @ Common Commands
+*   - rosrun tf tf_echo /map /base_scan
+*   - rosrun tf view_frames
+*   - rosrun tf tf_monitor
+*/
 int main(int argc, char**argv)
 {
     ros::init(argc, argv, "test_tf"); 
