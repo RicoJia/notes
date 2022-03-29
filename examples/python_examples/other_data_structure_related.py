@@ -3,6 +3,16 @@ def test_str():
     # see abc1abc2abc3
     print(string.join("abc"))
 
+def test_queue(): 
+    import queue
+    q = queue.Queue()
+    q.put(5)
+    q.put(10)
+    # look at the last queue
+    print(q.queue[-1])
+    # get the element
+    q.get()
+
 def test_div(): 
     a = -12
     b = 7
@@ -23,4 +33,5 @@ def test_div():
 
 if __name__=="__main__":
     # test_str()
-    test_div()
+    # test_div()
+    test_queue()
