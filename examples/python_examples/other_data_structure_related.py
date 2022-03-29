@@ -5,11 +5,12 @@ def test_str():
 
 def test_queue(): 
     import queue
-    q = queue.Queue()
+    q = queue.Queue(2)
     q.put(5)
     q.put(10)
     # look at the last queue
     print(q.queue[-1])
+    print(q.full())
     # get the element
     q.get()
 
