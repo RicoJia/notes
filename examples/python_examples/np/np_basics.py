@@ -22,6 +22,17 @@ def test_math():
     # see cube root 
     print(np.cbrt([1,8,27]))
 
+def invert_arr(): 
+    # ::-1 is how you invert the arrays
+    arr = np.ones((2,3,4))
+    arr[1,0,1] = 99
+    print(arr[:, :, ::-1])
+
+    arr = np.ones((2,3))
+    arr[1,2] = 99
+    print(arr[:, ::-1])
+
 if __name__=="__main__":
     # test_empty_arr()
-    test_math()
+    # test_math()
+    invert_arr()
