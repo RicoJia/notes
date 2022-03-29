@@ -54,7 +54,12 @@ def dictionary_basics():
     # delete an element
     my_dict["lol"] = "lol"
     del my_dict["lol"]
+    my_dict["key1"] = "val1"
+    my_dict["key2"] = "val2"
     print(my_dict)
+
+    # we're printing the keys only
+    print(list(my_dict))
 
 def deep_copy(): 
     di = {1:"a", 2:"b"}
@@ -73,7 +78,7 @@ def deep_copy():
 
     # 'Pickling an AuthenticationString object is ' 
     # TypeError: Pickling an AuthenticationString object is disallowed for security reasons
-    # that means you may have something that has unpicklable string, like a process object
+    # That means you may have something that has unpicklable string, like a process object
 
 def set_funcs(): 
     s = set()
@@ -140,6 +145,6 @@ if __name__ == "__main__":
     # dict_to_list()
     # set_funcs()
     # deep_copy()
-    # dictionary_basics()
-    list_basics()
+    dictionary_basics()
+    # list_basics()
     # test_tuples()
