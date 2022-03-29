@@ -20,7 +20,12 @@ def test_reference():
     # not modifying, since we're passing in alias to ls[0]. Variable names in Python are aliases to memory locations. Assigning an alias A to another will not modify the content of the previous A itself
     try_to_modofy_list_element(ls[0])
 
+def test_tup(): 
+    a, b = 1, 2
+    print(a,b)
+
 if __name__=="__main__":
     # test_warning()
     test_math()
+    test_tup()
 
