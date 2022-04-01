@@ -3,9 +3,9 @@ import concurrent.futures
 
 def test_event(): 
     def foo(ev):
-    print(f"flag: {ev.isSet()}")
-    ev.wait(20) #timeout
-    print(f"flag: {ev.isSet()}")
+        print(f"flag: {ev.isSet()}")
+        ev.wait(20) #timeout
+        print(f"flag: {ev.isSet()}")
 
     ev = threading.Event()
     th1 = threading.Thread(name="Th1", target=foo, args=(ev,))
@@ -34,6 +34,9 @@ def test_lock():
         name += 1
         print(name)
         lock.release()
+
+        with lock: 
+            print (name)
 
     for j in range(2): 
         t = threading.Thread(target = worker)
