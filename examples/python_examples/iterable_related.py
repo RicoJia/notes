@@ -60,6 +60,12 @@ def dictionary_basics():
 
     # we're printing the keys only
     print(list(my_dict))
+    # And we need list() to convert dict_values object. This is a must
+    print(list(my_dict.values()))
+
+    # merging 2 dicts
+    my_dict2 = {"1": "pen"}
+    print({**my_dict, **my_dict2})
 
 def deep_copy(): 
     di = {1:"a", 2:"b"}
@@ -109,6 +115,9 @@ def set_funcs():
     str1, str2 = s3
     print(str1, " ", str2)
 
+    # += does not work on set
+    # s2+=s
+
 def list_basics(): 
     # # None in list
     # ls = [1, None]
@@ -141,10 +150,14 @@ def list_basics():
     ls[0][0] = 1
     print(ls)
 
+    ls2 = [4,5,6]
+    tmp_ls = ls[0] + ls2
+    print(tmp_ls)
+
 if __name__ == "__main__": 
     # dict_to_list()
-    # set_funcs()
+    set_funcs()
     # deep_copy()
-    dictionary_basics()
+    # dictionary_basics()
     # list_basics()
     # test_tuples()
