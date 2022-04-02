@@ -43,6 +43,10 @@ void test_block_and_larger_shape(){
     cout<<"i: "<<i<<endl;
 
     std::cout<<__FUNCTION__<<": element: "<<w(2)<<std::endl;
+    // means block starts at (0,0), with size(2,2)
+    mat.block(0,0,2,2) = Eigen::Matrix2d::Identity();
+    mat.block(0,0,2,2) << 1,2,3,4;
+    std::cout<<__FUNCTION__<<": block: "<<mat<<std::endl;
 }
 
 void test_vector_min(){
