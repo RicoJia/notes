@@ -12,5 +12,5 @@ void test_hat(){
 
 int main()
 {
-    
+    test_hat();
 }

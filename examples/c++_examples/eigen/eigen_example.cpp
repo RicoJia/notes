@@ -22,7 +22,7 @@ void test_creation(){
 }
 
 void test_auto_keyword(){
-    // DO NOT USE auto, initialize matrices properly
+    // DO NOT USE auto, initialize matrices properly. One reason is right hand side always return a temporary, which gets destroyed at the next line. You are actually calling the copy ctor with Eigen::Matrix3d. https://eigen.tuxfamily.org/dox/TopicPitfalls.html#title3
     // auto R_3d = Eigen::Matrix3d::Identity();
     Eigen::Matrix3d R_3d = Eigen::Matrix3d::Identity();
     R_3d.block<2,2>(0,0) = Eigen::Matrix2d::Identity();
