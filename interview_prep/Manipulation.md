@@ -4,7 +4,7 @@
         - figure out reachable workspace, 
         - gripper we are using consists of only one actuator
     2. single destination (Z pointing down/doesn't matter)
-        ```
+        ```cpp
         class SingleDestinationPlanner{
             public: 
                 SingleDestinationPlanner(PLANNING_GROUP){
@@ -45,6 +45,7 @@
             ```cpp
             // subscribe: /joint_positions from robot, /pause_status from safe_thread
             // publish: /joint_control 
+            // service: /pause 
             // pick and place anything looking like coffee in the designated area
             // Assumptions: 
             // 1. no coffees have been removed in the input area
@@ -62,8 +63,7 @@
                 void execution(trajectory){
                     for (const auto& wp:plan.trajectory){
                         if(person_in_work_area){
-                            // we are using std::future and std::promise because the /safety node just publish once. 
-                            safety_fut.get();
+                            wait_for_person_to_leave(); 
                         }
                         // we use publisher because it's smaller. Else we can just call move_group.move()
                         ... 
@@ -89,6 +89,28 @@
                    current_waypoint[6] = 0.0; 
                    execution_cond_var.wait();
                 }
+
+            bool pause_unpause_srv_cb(req, res){
+                    if (req.pause){
+                        person_in_work_area = true;
+                        this->pause_fut.get();
+                    }
+                    else{
+                        // inform execution() that the wait is over
+                        this->unpause_promise.set();
+                    }
+            }
+
+            void wait_for_person_to_leave(){
+                this->unpause_promise = std::promise<void>(); 
+                this->unpause_future = this->unpause_promise.get_future();
+                // inform /safety that we have paused 
+                this->pause_promise.set()
+                // wait for next unpause srv from /safety 
+                this->unpause_future.get(); 
+                this->pause_promise=std::promise<void>();
+                this->pause_fut=this->pause_promise.get_future();
+            }
 
             };
             ```
@@ -138,6 +160,20 @@
            
         }
         ```
+    - [diagram](https://app.diagrams.net/#G1s3RWDtmiwxv2Y_aHYtxH-HjgZVMiYn71) 
 
 2. serving robot 
+    - assume we know where to park at each table 
+    - ROS NavStack Makes sense
+        1. Odometer (wheel encoder, IMU (a bit noisy, unless buy more expensive ones. But that accumulative drift is a problem anyways), Lidar as Odometer through scan matching (icp, gicp...) )
+        2. Simple TF tree: ```map->odom->base_link->sensor_link```
+        3. AMCL to estimate ```map -> base_link``` by publishing onto ```map->odom```. Particle filter with particles being robot state estimate. The goal is to try to estimate the distribution of states. Scoring is done by scan matching (p(z|x)). Then we resample to "discretize" the distribution. Adaptive is to increase number of particles if max score is too low (e.g., kidnapped robot problem where sensors suddenly stops working), or reduce the number if max score is too high
+            <p align="center">
+            <img src="https://img-blog.csdnimg.cn/img_convert/91978f9cdf938f57f8ccb79c14281790.png""" height="400" width="width"/>
+            </p>
+    - Other methods for localization
+        1. If possible, use AR tags at corners not attracting attention (so we can potentially do EKF SLAM)
+        2. Use radio beacons (<30cm I read), and solve trillateration using Least-Squares method
+    - But do we really want a robot arm? IMO not for serving directly for safety reasons. However, it might still be cool (for attracting investors) to have one. So we can have a little slider, 1. the arm puts coffee on the slider 2. the slider slides out for customer to receive. Then it's pretty much 
+    - [reference](https://blog.csdn.net/soaring_casia/article/details/119576504)
 
