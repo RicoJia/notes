@@ -36,4 +36,15 @@ function test_if(){
     # You also need space for -eq, so it is a separate word.
     if [[ ${UID} -eq 0 ]]; then echo "UID is 0"; fi
 }
-test_if
+# test_if
+
+function test_increase_variable(){
+    I=1
+    for i in {2..5}
+    do
+        # 1. integer math $(())
+        I=$((I+1))
+    done 
+    echo "I is ${I}"
+}
+test_increase_variable

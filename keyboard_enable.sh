@@ -1,9 +1,9 @@
 # This script remaps some keys for Shooterz game. d means disable, e means enable
-if [[ ${1} == "d" ]]
+if [[ ${1} == "e" ]]
 then 
   xmodmap -e 'keycode 67 = 3'#F1
-  xmodmap -e 'keycode 10 = 3 3' #1
-  xmodmap -e 'keycode 11 = 3 3'#2
+  xmodmap -e 'keycode 10 = 7 7' #1
+  xmodmap -e 'keycode 11 = 8 8'#2
   xmodmap -e 'keycode 14 = 4 4'#5
   xmodmap -e 'keycode 15 = 7 7'#6
   xmodmap -e 'keycode 17 = 7 7'#8
