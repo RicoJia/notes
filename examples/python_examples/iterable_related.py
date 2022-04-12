@@ -124,6 +124,18 @@ def set_funcs():
     s4 = set(i * 2 for i in ls)
     print(s4)
 
+    # removes a random value in set 
+    x = s4.pop()
+    print("after pop ", s4)
+
+def test_range(): 
+    # you can access range object like list 
+    r = range(1, 5)
+    print(type(r), r[2])
+
+    # create a set using range
+    s = set(range(2))
+
 def test_default_dict(): 
     # default dict is a subclass of dict
     from collections import defaultdict
@@ -200,3 +212,4 @@ if __name__ == "__main__":
     # list_basics()
     # test_tuples()
     # test_default_dict()
+    test_range()
