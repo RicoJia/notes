@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import time 
 def test_time_str(): 
     time_str = time.strftime("%Y, %m, %d")  #returns string that corresponds to the format strings

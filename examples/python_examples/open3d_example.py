@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 # examples/Python/Basic/working_with_numpy.py
 
 import copy

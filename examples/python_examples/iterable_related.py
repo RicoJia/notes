@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import numpy as np
 def kwargs_test(): 
     def test_args(*args): 
