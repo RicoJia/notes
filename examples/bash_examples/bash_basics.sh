@@ -40,11 +40,21 @@ function test_if(){
 
 function test_increase_variable(){
     I=1
+    B=0
     for i in {2..5}
     do
         # 1. integer math $(())
         I=$((I+1))
+        ((B+=1))
     done 
-    echo "I is ${I}"
+    echo "I is ${I}, B is ${B}"
 }
 test_increase_variable
+
+function test_str(){
+    a='Hello'
+    b='World'
+    c="${a} ${b}"
+    echo "${c}"
+}
+test_str
