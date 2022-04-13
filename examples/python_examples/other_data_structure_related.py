@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 def test_str():
     string = "123"
     # see abc1abc2abc3

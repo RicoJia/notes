@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 def inheritance_basics():
     # Parent class calls function in derived class
     class A:

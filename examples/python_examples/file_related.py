@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 ########### Zip file ###########
 # writing and reading from zip file
 def zip_file_related(): 

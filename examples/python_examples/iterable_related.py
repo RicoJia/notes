@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import numpy as np
 def kwargs_test(): 
     def test_args(*args): 
@@ -118,6 +119,48 @@ def set_funcs():
     # += does not work on set
     # s2+=s
 
+    # "set" comprehension
+    ls = [1,2,3]
+    s4 = set(i * 2 for i in ls)
+    print(s4)
+
+    # removes a random value in set 
+    x = s4.pop()
+    print("after pop ", s4)
+
+def test_range(): 
+    # you can access range object like list 
+    r = range(1, 5)
+    print(type(r), r[2])
+
+    # create a set using range
+    s = set(range(2))
+
+def test_default_dict(): 
+    # default dict is a subclass of dict
+    from collections import defaultdict
+    # created default values as 0 
+    # defaultdict(<class 'int'>, {0: 100, 1: 2})
+    d1 = defaultdict(int)
+    d1[0]+=100
+    d1[1] += 2
+    print(d1)
+
+    # create default values being []
+    d2 = defaultdict(list)
+    d2[0].append(3)
+    d2[0].append(4)
+    print(d2)
+
+    #another motivation is to avoid keyError like dict[NOT_EXSISTENT]. We pass in a function as "default factory" to provide a default value if a key doesn't exist
+    d3 = defaultdict(lambda: "not exist")
+    i = d3[100]
+
+    # you can create a set, append to it, etc. 
+    # iterate this as you would with dict 
+    for key, val in d3: 
+        print(key)
+
 def list_basics(): 
     # # None in list
     # ls = [1, None]
@@ -154,6 +197,13 @@ def list_basics():
     tmp_ls = ls[0] + ls2
     print(tmp_ls)
 
+    # unpack a list. if not enough params, we will run into error. Also we can do this in u, v
+    u, v, g= ls2
+    print(f"u: {u}, v: {v}")
+    ls3 = [[1,2], [3,4], [5,6]]
+    for u, v in ls3: 
+        print(u, v)
+
 if __name__ == "__main__": 
     # dict_to_list()
     set_funcs()
@@ -161,3 +211,5 @@ if __name__ == "__main__":
     # dictionary_basics()
     # list_basics()
     # test_tuples()
+    # test_default_dict()
+    test_range()
