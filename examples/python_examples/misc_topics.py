@@ -25,6 +25,14 @@ def test_tup():
     a, b = 1, 2
     print(a,b)
 
+def test_enum(): 
+    from enum import Enum
+    class Animal:
+        DOG = 1
+        CAT = 2
+    ls = [1,2,3]
+    print(ls[Animal.DOG]) 
+
 def test_string(): 
     #ljust returns a 20 char long str, with "O" padding char
     txt = "banana"
@@ -48,4 +56,5 @@ if __name__=="__main__":
     # test_warning()
     # test_math()
     # test_tup()
-    test_string()
+    # test_string()
+    test_enum()
