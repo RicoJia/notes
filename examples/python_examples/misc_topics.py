@@ -39,6 +39,11 @@ def test_string():
     # in total len(str_) is 15, with * on the sides
     print(str_.center(15, "*"))
 
+    # str.strip() remove trailing/ leading spaces
+    txt = "     banana     "
+    x = txt.strip()
+    print(x)
+
 if __name__=="__main__":
     # test_warning()
     # test_math()
