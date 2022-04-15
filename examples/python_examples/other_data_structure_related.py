@@ -28,6 +28,11 @@ def test_string():
     # see abc1abc2abc3
     print(string.join("abc"))
 
+    bit_num = b'sdf'
+    # NOTE: str(text_bytes) can't specify the encoding
+    print(str(bit_num))
+    print(bit_num.decode('utf-8'))
+
 def test_queue(): 
     import queue
     q = queue.Queue(2)
@@ -41,4 +46,4 @@ def test_queue():
 
 if __name__=="__main__":
     test_string()
-    test_queue()
+    # test_queue()
