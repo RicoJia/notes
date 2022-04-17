@@ -1,6 +1,8 @@
 #include <iostream>
 #include <ros/ros.h>
+#include <tf2_ros/transform_listener.h>
 #include <tf2/LinearMath/Quaternion.h>
+#include <geometry_msgs/TransformStamped.h>
 #include <Eigen/Dense>
 #include "tf/message_filter.h"
 
@@ -40,6 +42,29 @@ void test_affine()
     // const Eigen::Vector3d translation_part = transform_temp.translation().cast<double>();
     // tf::Transform transform_tf;
     // tf::transformEigenToTF(transform_eigen, transform_tf);
+}
+
+/**
+* @brief: TF2 Theory
+*   1. TF2 is faster: static_transform_publisher (using latched topic)
+*       rosrun tf2_ros static_transform_publisher 0 0 0 0 0 0 /base_link /laser, publishing on /tf_static
+*   2. TF2 坐标变换监听器中的 Buffer 实现 is faster too 
+*   3. tf_kdl ... are instances of the templated class tf2. You can define your own, too.
+*   4. Action-based client for occasional queries for transform (instead of having a listener constntly listening)
+*/
+void test_tf2(){
+    geometry_msgs::TransformStamped transformStamped;
+    tf2_ros::Buffer tfBuffer;
+    try{
+        // note this ros::Time(0) returns the "latest message"
+      transformStamped = tfBuffer.lookupTransform("turtle2", "turtle1", ros::Time(0));
+      // Note: we have now, but buffer time is 3s. We can't have now without 3s because that way, the transform will be invalid.
+      transformStamped = tfBuffer.lookupTransform("turtle2", "turtle1", ros::Time::now(), ros::Duration(3.0));
+    }
+    catch (tf2::TransformException &ex) {
+      ROS_WARN("%s",ex.what());
+      ros::Duration(1.0).sleep();
+    }
 }
 
 /**

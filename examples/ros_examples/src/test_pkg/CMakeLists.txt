@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
     roscpp  # need this for everything
     geometry_msgs
     tf2
+    tf2_ros
     message_generation
     )
 
