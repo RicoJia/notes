@@ -5,6 +5,24 @@ def test_math():
     print(math.log(10,10))
     print(math.floor(0.4))
 
+def test_div(): 
+    a = -12
+    b = 7
+    # by default, we get float -1.7 here
+    print("a/b ", a/b)
+    # get 2, since for negative it's -2*7+2, this is remainder
+    print("a%b: ", a%b)
+    # get -2, since it's the quotient of the smallest closest num, floor division
+    print("a//b: ", a//b)
+    # see (-2, 2), the remainer
+    print("", divmod(a, b))
+
+    import math
+    # fmod for negative number, find the closest larger number
+    print(math.fmod(-10, 3))    #3*-3-1 = -10
+    print(math.fmod(-5, 3))    #1*-3 - 2 = -5
+    print(math.fmod(5, -3))    #-3*-1 + 2 = 5
+
 def test_warning():
     import warnings
     def fxn():
@@ -25,22 +43,17 @@ def test_tup():
     a, b = 1, 2
     print(a,b)
 
-def test_string(): 
-    #ljust returns a 20 char long str, with "O" padding char
-    txt = "banana"
-    x = txt.ljust(20, "O")
-    print(x)
-
-    # to split a string into a list of words, based on delim
-    str_ = "lol, lol"
-    # see['lol', ' lol']
-    print(str_.split(','))
-    print(str_.endswith("s"))
-    # in total len(str_) is 15, with * on the sides
-    print(str_.center(15, "*"))
+def test_enum(): 
+    from enum import Enum
+    class Animal:
+        DOG = 1
+        CAT = 2
+    ls = [1,2,3]
+    print(ls[Animal.DOG]) 
 
 if __name__=="__main__":
     # test_warning()
     # test_math()
     # test_tup()
-    test_string()
+    # test_enum()
+    # test_div()
