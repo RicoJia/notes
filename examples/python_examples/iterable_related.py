@@ -65,8 +65,12 @@ def dictionary_basics():
     print(list(my_dict.values()))
 
     # merging 2 dicts
-    my_dict2 = {"1": "pen"}
+    my_dict2 = {"1": "pen", "2": "hug"}
     print({**my_dict, **my_dict2})
+
+    # pop doesn't throw errors
+    my_dict2.pop("1")
+    print(my_dict2)
 
 def deep_copy(): 
     di = {1:"a", 2:"b"}
@@ -206,10 +210,10 @@ def list_basics():
 
 if __name__ == "__main__": 
     # dict_to_list()
-    set_funcs()
+    # set_funcs()
     # deep_copy()
-    # dictionary_basics()
+    dictionary_basics()
     # list_basics()
     # test_tuples()
     # test_default_dict()
-    test_range()
+    # test_range()
