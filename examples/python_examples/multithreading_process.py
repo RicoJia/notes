@@ -48,5 +48,25 @@ def test_lock():
         if t is not main_thread: 
             t.join()
 
+import signal
+import time
+def test_process(): 
+    """
+    Theory: 
+        1. you have SIGUSR1, SIGUSR2 to communicate between processes. 
+        2. 
+    """
+    shutdown = False
+    def sig_handler_usr2(signum, frame):
+        nonlocal shutdown
+        shutdown = True
+        print("usr2 is called")
+    signal.signal(signal.SIGUSR2, sig_handler_usr2)
+    print("sleeping")
+    while not shutdown: 
+        time.sleep(30)
+    
+
 if __name__ == "__main__": 
-    test_lock()
+    # test_lock()
+    test_process()
