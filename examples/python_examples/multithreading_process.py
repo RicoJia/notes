@@ -64,7 +64,7 @@ def test_process():
     signal.signal(signal.SIGUSR2, sig_handler_usr2)
     print("sleeping")
     while not shutdown: 
-        time.sleep(30)
+        time.sleep(0.5)
     
 
 if __name__ == "__main__": 
