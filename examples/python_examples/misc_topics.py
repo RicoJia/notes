@@ -56,4 +56,4 @@ if __name__=="__main__":
     # test_math()
     # test_tup()
     # test_enum()
-    # test_div()
+    test_div()
