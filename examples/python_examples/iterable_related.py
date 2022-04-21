@@ -208,6 +208,16 @@ def list_basics():
     for u, v in ls3: 
         print(u, v)
 
+def test_unpack(): 
+    """
+    Unpack works with all iterables: iterator, tuple, string, generator.
+    use _ to ignore
+    make sure variable name isn't being used anywhere else.
+    """
+    a,b,c,d = "1234"
+    print(a)
+
+
 if __name__ == "__main__": 
     # dict_to_list()
     # set_funcs()
