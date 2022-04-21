@@ -1,25 +1,104 @@
 #!/usr/bin/python3
 import numpy as np
-def kwargs_test(): 
-    def test_args(*args): 
-        print(args) # should see a tuple
+#========================================================================
+def deep_copy():
+    di = {1:"a", 2:"b"}
+    di2 = di.copy()
+    di3 = di
+    di[1] = "ccc"
+    print(di, di2, di3)
 
-    class test_kwargs: 
-        def __init__(self, **kwargs): 
-            print(kwargs)   # should see a dictionary
-            print(kwargs["foo"])
+    ls1 = ["a", "b"]
+    ls2 = ls1.copy()
+    ls1[0] = "ccc"
+    # Not all objects have copy. use deep copy
+    import copy
+    ls3 = copy.deepcopy(ls1)
+    print(ls1, ls2, ls3)
 
-    test_kwargs(foo="bar", love=101)
-    test_args(101, "123")
-     
+    # 'Pickling an AuthenticationString object is '
+    # TypeError: Pickling an AuthenticationString object is disallowed for security reasons
+    # That means you may have something that has unpicklable string, like a process object
 
-    # partial
-    from functools import partial
-    def func(a, b): 
-        print(a, b)
-    func_w = partial(func, b = 12)
-    func_w(a = 13)
+def test_unpack():
+    """
+    1. Unpack works with all iterables: iterator, tuple, string, generator.
+    2. make sure variable name isn't being used anywhere else.
+    3. Star unpacking: just no more than 1 *. Good for known patterns
+        - Everything comes out * is in a list.
+        - use _ to ignore, or ign
+    """
+    a,b,c,d = "1234"
+    print(a)
+    # Too many things to unpack
+    try:
+        a,b,c = "1,2,3,4"
+    # Use Exception can ignore KeyboardInterrupt, which otherwise get caught by except
+    except Exception as e:
+        print(e)
 
+    # solution: star unpacking.
+    a, *rest = "1234"
+    print(rest)    #see ['2', '3', '4']
+    # find average of nums from the middle of a list
+    first, *middle, last = [100, 90, 80,80, 99]
+    print(sum(middle)/len(middle))
+    # Design pattern, can be used as tag:
+    records = [("foo", 1,2), ("bar", "hello")]
+    for tag, *args in records:
+        if tag == "foo":
+            print(args)
+
+    # Also, need star expression to unpack args for func
+    def sum_(a, b):
+        return a + b
+    ls = [1,2]
+    # This wouldn't work to pass a list into the func
+    # print(sum_(ls))
+    print(sum_(*ls))
+
+    line = 'nobody:*:-2:-2:Unprivileged User:/var/empty:/usr/bin/false'
+    uname, * fields, homedir, ign = line.split(':')
+    print(homedir)
+
+def iterator_basics(): 
+    """
+    1. Iterable is something you can iterate over, like a list, dictionary, using the iterator inside them. 
+    2. you must have ```__iter__``` and ```__next__``` for iterators
+        - Use next() on iterables
+        - Use ```iter()``` to get an iterator
+        - Use ```for i in ``` to loop over
+
+    """
+    class Bday:
+        def __iter__(self):
+            return self
+        def __next__(self):
+            return 100
+            # raise StopIteration   #or do this
+    # __iter__ returns an iterator
+    bday = Bday()         
+    # __next__ returns the next value of the iterable
+    print(next(bday))     
+
+def test_iterator_on_iterable(): 
+    """
+    1. You have to get an iterator, Then you can do next()
+    2. or ```for i in``` calls the iterator inside an iterable
+    3. dict is an iterable. But iter(di) gives you the keys
+    4. Once we have reached the bottom of an iterator, raises StopIteration 
+    """
+    ls = [1,2,3]
+    ls_iter = iter(ls)
+    # see 1, 2
+    print(next(ls_iter), next(ls_iter))
+
+    #create an iterable from dictionary
+    di =  {"one": 1, "two":2}
+    dict_iterator = iter(di)
+    print(next(dict_iterator))
+
+#========================================================================
 def test_tuples():
     tup = (1,2,3)
     print(type(tup), tup[1])
@@ -71,25 +150,6 @@ def dictionary_basics():
     # pop doesn't throw errors
     my_dict2.pop("1")
     print(my_dict2)
-
-def deep_copy(): 
-    di = {1:"a", 2:"b"}
-    di2 = di.copy()
-    di3 = di
-    di[1] = "ccc"
-    print(di, di2, di3)
-
-    ls1 = ["a", "b"]
-    ls2 = ls1.copy()
-    ls1[0] = "ccc"
-    # Not all objects have copy. use deep copy
-    import copy
-    ls3 = copy.deepcopy(ls1)
-    print(ls1, ls2, ls3)
-
-    # 'Pickling an AuthenticationString object is ' 
-    # TypeError: Pickling an AuthenticationString object is disallowed for security reasons
-    # That means you may have something that has unpicklable string, like a process object
 
 def set_funcs(): 
     s = set()
@@ -208,22 +268,14 @@ def list_basics():
     for u, v in ls3: 
         print(u, v)
 
-def test_unpack(): 
-    """
-    Unpack works with all iterables: iterator, tuple, string, generator.
-    use _ to ignore
-    make sure variable name isn't being used anywhere else.
-    """
-    a,b,c,d = "1234"
-    print(a)
-
-
 if __name__ == "__main__": 
     # dict_to_list()
     # set_funcs()
     # deep_copy()
-    dictionary_basics()
+    # dictionary_basics()
     # list_basics()
     # test_tuples()
     # test_default_dict()
     # test_range()
+    # test_unpack()
+    test_iterator_on_iterable()

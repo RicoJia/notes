@@ -72,6 +72,31 @@ def test_optional_arg():
     func(None)
     func2(2)
 
+def kwargs_test(): 
+    """
+    kwargs is just a dictionary
+    """
+    def test_args(*args): 
+        print(args) # should see a tuple
+
+    class test_kwargs: 
+        def __init__(self, **kwargs): 
+            print(kwargs)   # should see a dictionary
+            print(kwargs["foo"])
+            for key, value in kwargs.items():
+                print(value)
+
+    test_kwargs(foo="bar", love=101)
+    test_args(101, "123")
+
+def test_partial():
+    # partial
+    from functools import partial
+    def func(a, b): 
+        print(a, b)
+    func_w = partial(func, b = 12)
+    func_w(a = 13)
+
 if __name__ == "__main__": 
     # test_nested_func()
     # test_scope()
