@@ -36,9 +36,51 @@ def dolist(mydir):
     # if this env var doesn't exist, we will have to pass in an argument
     click.echo(os.listdir(mydir))
 
+#########################################################
+# 1. group of commands using cli commands
+@click.group()
+def cli():
+  pass
+@cli.command(name='gen')
+def generic():
+    click.echo('Hello there')
+@cli.command(name='wel')
+def welcome():
+    click.echo('Welcome')
+def test_group_cli_command(): 
+    cli()
+
+# group of commands using click group
+@click.group()
+def messages():
+  pass
+@click.command()
+def generic_cp():
+    click.echo('Hello there')
+@click.command()
+def welcome_cp():
+    click.echo('Welcome')
+messages.add_command(generic_cp)
+messages.add_command(welcome_cp)
+def test_group_click_group():
+    messages()
+
+# add a subgroup of command to another group
+# now to run this, you need ./click_basics.py messages-grp welcome-grp-cp
+@click.group()
+def messages_grp():
+  pass
+@messages_grp.command()
+def welcome_grp_cp():
+    click.echo('Welcome_grp_cp')
+messages.add_command(messages_grp)
+
+
 if __name__ == '__main__':
     # hello()
     # hello_arg()
     # hello_typed_arg()
     # dots()
-    dolist()
+    # dolist()
+    # test_group_cli_command()
+    test_group_click_group()
