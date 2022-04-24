@@ -40,6 +40,12 @@ def test_flatten():
     print(np.stack(ls))
     print(np.array(ls))
 
+def np_masking(): 
+    arr = np.random.rand(4,3,3)
+    print(arr)
+    mask = np.logical_and((arr > arr.min()), (arr < arr.max()))
+    print(mask)
+
 if __name__=="__main__":
     # test_empty_arr()
     # test_math()
