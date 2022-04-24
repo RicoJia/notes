@@ -123,7 +123,9 @@ def test_type_hints():
             print(item)
     func4([2,3,4])
 
-    # Type alias: define custom aliases 
+    # Type alias: define custom aliases. Could be useful in this case: 
+    # from production.contracts import DEFAULT_POSE, tree
+    # CameraNodeConfigSpec = tree.CameraNodeConfigSpec
     from typing import Tuple
     Vector2D = Tuple[int, int]
     def func5(vector: Vector2D):
