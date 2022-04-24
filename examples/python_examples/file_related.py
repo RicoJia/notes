@@ -124,6 +124,6 @@ def os_basics():
     with open("file.txt", 'w') as file:   #open is a context manager
        file.write("Hello World")
 
-    # list all files
+    # list all files, this is a list
     os.listdir(path)
     os.rename(name)
