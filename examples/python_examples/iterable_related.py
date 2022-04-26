@@ -147,6 +147,13 @@ def generator_basics():
         print(s)
 #========================================================================
 def test_tuples():
+    """
+    1. tuples are faster and smaller than list
+        - can print type(tup) 
+    2. del tuple[1] won't work
+    3. ==, < do work, by position 
+    4. Quirk about tuple: SINGLE element, we have to append ',' but no need in other cases (e.g, no elements)
+    """
     tup = (1,2,3)
     print(type(tup), tup[1])
     # tuple has no deletion
@@ -154,7 +161,13 @@ def test_tuples():
         del tup[1]
     except: 
         print("no delete for tuple")
+
+    print((1,2,3) == (2,3,4))
+    print((1,2,3) < (2,3,4))
     
+    # quirk
+    #tuple = (1) #error
+    tuple = (1, )
 
 # vidb, ddd, debugger for python 
 def dict_to_list():
@@ -321,9 +334,9 @@ if __name__ == "__main__":
     # deep_copy()
     # dictionary_basics()
     # list_basics()
-    # test_tuples()
+    test_tuples()
     # test_default_dict()
     # test_range()
     # test_unpack()
     # test_iterator_on_iterable()
-    generator_basics()
+    # generator_basics()

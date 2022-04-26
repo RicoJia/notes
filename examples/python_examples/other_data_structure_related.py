@@ -44,6 +44,39 @@ def test_queue():
     # get the element
     q.get()
 
+def test_deque(): 
+    """
+    1. Natural choice for FIFO queue. pop, push O(1), while list is O(N)
+    2. Uses: 
+        1. if no length specified, the queue is unbounded
+        2. popleft(): the left most element, pop(): the right most element
+    """
+    from collections import deque
+    q = deque (maxlen = 3)
+    q.append('a')
+    q.append('b')
+    q.append('c')
+    q.append('d')
+    print(q)    # see b c d
+    print(q.popleft())  # see b, popleft(): the left most element
+    print(q.pop())  # see d, pop(): the right most element
+
+def test_heapq(): 
+    """
+    1. By default, returns the smallest element 
+    2. nLargest, nSmallest. Uses heapq, but also, if N == 1, just get min(). if N -> len(list), will do sorting first
+    """
+    import heapq
+    li = [5, 7, 9, 1, 3]
+    print(heapq.nlargest(3, li))
+    print(heapq.nsmallest(3, li))
+    heapq.heapify(li)
+    heapq.heappush(li,4)
+    print (heapq.heappop(li))
+
 if __name__=="__main__":
-    test_string()
+    # test_string()
     # test_queue()
+    # test_deque()
+    test_heapq()
+
