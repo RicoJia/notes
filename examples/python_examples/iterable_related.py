@@ -79,7 +79,7 @@ def iterator_basics():
     # __iter__ returns an iterator
     bday = Bday()         
     # __next__ returns the next value of the iterable
-    print(next(bday))     
+    print(next(bday))
 
 def test_iterator_on_iterable(): 
     """
@@ -98,6 +98,53 @@ def test_iterator_on_iterable():
     dict_iterator = iter(di)
     print(next(dict_iterator))
 
+def generator_basics(): 
+    """
+    1. Use yield, which is like return, but returns a generator object, which can be iterated only once. 
+        - Do not store all values in memory at once, generated on the fly
+    2. By default, it raises StopIteration exception
+    3. So use for i in.... For loop returns a generator
+    4. Design Patterns: 
+        1. Good for stuff that's generated indefinitely, real time
+        2. Good for search, which decouples search process from the upper stream code
+    """
+    def Bday_Gen():
+        yield 1
+        yield 2
+    # 1. you get a StopIteration exception
+    bday_gen = Bday_Gen()
+    while (True):
+        try:
+            print(next(bday_gen))
+        except StopIteration:
+            break
+    print("Done")
+
+    # 2. Use for loop instead
+    g = (x for x in range(10))
+    print(next(g))   # this is totes valid
+    print("===============")
+    # can keep on iterating 
+    for i in g: 
+        print(i)
+
+    # 3. Illegal since it can be iterated only once
+    # for i in generator:     
+
+    # 4. use for loop 
+    bday_gen = Bday_Gen()
+    print("===============")
+    for b in bday_gen: 
+        print(b)
+
+    # 5 generator is good design pattern for search
+    ls = [1,2,3,4,5,6,7,8, 2, 2]
+    def search(num): 
+        for n in ls: 
+            if n == num: 
+                yield n
+    for s in search(2): 
+        print(s)
 #========================================================================
 def test_tuples():
     tup = (1,2,3)
@@ -278,4 +325,5 @@ if __name__ == "__main__":
     # test_default_dict()
     # test_range()
     # test_unpack()
-    test_iterator_on_iterable()
+    # test_iterator_on_iterable()
+    generator_basics()
