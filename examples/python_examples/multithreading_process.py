@@ -80,6 +80,11 @@ def test_process():
 
     pset.join()
 
+def test_multiprocess_queue(): 
+    """
+    1. queue.get() by default will block the main thread and wait for an item to come
+    """
+    from multiprocessing import Queue
     
 
 if __name__ == "__main__": 
