@@ -179,38 +179,123 @@ def dict_to_list():
     print(di.values())
 
 def dictionary_basics(): 
-    # using np array as a key in dictionary, have to use to_bytes
-    my_array = np.array([1,2,3])
-    my_dict = {}
-    my_dict[my_array.tobytes()] = None
+    """
+    1. if no value is found, get() will return default value (like None), dict[key]will raise an error
+    2. delete an element 
+        - pop doesn't throw errors
+    3. when you do list(dict), iter(dict), they operate on keys. 
+        - next(iter(dict)). need ```iter``` because dict is not an iterable
+        - my_dict.values() gives you an "value-view" object, not a list. Similarly, my_dict.items(), .keys() gives you "item-view" keys-view objects
+    4. merging 2 dicts
+    5. Sort dictionary by value (ascending order) and return items in a list
+    """
 
-    # if no value is found, get() will return default value (like None), dict[key]will raise an error
+    # 1
     person = {}
     person.get("key")   #get None
     person.get("key", "hehe")   #get hehe, default value
     # get KeyError
     # person["key"]
 
-    # delete an element
-    my_dict["lol"] = "lol"
+    # 2
+    my_dict = {"lol": 1, "aaa": 2}
     del my_dict["lol"]
-    my_dict["key1"] = "val1"
-    my_dict["key2"] = "val2"
+    print(my_dict)
+    my_dict.pop("aaa")
     print(my_dict)
 
-    # we're printing the keys only
+    # 3
+    my_dict = {1:2, 3:4}
     print(list(my_dict))
+    print(next(iter(my_dict))) 
     # And we need list() to convert dict_values object. This is a must
     print(list(my_dict.values()))
 
-    # merging 2 dicts
+    # 4
     my_dict2 = {"1": "pen", "2": "hug"}
     print({**my_dict, **my_dict2})
 
-    # pop doesn't throw errors
-    my_dict2.pop("1")
-    print(my_dict2)
+    # 5
+    dic = {1:100, 2:3}
+    sorted_items = sorted(dic.items(), key=lambda x:x[1])
+    print("descending: ", sorted_items)
+    sorted_items = sorted(dic.items(), reverse=True, key=lambda x:x[1]) 
+    print("ascending: ", sorted_items)
 
+def test_dict_less_known_features(): 
+    """
+    1. using np array as a key in dictionary, have to use to_bytes
+    2. Find min, max of keys, or values:    
+        - zip(keys(), values()), zip(values(), keys())
+        - just find the min key or min value. 
+        - just return the value of the min key. 
+    3. Finding commonalities bw two dicts: items-view, keys-view objects support set operations, but not values-view objects pq values can have duplicates. 
+        - Make a new dict with certain elements removed 
+    """
+    # 1
+    my_array = np.array([1,2,3])
+    my_dict = {}
+    my_dict[my_array.tobytes()] = None
+
+    # 2
+    my_dict = {"1": 100, "2": 99}
+    print("with max value: ", max(zip(my_dict.values(), my_dict.keys())))
+    print("with max key", max(zip(my_dict.keys(), my_dict.values())))
+    print("min value: ", min(my_dict.values())) 
+    print("key of the min value: ", min(my_dict, key = lambda k:my_dict[k]))
+
+    # 3 
+    my_dict = {"1": 100, "2": 99}
+    my_dict_2 = {"1": 100, "2": 99, "3": 98}
+    print("common keys: ", my_dict.keys() & my_dict_2.keys())
+    print("other keys: ", my_dict_2.keys() - my_dict.keys())
+    print("common items: ", my_dict.items() & my_dict_2.items())
+    
+    # 4 
+    my_dict_2 = {"1": 100, "2": 99, "3": 98}
+    c = {key: my_dict_2[key] for key in my_dict_2.keys() - {"1"}}
+    print("certain key removed: ", c)
+
+def test_ordereddict():
+    """
+    1. Insertion order is preserved when you do next(iter), or for
+    2. Implementation: using doubly linked list. and once a new item is inserted, it's inserted at the back. 
+        - So it's twice the size as a regular dict
+    """
+    from collections import OrderedDict
+    d = OrderedDict()
+    d[5] = 6
+    d[3] = 4
+    d[1] = 2
+    for key, val in d.items(): 
+        print(key, val)
+
+
+def test_default_dict(): 
+    # default dict is a subclass of dict
+    from collections import defaultdict
+    # created default values as 0 
+    # defaultdict(<class 'int'>, {0: 100, 1: 2})
+    d1 = defaultdict(int)
+    d1[0]+=100
+    d1[1] += 2
+    print(d1)
+
+    # create default values being []
+    d2 = defaultdict(list)
+    d2[0].append(3)
+    d2[0].append(4)
+    print(d2)
+
+    #another motivation is to avoid keyError like dict[NOT_EXSISTENT]. We pass in a function as "default factory" to provide a default value if a key doesn't exist
+    d3 = defaultdict(lambda: "not exist")
+    i = d3[100]
+
+    # you can create a set, append to it, etc. 
+    # iterate this as you would with dict 
+    for key, val in d3: 
+        print(key)
+    
 def set_funcs(): 
     s = set()
     s = {1,2,3}
@@ -260,31 +345,6 @@ def test_range():
     # create a set using range
     s = set(range(2))
 
-def test_default_dict(): 
-    # default dict is a subclass of dict
-    from collections import defaultdict
-    # created default values as 0 
-    # defaultdict(<class 'int'>, {0: 100, 1: 2})
-    d1 = defaultdict(int)
-    d1[0]+=100
-    d1[1] += 2
-    print(d1)
-
-    # create default values being []
-    d2 = defaultdict(list)
-    d2[0].append(3)
-    d2[0].append(4)
-    print(d2)
-
-    #another motivation is to avoid keyError like dict[NOT_EXSISTENT]. We pass in a function as "default factory" to provide a default value if a key doesn't exist
-    d3 = defaultdict(lambda: "not exist")
-    i = d3[100]
-
-    # you can create a set, append to it, etc. 
-    # iterate this as you would with dict 
-    for key, val in d3: 
-        print(key)
-
 def list_basics(): 
     # # None in list
     # ls = [1, None]
@@ -333,8 +393,10 @@ if __name__ == "__main__":
     # set_funcs()
     # deep_copy()
     # dictionary_basics()
+    # test_ordereddict()
+    test_dict_less_known_features()
     # list_basics()
-    test_tuples()
+    # test_tuples()
     # test_default_dict()
     # test_range()
     # test_unpack()
