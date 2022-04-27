@@ -77,6 +77,17 @@ def kwargs_test():
     test_args(101, "123")
 
 def test_partial():
+    """
+    How it works: (apart from kwargs support). partial is returning a wrapper with extended args
+    def partial(func, *part_args):
+        def wrapper(*extra_args):
+            args = list(part_args)
+            args.extend(extra_args)
+            return func(*args)
+        return wrapper
+    func_wrapper = partial(func, 1)
+    func_wrapper(12)        # pass 12 in as extra_args
+    """
     # partial
     from functools import partial
     def func(a, b): 
