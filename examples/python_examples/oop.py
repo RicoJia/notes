@@ -59,7 +59,28 @@ def test_enum():
         CAT = 2
     print(TestEnum.CAT.value)
 
+def test_get_attribute(): 
+    """
+    1. When you call a member in class A, you will call A.__getattribute__() as well. So you might get recursion error
+    2. the calling with super().__getattribute__() will access the proper attribute. Not sure why? 
+    """
+    class Foo: 
+        def __init__(self): 
+            self.dummy = 100
+        def __getattribute__(self, s):
+            """
+            s is a string.
+            """
+            print ("1")
+            # calling this directly = recursion
+            # self.dummy
+            # call with super() instead, which is equivalent to self.dummy with no ambiguity
+            print(super().__getattribute__("dummy"))
+    f = Foo()
+    f.dummy
+
 if __name__ == "__main__": 
     # inheritance_basics()
-    test_class_variable()
+    # test_class_variable()
     # test_enum()
+    test_get_attribute()

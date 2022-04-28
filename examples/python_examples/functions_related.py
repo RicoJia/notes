@@ -179,8 +179,104 @@ def test_type_hints():
     # this will complain since we have mixed types
     func9(1, "sr")
 
+def test_decorator(): 
+    """
+    1. Decorator is not to execute a function with extra args. Instead it will return a "decorated function" 
+        - Decorator is just a syntactic sugar for Foo = decorate(Foo)
+        - the way to use it is to add timethis on top of some_func.  
+        - with functions.wraps, we can have: 
+            1. __name__ being "some_func" instead of "wrapper"
+            2. Access the wrapped function
+            3. Of course wraps is optional. Decorator can work without it
+    2. This is called "metaprogramming", which is to write a program that modified an existing program
+        - decorators heavily use closures and returns a callable
+        - **in python, an object with __call__() is a callable**
+    """
+    import time 
+    from functools import wraps
+    # 1
+    def timethis(func): 
+         @wraps(func)
+         # have to use args and kwargs to wrap a function with.
+         def wrapper(*args, **kwargs):
+             start = time.time() 
+             result = func(*args, **kwargs) 
+             end = time.time() 
+             print(func.__name__, end-start) 
+             # return the same thing as a convention
+             return result 
+         return wrapper
+    # decorator is just equivalent to a wrapper
+    def foo(): 
+        print("foo")
+    foo = timethis(foo)
+    foo()
+
+    @timethis
+    def some_func(): 
+        print('hehe')
+
+    some_func()
+    print("function attributes: ", some_func.__name__)
+    some_func.__wrapped__()
+
+def test_class_decorator(): 
+    """
+    1. Motivation: make all class functions decorated the same way. 
+        - Caution: __getattribute__() might be recursive
+    """
+    # 1
+    def time_all_class_methods(Cls):
+        # Cls: class
+        # decoration body - doing nothing really since we need to wait until the decorated object is instantiated
+        class Wrapper:
+            def __init__(self, *args, **kwargs):
+                print(f"wrapper init")
+                self.decorated_obj = Cls(*args, **kwargs)
+
+            def __getattribute__(self, s):
+                """
+                Must return a callable. s is a string 
+                """
+                print("1")
+                x = super().__getattribute__("decorated_obj").__getattribute__(s)
+                return x
+        return Wrapper  # decoration ends here
+
+    @time_all_class_methods
+    class MyClass:
+        def __init__(self):
+            print("MyClass.__init__")
+        def method_x(self):
+            print("Calling from MyClass.method_x")
+        def method_y(self):
+            print("Calling from MyClass.method_y")
+
+    """
+    see
+    wrapper init
+    MyClass.__init__
+    then in function calls, can see 1 being printed out
+    """
+    mc = MyClass()
+    mc.method_x()
+    mc.method_y()
+
+    # 2
+    REGISTERED_SPECS = dict()
+    def _register_spec(name: str, cls: Type):
+        alias = name or cls.__name__
+        REGISTERED_SPECS[alias] = cls
+        return cls
+    from functools import partial
+    def is_spec(name: str = None):
+        return partial(_register_spec, name)
+
+
 if __name__ == "__main__": 
     # test_nested_func_in_class()
     # test_scope()
     # test_optional_arg()
-    test_type_hints()
+    # test_type_hints()
+    test_decorator()
+    # test_class_decorator()

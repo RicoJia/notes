@@ -39,9 +39,16 @@ def test_reference():
     # not modifying, since we're passing in alias to ls[0]. Variable names in Python are aliases to memory locations. Assigning an alias A to another will not modify the content of the previous A itself
     try_to_modofy_list_element(ls[0])
 
-def test_tup(): 
-    a, b = 1, 2
-    print(a,b)
+def test_or(): 
+    """
+    1. Or actually returns the first input when it's 'truthy' or you've reached the end. And this is because it Works with "short-circuit", i.e., keep searching until it finds a true
+        - So if "sdf" is the first "truthy" value, then it will return it
+    2. and - returns the first "falsy" input
+    3. great for handling corner cases, where you might have None, or empty list. 
+    """
+    name = None
+    name2 = "sdf"
+    print(name or name2)
 
 def test_enum(): 
     from enum import Enum
@@ -54,6 +61,6 @@ def test_enum():
 if __name__=="__main__":
     # test_warning()
     # test_math()
-    # test_tup()
+    test_or()
     # test_enum()
-    test_div()
+    # test_div()
