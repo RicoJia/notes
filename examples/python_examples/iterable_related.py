@@ -145,6 +145,19 @@ def generator_basics():
                 yield n
     for s in search(2): 
         print(s)
+
+def test_zip(): 
+    """
+    Note zip creates an iterator (so it can be iterated only once)
+    """
+    di = {1:"a", 2:"b"}
+    foo = zip(di.values(), di.keys())
+    for i in foo: 
+        print(i)
+    print("not going to print anything afterwards")
+    for i in foo: 
+        print(i)
+    
 #========================================================================
 def test_tuples():
     """
@@ -226,7 +239,7 @@ def test_dict_less_known_features():
     """
     1. using np array as a key in dictionary, have to use to_bytes
     2. Find min, max of keys, or values:    
-        - zip(keys(), values()), zip(values(), keys())
+        - zip(keys(), values()), zip(values(), keys()). 
         - just find the min key or min value. 
         - just return the value of the min key. 
     3. Finding commonalities bw two dicts: items-view, keys-view objects support set operations, but not values-view objects pq values can have duplicates. 
@@ -297,11 +310,13 @@ def test_default_dict():
         print(key)
     
 def set_funcs(): 
-    s = set()
+    """
+    1. Can be used to remove duplicates in a Hashable function
+    """
     s = {1,2,3}
     s.add(4)
     print("s add: ", s)
-    # remove will raise an error if not existing 
+    # 
     s.remove(2)
     # discard will not raise an error
     s.discard(2)
@@ -346,47 +361,66 @@ def test_range():
     s = set(range(2))
 
 def list_basics(): 
-    # # None in list
-    # ls = [1, None]
-    # if None in ls:
-    #     print("lol")
-    #
-    # #sort
-    # ls = [(1,2), (2,-90), (3, 90)]
-    # sorted(ls)  # see [(1, 2), (2, -90), (3, 90)], always compares the first element!
+    """
+    1. None in list works with if statement
+    2. sorted will sort the list in place
+    3. ls.reverse() will also does the job in place
+    4. Create object with identical elements
+        - see 'aaaa'. * in python will create APPEND the object with 1. Identical elements for immutables, and references for mutables
+        - so USE LIST  comprehension if we want to have real duplicates
+    5. list.extend() adds an iterable's values to the list
+        - extend can work with non-local variables, while += can only work with locals
+    6. slice is a great object to hold list indices, which is to be used over and over
+    """
+    # 1
+    ls = [1, None]
+    if None in ls:
+        print("lol")
+    # 2
+    ls = [(1,2), (2,-90), (3, 90)]
+    sorted(ls)  # see [(1, 2), (2, -90), (3, 90)], always compares the first element!
 
-    # has to be used this way
+    # 3
     ls = [1,2,3]
     ls.reverse()
     print(ls)
 
-    #### Create object with identical elements
-    # see 'aaaa'. * in python will create APPEND the object with 1. identical elements for immutables, and references for mutables
+    # 4
     str_ = 'a'*4
     _str = 'a'*4
     print(str_)
-
     # * is no good in this case
     ls = [2 * [0]] * 3
     ls[0][0] = 1
     ls[1][1] = 100
     print(ls)
-
-    # so USE LIST  comprehension
+    # so USE LIST comprehension
     ls = [[0 for j in range (3)] for i in range(2)]
     ls[0][0] = 1
     print(ls)
 
-    ls2 = [4,5,6]
-    tmp_ls = ls[0] + ls2
-    print(tmp_ls)
+    # 5
+    list_1 = [1,2,3]
+    list_2 = [4,5,6]
+    list_1.extend(list_2)   # list_2 is an iterable,
+    print("extended list: ", list_1)
+    # 5.1
+    l = [1,2,3]
+    def foo(): 
+        l.extend([4])
+    def bar(): 
+        l += [4]
+    foo()
+    # bar() # will fail: += can only work with locals
+    print(l)
 
-    # unpack a list. if not enough params, we will run into error. Also we can do this in u, v
-    u, v, g= ls2
-    print(f"u: {u}, v: {v}")
-    ls3 = [[1,2], [3,4], [5,6]]
-    for u, v in ls3: 
-        print(u, v)
+    # 6
+    items = [0, 1, 2, 3, 4, 5, 6]
+    # (start, stop, step), step is optional
+    a_slice = slice(1, 4, 2)
+    b_slice = slice(1,3)
+    print("alisce: ", items[a_slice])
+    print("blice: ", items[b_slice])
 
 if __name__ == "__main__": 
     # dict_to_list()
@@ -394,11 +428,12 @@ if __name__ == "__main__":
     # deep_copy()
     # dictionary_basics()
     # test_ordereddict()
-    test_dict_less_known_features()
-    # list_basics()
+    # test_dict_less_known_features()
+    list_basics()
     # test_tuples()
     # test_default_dict()
     # test_range()
     # test_unpack()
     # test_iterator_on_iterable()
     # generator_basics()
+    # test_zip()

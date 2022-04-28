@@ -67,6 +67,7 @@ def test_heapq():
         - heapify - first element being the smallest
     2. nLargest, nSmallest. Uses heapq, but also, if N == 1, just get min(). if N -> len(list), will do sorting first
         - heapq.heappop(li) returns the smallest element
+        - use nsmallest(key=...) to find the smallest items
     3. NOT threadsafe. 
     4. Can work with tuple
     5. Bugs:
@@ -76,6 +77,19 @@ def test_heapq():
     li = [5, 7, 9, 1, 3]
     print(heapq.nlargest(3, li))
     print(heapq.nsmallest(3, li))
+
+    li2 = [  {'name': 'IBM', 'shares': 100, 'price': 91.1},
+
+             {'name': 'AAPL', 'shares': 50, 'price': 543.22},
+
+             {'name': 'FB', 'shares': 200, 'price': 21.09},
+
+             {'name': 'HPQ', 'shares': 35, 'price': 31.75},
+
+             {'name': 'YHOO', 'shares': 45, 'price': 16.35},
+
+             {'name': 'ACME', 'shares': 75, 'price': 115.65}]
+    print("heapq, find smallest item in a list of dict: ", heapq.nsmallest(2, li2, key= lambda k: k["price"]))
 
     # heapify - first element being the smallest
     heapq.heapify(li)
@@ -135,6 +149,6 @@ if __name__=="__main__":
     # test_string()
     # test_queue()
     # test_deque()
-    # test_heapq()
-    test_priority_q()
+    test_heapq()
+    # test_priority_q()
 
