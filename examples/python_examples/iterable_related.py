@@ -183,13 +183,32 @@ def test_tuples():
     tuple = (1, )
 
 # vidb, ddd, debugger for python 
-def dict_to_list():
+def dict_operations():
+    """
+    1. dict to list - need to convert items, values (values-view object) to list explicitly
+        - filter
+    2. Sort a dictionary based on key
+        1. Use operator.itemgetter is a bit faster. itemgetter is a callable that calls __getitem__ 
+        1. you can do sorted(dic, key = lambda k : dic[k])
+    3. max, min can use itemgetter as well
+    """
+    # 1
     di = {1:"a", 2:"b"}
     ls = list(di.items())
     print(list(filter(lambda x: x[0] < 5, ls)))
     # dict_items() type, not supporting filter() directly on dict.items(). Must use list
     print(type(di.items()))
     print(di.values())
+
+    # 2 
+    dic = [ {'fname': 'Brian', 'lname': 'Jones', 'uid': 1003}, {'fname': 'David', 'lname': 'Beazley', 'uid': 1002}, {'fname': 'John', 'lname': 'Cleese', 'uid': 1001}, {'fname': 'Big', 'lname': 'Jones', 'uid': 1004}]
+    print("sort dictionary by single key: ", sorted(dic, key = lambda k : k["lname"]))
+    print("sort dictionary by two keys: ", sorted(dic, key = lambda k : (k['lname'], k['fname']))) 
+
+    #3 
+    from operator import itemgetter
+    print("sort dictionary by single key, itemgetter: ", sorted(dic, key = itemgetter("lname")))
+    print("sort dictionary by double key, itemgetter: ", sorted(dic, key = itemgetter("lname", "fname")))
 
 def dictionary_basics(): 
     """
@@ -282,7 +301,6 @@ def test_ordereddict():
     d[1] = 2
     for key, val in d.items(): 
         print(key, val)
-
 
 def test_default_dict(): 
     # default dict is a subclass of dict
@@ -423,13 +441,13 @@ def list_basics():
     print("blice: ", items[b_slice])
 
 if __name__ == "__main__": 
-    # dict_to_list()
     # set_funcs()
     # deep_copy()
+    dict_operations()
     # dictionary_basics()
     # test_ordereddict()
     # test_dict_less_known_features()
-    list_basics()
+    # list_basics()
     # test_tuples()
     # test_default_dict()
     # test_range()
