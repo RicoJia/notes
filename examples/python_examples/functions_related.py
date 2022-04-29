@@ -272,7 +272,6 @@ def test_chaining_decorators():
 
     func("holi")
 
-
 def test_class_decorator(): 
     """
     1. Motivation: make all class functions decorated the same way. 
