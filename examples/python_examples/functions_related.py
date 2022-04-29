@@ -190,37 +190,44 @@ def test_type_hints():
 
 def test_decorator(): 
     """
-    1. func(a)(b) is actually calling a function inside wrapper
-        - So decorator can be decorator(args1)
-    2. Decorator is not to execute a function with extra args. Instead it will return a wrapped function
-        - Decorator is just a syntactic sugar for Foo = decorate(Foo)
-        - the way to use it is to add timethis on top of some_func.  
-        - with functions.wraps, we can have: 
-            1. __name__ being "some_func" instead of "wrapper"
-            2. Access the wrapped function
-    3. Of course wraps is optional. Decorator can work without it
-    4. This is called "metaprogramming", which is to write a program that modified an existing program
+    1. Decorator is not to execute a function with extra args. Instead it's a fucntion returning a wrapped function
+        - This is called "metaprogramming", which is to write a program that modified an existing program
         - decorators heavily use closures and returns a callable
         - **in python, an object with __call__() is a callable**
+    2. Func(a)(b) is actually calling a nested function 
+        - Decorator is just a syntactic sugar for Foo = decorate(Foo) (if decorate takes in Foo), or Foo=decorate(args1)(Foo) (if nested func takes in Foo and decorate takes in args 1)
+    3. With functions.wraps, we can have: 
+        1. __name__ being "some_func" instead of "wrapper"
+        2. Access the wrapped function
+    4. Of course wraps is optional. Decorator can work without it
     """
-    # 1
+    # 1 basic example -  decorator is a fucntion returning a wrapped function
+    def function_decorator(func):
+        def wrapped_func():
+            print('=' * 30)
+            func()
+        return wrapped_func
+    @function_decorator
+    def test():
+        print('1, Hello World!')
+
+    # 2. func(a)(b) is actually calling a nested function 
     def bar(a):
         def bar2(b):
             return a+b
         return bar2
     print("func(a)(b): ", bar(1)(2))
-    # 1.5
+    # This step is equivalent to barred_func = bar_decorator(4)(barred_func), which is an int
     def bar_decorator(a): 
         def bar2_decorator(func): 
             return func(a)
         return bar2_decorator
-    # This step is equivalent to barred_func = bar_decorator(4)(barred_func), which is an int
     @bar_decorator(4)
     def barred_func(a):
         return a+1
     print("barred function: ", barred_func) 
 
-    # 2, 3
+    # 3
     import time 
     from functools import wraps
     def timethis(func): 
@@ -240,11 +247,9 @@ def test_decorator():
     foo = timethis(foo)
     foo()
 
-    # 3
     @timethis
     def some_func(): 
         print('hehe')
-
     some_func()
     print("function attributes: ", some_func.__name__)
     some_func.__wrapped__()
