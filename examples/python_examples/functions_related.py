@@ -26,6 +26,10 @@ def test_scope():
     print(ls_cp)
 
 def test_nested_func_in_class(): 
+    """
+    1. nested function can modify the same member in class
+    """
+    # 1
     class Foo(object):
         def __init__(self):
            self.haha = "mark" 
@@ -33,8 +37,7 @@ def test_nested_func_in_class():
             def another_func(): 
                 self.haha = "markhaha"
             another_func()
-            print(self.haha)
-
+            print("modify member in class: ", self.haha)
     f = Foo()
     f.nested_func()
 
@@ -127,6 +130,12 @@ def test_type_hints():
         print(scores, di)
     func3((3,4), {1:"asdf"})
 
+    # typing that stores __name__ for a class 
+    from typing import Type
+    def func3(p: Type): 
+        print("Type.type can store __name__",  p.__name__)
+    func3(Person)
+
     # typing.sequence can be used to refer to list, tuple
     from typing import Sequence as Seq1
     def func4(seq:Seq1): 
@@ -181,20 +190,39 @@ def test_type_hints():
 
 def test_decorator(): 
     """
-    1. Decorator is not to execute a function with extra args. Instead it will return a "decorated function" 
+    1. func(a)(b) is actually calling a function inside wrapper
+        - So decorator can be decorator(args1)
+    2. Decorator is not to execute a function with extra args. Instead it will return a wrapped function
         - Decorator is just a syntactic sugar for Foo = decorate(Foo)
         - the way to use it is to add timethis on top of some_func.  
         - with functions.wraps, we can have: 
             1. __name__ being "some_func" instead of "wrapper"
             2. Access the wrapped function
-            3. Of course wraps is optional. Decorator can work without it
-    2. This is called "metaprogramming", which is to write a program that modified an existing program
+    3. Of course wraps is optional. Decorator can work without it
+    4. This is called "metaprogramming", which is to write a program that modified an existing program
         - decorators heavily use closures and returns a callable
         - **in python, an object with __call__() is a callable**
     """
+    # 1
+    def bar(a):
+        def bar2(b):
+            return a+b
+        return bar2
+    print("func(a)(b): ", bar(1)(2))
+    # 1.5
+    def bar_decorator(a): 
+        def bar2_decorator(func): 
+            return func(a)
+        return bar2_decorator
+    # This step is equivalent to barred_func = bar_decorator(4)(barred_func), which is an int
+    @bar_decorator(4)
+    def barred_func(a):
+        return a+1
+    print("barred function: ", barred_func) 
+
+    # 2, 3
     import time 
     from functools import wraps
-    # 1
     def timethis(func): 
          @wraps(func)
          # have to use args and kwargs to wrap a function with.
@@ -212,6 +240,7 @@ def test_decorator():
     foo = timethis(foo)
     foo()
 
+    # 3
     @timethis
     def some_func(): 
         print('hehe')
@@ -224,6 +253,7 @@ def test_class_decorator():
     """
     1. Motivation: make all class functions decorated the same way. 
         - Caution: __getattribute__() might be recursive
+    2. decorator(args1)(func/class)
     """
     # 1
     def time_all_class_methods(Cls):
@@ -258,20 +288,34 @@ def test_class_decorator():
     MyClass.__init__
     then in function calls, can see 1 being printed out
     """
-    mc = MyClass()
-    mc.method_x()
-    mc.method_y()
+    # mc = MyClass()
+    # mc.method_x()
+    # mc.method_y()
 
     # 2
+    from typing import Tuple, Type
     REGISTERED_SPECS = dict()
-    def _register_spec(name: str, cls: Type):
-        alias = name or cls.__name__
-        REGISTERED_SPECS[alias] = cls
-        return cls
-    from functools import partial
-    def is_spec(name: str = None):
-        return partial(_register_spec, name)
-
+    # decorator(args1)(func/class)
+    def is_spec():
+        def _register_spec(cls: Type):
+            name = None
+            # ClassName.__name__ can work
+            alias = name or cls.__name__
+            REGISTERED_SPECS[alias] = cls
+            print("Haha from inside wrapper")
+            return cls
+        return _register_spec
+    # note that we need (), then it's equivalent to have is_spec()(class Foo)
+    @is_spec()
+    class Foo:
+        def __init__(self):
+            print("Foo.__init__")
+        def method_x(self):
+            print("Calling from Foo.method_x")
+        def method_y(self):
+            print("Calling from Foo.method_y")
+    mc = Foo()
+    print(REGISTERED_SPECS)
 
 if __name__ == "__main__": 
     # test_nested_func_in_class()
