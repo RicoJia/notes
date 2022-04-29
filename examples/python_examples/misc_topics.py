@@ -44,7 +44,7 @@ def test_or():
     1. Or actually returns the first input when it's 'truthy' or you've reached the end. And this is because it Works with "short-circuit", i.e., keep searching until it finds a true
         - So if "sdf" is the first "truthy" value, then it will return it
     2. and - returns the first "falsy" input
-    3. great for handling corner cases, where you might have None, or empty list. 
+    3. great for handling corner cases, where you might have None, or empty list.
     """
     name = None
     name2 = "sdf"

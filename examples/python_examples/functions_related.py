@@ -249,6 +249,30 @@ def test_decorator():
     print("function attributes: ", some_func.__name__)
     some_func.__wrapped__()
 
+def test_chaining_decorators(): 
+    """
+    1. execute top to bottom . func1(a)(b)...
+    """
+    def func1(func):
+      def inner(arg):
+        print(func1.__name__)   #this is how you print the name
+        func(arg)
+      return inner
+
+    def func2 (func):
+      def inner(arg):
+        print(func2.__name__)
+        func(arg)
+      return inner
+
+    @func1
+    @func2
+    def func(msg):      #will first execute func1, then func2.
+      print(msg)
+
+    func("holi")
+
+
 def test_class_decorator(): 
     """
     1. Motivation: make all class functions decorated the same way. 
