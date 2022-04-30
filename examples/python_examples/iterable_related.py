@@ -303,27 +303,33 @@ def test_ordereddict():
         print(key, val)
 
 def test_default_dict(): 
-    # default dict is a subclass of dict
+    """
+    1. Default dict is a subclass of dict. Can create default values. 
+    2. Can create default list 
+    3. Another motivation is to avoid keyError like dict[NOT_EXSISTENT]. 
+        - We pass in a function as "default factory" to provide a default value if a key doesn't exist
+    4. Iterate over default dict as you would with other iterables
+    5. group items together, by using first sorting, then operation.groupby; but this TODO
+    """
+    # 1
     from collections import defaultdict
-    # created default values as 0 
     # defaultdict(<class 'int'>, {0: 100, 1: 2})
     d1 = defaultdict(int)
     d1[0]+=100
     d1[1] += 2
     print(d1)
 
-    # create default values being []
+    # 2
     d2 = defaultdict(list)
     d2[0].append(3)
     d2[0].append(4)
     print(d2)
 
-    #another motivation is to avoid keyError like dict[NOT_EXSISTENT]. We pass in a function as "default factory" to provide a default value if a key doesn't exist
+    # 3
     d3 = defaultdict(lambda: "not exist")
     i = d3[100]
 
-    # you can create a set, append to it, etc. 
-    # iterate this as you would with dict 
+    # 4 
     for key, val in d3: 
         print(key)
     
@@ -451,11 +457,11 @@ def list_basics():
 if __name__ == "__main__": 
     # set_funcs()
     # deep_copy()
-    # dict_operations()
+    dict_operations()
     # dictionary_basics()
     # test_ordereddict()
     # test_dict_less_known_features()
-    list_basics()
+    # list_basics()
     # test_tuples()
     # test_default_dict()
     # test_range()

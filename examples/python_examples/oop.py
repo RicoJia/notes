@@ -43,6 +43,20 @@ def test_class_variable():
     f.var = 12
     print(Foo.__dict__, f.__dict__)
 
+def test_sort_by_attr():
+    """
+    1. by default, sorted is ascending order. operator.attrgetter
+    """
+    class Foo():
+        def __init__(self, name, grade):
+            self.name = name
+            self.grade = grade, name, grade
+    ls = [Foo("Lee", 12), Foo("Chen", 10), Foo("Yoon", 9), Foo("Jia", 11)]
+    from operator import attrgetter
+    ls = sorted(ls, key=attrgetter("grade"))
+    [print("sorted list by attributes: ", item.name) for item in ls]
+    
+            
 
 def test_enum(): 
     # SIMPLE WAY TO DO THIS
@@ -83,4 +97,5 @@ if __name__ == "__main__":
     # inheritance_basics()
     # test_class_variable()
     # test_enum()
-    test_get_attribute()
+    # test_get_attribute()
+    test_sort_by_attr()
