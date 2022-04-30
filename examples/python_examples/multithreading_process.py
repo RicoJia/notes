@@ -82,9 +82,13 @@ def test_process():
 
 def test_multiprocess_queue(): 
     """
-    1. queue.get() by default will block the main thread and wait for an item to come
+    1. Queue(max_size)
+    2. queue.put(), queue.get() by default will block the main thread and wait for an item to come
+    3. queue.put_nowait(), queue.get_nowait() will not block
     """
     from multiprocessing import Queue
+    q = Queue(4)
+    q.put(1)
     
 def test_forking(): 
     """
