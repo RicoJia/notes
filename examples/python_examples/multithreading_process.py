@@ -90,21 +90,22 @@ def test_forking():
     """
     1. Forking is to spawn a child process from the "fork" point. All data is copied to the child process. 
         - A process is a program that gets loaded from disk to stack, and gets executed. It has data, kernel state that holds all data necessary. 
-        - Parent PID will be 1
+        - Parent PID will be non-zero
+    2. so if you do forking, each child process will spawn the same number of processes. 
+        - so the total number of forked process will be 2^(number of fork() statements)
+        - for a child process, your pid will remain 0 until you spawn someone.
     """
     import os 
     import time
     num = 7 
-    pid1 = os.fork()
-    pid2 = os.fork()
-    pid3 = os.fork()
+    # here we see 32 pids
+    pid = os.fork()
+    print(pid)
+    pid = os.fork()
+    print(pid)
+    # pid3 = os.fork()
+    # pid4 = os.fork()
     time.sleep(10)
-    # if pid1 == 0: 
-    #     num = 8 
-    #     print("Helloo from the child, num: ", num)
-    # else: 
-    #     time.sleep(2)
-    #     print("Helloo from the parent: ", num)
 
 if __name__ == "__main__": 
     # test_lock()
