@@ -251,7 +251,7 @@ def dictionary_basics():
     dic = {1:100, 2:3}
     sorted_items = sorted(dic.items(), key=lambda x:x[1])
     print("descending: ", sorted_items)
-    sorted_items = sorted(dic.items(), reverse=True, key=lambda x:x[1]) 
+    sorted_items = sorted(dic.items(), reverse=True, key=lambda x:x[1])
     print("ascending: ", sorted_items)
 
 def test_dict_less_known_features(): 
@@ -388,6 +388,7 @@ def list_basics():
         - so USE LIST  comprehension if we want to have real duplicates
     5. list.extend() adds an iterable's values to the list
         - extend can work with non-local variables, while += can only work with locals
+        - append is used to add another element in. +=, extend doesn't do those
     6. slice is a great object to hold list indices, which is to be used over and over
     """
     # 1
@@ -421,7 +422,14 @@ def list_basics():
     list_1 = [1,2,3]
     list_2 = [4,5,6]
     list_1.extend(list_2)   # list_2 is an iterable,
+    # two lists being merged to one
     print("extended list: ", list_1)
+    list_1 = [1,2,3]
+    list_1+=list_2
+    print("+= list: ", list_1)
+    list_1.append(3)
+    print("append list: ", list_1)
+
     # 5.1
     l = [1,2,3]
     def foo(): 
@@ -443,11 +451,11 @@ def list_basics():
 if __name__ == "__main__": 
     # set_funcs()
     # deep_copy()
-    dict_operations()
+    # dict_operations()
     # dictionary_basics()
     # test_ordereddict()
     # test_dict_less_known_features()
-    # list_basics()
+    list_basics()
     # test_tuples()
     # test_default_dict()
     # test_range()
