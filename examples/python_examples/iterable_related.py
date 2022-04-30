@@ -329,46 +329,46 @@ def test_default_dict():
     
 def set_funcs(): 
     """
-    1. Can be used to remove duplicates in a Hashable function
+    1. Basics: add, remove; intersection (&), union(|), rest (-)
+        - discard will not raise an error, pop will
+        - pop() popping a random value
+        - does not support +=
+    2. Set comprehension
+    3. Can be used to remove duplicates in a Hashable function
+    4. frozenset
+        1. does not support indexing, 
+        2. but can be used to unpack
     """
+    # 1
     s = {1,2,3}
     s.add(4)
     print("s add: ", s)
-    # 
     s.remove(2)
     # discard will not raise an error
     s.discard(2)
     print("s remove and discard", s)
-
     s2 = {2,3,4}
     print("s2 n s", s2.intersection(s))
     print("s2 n s", s2 & s)
     # shows S2 - (s2 & s)
     print("s2 - s", s2 - s)
 
-    # will see TypeError: unhashable type: 'set'
+    # 2 "set" comprehension
+    ls = [1,2,3]
+    s4 = set(i * 2 for i in ls)
+    print(s4)
+    # removes a random value in set 
+    x = s4.pop()
+    print("after pop ", s4)
+
+    # 4will see TypeError: unhashable type: 'set'
     # because this is set is a mutable, so once it's changed, its hash has to change
-    # use frozenset
-    # s2.add({"12", "32"})
     s2.add(frozenset({"12", "32"}))
     print(f"union: {s | s2}")
-
     # frozen set does NOT support indexing. This is how you retrive elements: 
     s3 = frozenset({"a", "b"})
     str1, str2 = s3
     print(str1, " ", str2)
-
-    # += does not work on set
-    # s2+=s
-
-    # "set" comprehension
-    ls = [1,2,3]
-    s4 = set(i * 2 for i in ls)
-    print(s4)
-
-    # removes a random value in set 
-    x = s4.pop()
-    print("after pop ", s4)
 
 def test_range(): 
     # you can access range object like list 
