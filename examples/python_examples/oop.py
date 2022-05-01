@@ -56,7 +56,25 @@ def test_sort_by_attr():
     ls = sorted(ls, key=attrgetter("grade"))
     [print("sorted list by attributes: ", item.name) for item in ls]
     
-            
+def test_abstract_method():
+    """
+    1. abstract function is parent class function with no implementation. Parent class having at least 1 abstract function is an abstract class. Same as in C++
+    2. Should use ABC, else there won't be error
+        - but abstractmethod doesn't seem to do anything? 
+    """
+    from abc import ABC, abstractmethod
+    class Foo(ABC):
+        @abstractmethod
+        def foo(self): 
+            # print("foo")
+            pass
+
+    class FooC(Foo): 
+        def bar(self): 
+            print("bar")
+
+    f = FooC()
+    f.foo()
 
 def test_enum(): 
     # SIMPLE WAY TO DO THIS
@@ -96,6 +114,7 @@ def test_get_attribute():
 if __name__ == "__main__": 
     # inheritance_basics()
     # test_class_variable()
+    test_abstract_method()
     # test_enum()
     # test_get_attribute()
-    test_sort_by_attr()
+    # test_sort_by_attr()
