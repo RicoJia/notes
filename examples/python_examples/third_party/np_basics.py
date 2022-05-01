@@ -46,8 +46,18 @@ def np_masking():
     mask = np.logical_and((arr > arr.min()), (arr < arr.max()))
     print(mask)
 
+def np_random(): 
+    """
+    1. random.randint(low, high=None, size=None, dtype=int)¶
+        - works with negative values as well
+    """
+    from numpy import random
+    print(random.randint(4, 10, size = (3,3)))
+    print(random.randint(-4, 10, size = (3,3)))
+
 if __name__=="__main__":
     # test_empty_arr()
     # test_math()
     # invert_arr()
-    test_flatten()
+    # test_flatten()
+    np_random()
