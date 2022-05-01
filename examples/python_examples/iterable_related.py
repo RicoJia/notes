@@ -146,6 +146,20 @@ def generator_basics():
     for s in search(2): 
         print(s)
 
+def generateor_uses(): 
+    """
+    1. Elegant way to reduce and transform data. max(), sum(), join(), no need to create a list
+        - alternatively, min(dic, key = ...)
+    """
+    s = ('ACME', 50, 123.45)
+    # ","("abc") = "a,b,c"
+    print(",".join(str(x) for x in s))
+
+    portfolio = [ {'name':'GOOG', 'shares': 50}, {'name':'YHOO', 'shares': 75}, {'name':'AOL', 'shares': 20}]
+    print(min(p["shares"] for p in portfolio))
+    nums = [1,2,3,45]
+    print("sum using generator: ", sum(n for n in nums))
+
 def test_zip(): 
     """
     Note zip creates an iterator (so it can be iterated only once)
@@ -181,6 +195,17 @@ def test_tuples():
     # quirk
     #tuple = (1) #error
     tuple = (1, )
+
+def test_named_tuples(): 
+    """
+    1. Still a tuple, can be unpacked, but instead of [1], you use field name
+    2. Can use _replace() to make a new namedtuple with new fields
+    """
+    from collections import namedtuple
+    Subscriber = namedtuple("some_name", ["addr", "name"])
+    sub = Subscriber("123 st", "Jo")
+    sub_new = sub._replace(addr="456st")
+    print(sub, sub_new)
 
 # vidb, ddd, debugger for python 
 def dict_operations():
@@ -333,6 +358,33 @@ def test_default_dict():
     for key, val in d3: 
         print(key)
     
+def test_chain_map(): 
+    """
+    1. ChainMap keeps a list of keys of multiple dictionaries, and can behave as one. Changes on each dict -> ChainMap; changes on ChainMap -> first dict
+        - value from the first dictionary will be returned, if there're repeating keys
+        - alternative: update, but that creates a totally new dict
+    2. You can add ChainMap, which is useful for variables of different scope. 
+        - or return a new chainmap (without the first one) for searching. 
+    """
+    from collections import ChainMap
+    a = {'x': 1, 'z': 3 } 
+    b = {'y': 2, 'z': 4 }
+    c = {'z': 5, 'a': 4 }
+    # 1
+    chain = ChainMap(a,b,c)
+    # ChainMap({'x': 1, 'z': 3}, {'y': 2, 'z': 4}, {'z': 5, 'a': 4})
+    print("chainmap: ", chain)
+    print("from first dic, z: ", chain["z"])
+    chain["z"] = 100
+    print("change value in chainmap: ", chain)
+    b["z"] = 7
+    print("But you can change values in the following dicts as well: ", chain)
+    
+    # 2
+    print("adding an empty dict to chainmap: ", chain.new_child())
+    print("new chainmap without the first dict: ", chain.parents)
+
+
 def set_funcs(): 
     """
     1. Basics: add, remove; intersection (&), union(|), rest (-)
@@ -474,10 +526,13 @@ if __name__ == "__main__":
     # test_dict_less_known_features()
     # list_basics()
     # test_tuples()
+    # test_named_tuples()
     # test_default_dict()
+    test_chain_map()
     # test_range()
     # test_unpack()
     # test_iterator_on_iterable()
     # generator_basics()
+    # generateor_uses()
     # test_zip()
-    useful_list_features()
+    # useful_list_features()
