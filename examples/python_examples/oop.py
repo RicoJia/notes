@@ -73,8 +73,9 @@ def test_abstract_method():
         def bar(self): 
             print("bar")
 
-    f = FooC()
-    f.foo()
+    # will see error since Foo can not be instantiated
+    # f = FooC()
+    # f.foo()
 
 def test_enum(): 
     # SIMPLE WAY TO DO THIS
@@ -111,10 +112,20 @@ def test_get_attribute():
     f = Foo()
     f.dummy
 
+def test_hasattr(): 
+    """
+    1. hasattr can be helpful
+    """
+    class Foo: 
+        f = 1
+    foo = Foo()
+    print(hasattr(foo, "f"), hasattr(foo, "b"))
+
 if __name__ == "__main__": 
     # inheritance_basics()
     # test_class_variable()
-    test_abstract_method()
+    # test_abstract_method()
     # test_enum()
     # test_get_attribute()
     # test_sort_by_attr()
+    test_hasattr()
