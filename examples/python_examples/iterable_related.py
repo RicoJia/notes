@@ -454,10 +454,21 @@ def list_basics():
     print("alisce: ", items[a_slice])
     print("blice: ", items[b_slice])
 
+def useful_list_features(): 
+    """
+    1. compress can be used to filter out list items 
+        - returns an iterable
+    """
+    from itertools import compress
+    addresses = [ '5412 N CLARK', '5148 N CLARK', '5800 E 58TH', '2122 N CLARK' '5645 N RAVENSWOOD', '1060 W ADDISON', '4801 N BROADWAY', '1039 W GRANVILLE',]
+    counts = [ 0, 3, 10, 4, 1, 7, 6, 1]
+    more_than_5 = [c>5 for c in counts]
+    print(list(compress(addresses, more_than_5)))
+
 if __name__ == "__main__": 
     # set_funcs()
     # deep_copy()
-    dict_operations()
+    # dict_operations()
     # dictionary_basics()
     # test_ordereddict()
     # test_dict_less_known_features()
@@ -469,3 +480,4 @@ if __name__ == "__main__":
     # test_iterator_on_iterable()
     # generator_basics()
     # test_zip()
+    useful_list_features()
