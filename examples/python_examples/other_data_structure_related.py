@@ -33,6 +33,42 @@ def test_string():
     print(str(bit_num))
     print(bit_num.decode('utf-8'))
 
+def test_starts_with(): 
+    """
+    1. you can search for strings that starts with one of the following. But you need tuple
+    """
+    filenames = [ 'Makefile', 'foo.c', 'bar.py', 'spam.c', 'spam.h' ]
+    for f in filenames: 
+        if f.startswith(("M", "fo")): 
+            print(f)
+
+def test_regex(): 
+    """
+    1. regex refreshers: 
+        - "\s" is white space. "\s*" means any number of white spaces
+    2. x = re.findall("ai", txt) gives list of all matches
+    3. re.search() returns a Match object. start() gives the first occurence of the match
+    4. split func
+        - x = re.split("\s", txt)
+        - str.split() does not support regex. But str.split() already strips huge white spaces away
+        - re.split() good for spliting multiple delimeters
+    """
+    import re
+    txt = "The rain in    Spain"
+    x = re.findall("ai", txt)
+    print(x)
+    print(re.search("\s", txt).start())
+
+    # you will see multiple " " 
+    print(re.split("\s", txt))
+    # but with txt.split(), you don't see the extra " "
+    print(txt.split())
+
+    line = 'asdf fjdk; afed, fjek,asdf,      foo'
+    print(re.split(r"[;,\s]", line))
+    print(re.split(r'[;,\s]\s*', line))
+
+
 def test_queue(): 
     import queue
     q = queue.Queue(2)
@@ -147,8 +183,9 @@ def test_priority_q():
 
 if __name__=="__main__":
     # test_string()
+    test_starts_with()
     # test_queue()
     # test_deque()
-    test_heapq()
+    # test_heapq()
     # test_priority_q()
-
+    # test_regex()
