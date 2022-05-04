@@ -205,7 +205,9 @@ def test_named_tuples():
     Subscriber = namedtuple("some_name", ["addr", "name"])
     sub = Subscriber("123 st", "Jo")
     sub_new = sub._replace(addr="456st")
+    print("field: ", sub_new.addr) 
     print(sub, sub_new)
+    print("converted to dictionary: ", sub_new._asdict())
 
 # vidb, ddd, debugger for python 
 def dict_operations():
@@ -245,6 +247,7 @@ def dictionary_basics():
         - my_dict.values() gives you an "value-view" object, not a list. Similarly, my_dict.items(), .keys() gives you "item-view" keys-view objects
     4. merging 2 dicts
     5. Sort dictionary by value (ascending order) and return items in a list
+        - items() seems like a tuple object, that's why you can use x[1] for accessing them
     """
 
     # 1
@@ -273,9 +276,13 @@ def dictionary_basics():
     print({**my_dict, **my_dict2})
 
     # 5
-    dic = {1:100, 2:3}
+    dic = {1:100, 4: 50, 2:3}
     sorted_items = sorted(dic.items(), key=lambda x:x[1])
     print("descending: ", sorted_items)
+    sorted_items = sorted(dic.items(), key=lambda x:x[0])
+    print("descending by key: ", sorted_items)
+    sorted_items = sorted(dic.items())
+    print("descending by key, default key: ", sorted_items)
     sorted_items = sorted(dic.items(), reverse=True, key=lambda x:x[1])
     print("ascending: ", sorted_items)
 
@@ -521,14 +528,14 @@ if __name__ == "__main__":
     # set_funcs()
     # deep_copy()
     # dict_operations()
-    # dictionary_basics()
+    dictionary_basics()
     # test_ordereddict()
     # test_dict_less_known_features()
     # list_basics()
     # test_tuples()
     # test_named_tuples()
     # test_default_dict()
-    test_chain_map()
+    # test_chain_map()
     # test_range()
     # test_unpack()
     # test_iterator_on_iterable()
