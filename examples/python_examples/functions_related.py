@@ -130,6 +130,12 @@ def test_type_hints():
         print(scores, di)
     func3((3,4), {1:"asdf"})
 
+    # typing for list 
+    from typing import List
+    def func3_5(scores: List[int]): 
+        print(scores)
+    func3_5([1,2,3])
+
     # typing that stores __name__ for a class 
     from typing import Type
     def func3(p: Type): 
