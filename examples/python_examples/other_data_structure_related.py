@@ -33,14 +33,25 @@ def test_string():
     print(str(bit_num))
     print(bit_num.decode('utf-8'))
 
-def test_starts_with(): 
+def test_matching (): 
     """
     1. you can search for strings that starts with one of the following. But you need tuple
+    2. fnmatch can match with wildcard. Case-sensitivity is the same as the operating system 
+    3. fnmatchcase will match the exact case. 
     """
+    # 1
     filenames = [ 'Makefile', 'foo.c', 'bar.py', 'spam.c', 'spam.h' ]
     for f in filenames: 
         if f.startswith(("M", "fo")): 
             print(f)
+
+    # 2 
+    from fnmatch import fnmatch, fnmatchcase
+    print("fn match: ", fnmatch("foo.txt", "*txt"))
+    print("fn match: ", fnmatch("foo.txt", "*TXT"))
+    print("fn match: ", fnmatch("foo.TXT", "*txt")) #still false
+    print("fn matchcase: ", fnmatchcase("foo.TXT", "*txt")) #still false
+
 
 def test_regex(): 
     """
@@ -52,6 +63,7 @@ def test_regex():
         - x = re.split("\s", txt)
         - str.split() does not support regex. But str.split() already strips huge white spaces away
         - re.split() good for spliting multiple delimeters
+    5. \d+ means one or more digits
     """
     import re
     txt = "The rain in    Spain"
@@ -67,6 +79,9 @@ def test_regex():
     line = 'asdf fjdk; afed, fjek,asdf,      foo'
     print(re.split(r"[;,\s]", line))
     print(re.split(r'[;,\s]\s*', line))
+
+    str1 = "11/12/2020"
+    print("\d+ test:", re.match(r"\d+/\d+/\d+", str1))
 
 
 def test_queue(): 
@@ -183,9 +198,9 @@ def test_priority_q():
 
 if __name__=="__main__":
     # test_string()
-    test_starts_with()
+    # test_matching()
     # test_queue()
     # test_deque()
     # test_heapq()
     # test_priority_q()
-    # test_regex()
+    test_regex()
