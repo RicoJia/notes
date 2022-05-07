@@ -53,6 +53,10 @@ def test_matching ():
     print("fn matchcase: ", fnmatchcase("foo.TXT", "*txt")) #still false
 
 
+"""
+How Regex Works 
+    - it's a finite state machine. (abc) is a->b->c; a(ab)*b, ab and aab are different. So it's called NFA (non-deterministic finite automata). So you end up using graph search. The state machine is coded up by Regex compiler.
+"""
 def test_regex(): 
     """
     1. regex refreshers: 
@@ -64,6 +68,9 @@ def test_regex():
         - str.split() does not support regex. But str.split() already strips huge white spaces away
         - re.split() good for spliting multiple delimeters
     5. \d+ means one or more digits
+    6. [] means charactger class, chars in this class can be matched to a single char. ()
+    7. str.replace() and re.sub
+    8. re.compile() can generate code for the state machine, great for reusing over and over. 
     """
     import re
     txt = "The rain in    Spain"
@@ -82,6 +89,17 @@ def test_regex():
 
     str1 = "11/12/2020"
     print("\d+ test:", re.match(r"\d+/\d+/\d+", str1))
+
+    str2=str1.replace("11", "haha")
+    print(str2)
+    # 3- means capture group
+    str3=re.sub(r"(\d+)/(\d+)/(\d+)", r"\3-\2-\1", str1)
+    print("using regex: ", str3)
+    
+    # 8
+    pattern = re.compile(r"(\d+)/(\d+)/(\d+)")
+    str3 = pattern.sub(r"\1-\2-\3", str1)
+    print("using regex pattern: ", str3)
 
 
 def test_queue(): 
