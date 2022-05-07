@@ -33,6 +33,9 @@ def invert_arr():
     print(arr[:, ::-1])
 
 def test_flatten(): 
+    """
+    1. stack can transform list of list -> array
+    """
     arr = np.ones([4,2])
     arr[2, :] = [1,2]
     print(arr.flatten())
