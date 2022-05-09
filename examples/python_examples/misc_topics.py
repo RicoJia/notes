@@ -4,6 +4,10 @@ def test_math():
     1. math.log(2.7183)
     2. Use Decimal, decimal, change context
     3. math.fsum() for accurate sum
+    4. bin(num), oct(num), hex(num)
+    5. int("int_str", base) to convert an integer string to base-10 integer
+    6. num.to_bytes, num.bit_length()
+    7. int.from_bytes(byte_string)
     """
     import math
     print(math.log(2.7183))
@@ -22,6 +26,26 @@ def test_math():
     ls = [1.2e+18, 1, -1.2e+18]
     print("sum of ls: ", sum(ls), ", while using math.fsum: ", math.fsum(ls))
 
+    # 4
+    print("binary num for 10 (1010): ", bin(10))
+    print("Oct num for 10 (0o12): ", oct(10))
+    print("hex num for 10 (0xa): ", hex(10))
+
+    # 5 
+    print("0x4d2 is 1234: ", int("4d2", 16))
+
+    # 6
+    x = 0x01020304
+    print(x, "big endian, the normal order we see: ", x.to_bytes(4, "big"))
+    print(x, "Little endian, the reverse order we see: ", x.to_bytes(4, "little"))
+    print(x, "bit length: ", x.bit_length())
+    quotient, rem = divmod(x.bit_length(), 8) 
+    print("number of bytes: ", int(quotient) + int(rem >0))
+    
+    # 7
+    data = b"\x00\x124V\x00x\x90\xab\x00\xcd\xef\x01\x00#\x004"
+    print("number of bytes of byte string: ", len(data))
+    print("from bytes, little", int.from_bytes(data, "little"))
 
 def test_div(): 
     a = -12
