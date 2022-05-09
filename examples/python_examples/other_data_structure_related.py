@@ -1,27 +1,36 @@
 #!/usr/bin/python3
 def test_string(): 
-    #ljust returns a 20 char long str, with "O" padding char
+    """
+    1. ljust returns a 20 char long str, with "O" padding char
+    2. to split a string into a list of words, based on delim
+    3. str.strip() remove trailing/ leading spaces
+    4. See if start with, end with 
+    5. find substring start index
+    6. Print number with certain digits f"{12.456:10.1f}"
+    7. nota: no escribe ```f"{arr[""]}"```, "" no se lleva bien con formatted string
+    """
+    # 1
     txt = "banana"
     x = txt.ljust(20, "O")
     print(x)
 
-    # to split a string into a list of words, based on delim
+    # 2
     str_ = "lol, lol"
     # see['lol', ' lol']
     print(str_.split(','))
     # in total len(str_) is 15, with * on the sides
     print(str_.center(15, "*"))
 
-    # str.strip() remove trailing/ leading spaces
+    # 3
     txt = "     banana     "
     x = txt.strip()
     print(x)
 
-    # See if start with, end with 
+    # 4
     str_ = "turkiye"
     print(str_.endswith("e"))
 
-    # find substring start index
+    # 5
     print(str_.find("r"))
 
     string = "123"
@@ -32,6 +41,8 @@ def test_string():
     # NOTE: str(text_bytes) can't specify the encoding
     print(str(bit_num))
     print(bit_num.decode('utf-8'))
+
+    print(f"{12.456:10.1f}")    # 10 will add blanks
 
 def test_matching (): 
     """
@@ -215,10 +226,10 @@ def test_priority_q():
 
 
 if __name__=="__main__":
-    # test_string()
+    test_string()
     # test_matching()
     # test_queue()
     # test_deque()
     # test_heapq()
     # test_priority_q()
-    test_regex()
+    # test_regex()

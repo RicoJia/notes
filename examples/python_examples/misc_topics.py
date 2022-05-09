@@ -1,9 +1,27 @@
 #!/usr/bin/python3
 def test_math(): 
+    """
+    1. math.log(2.7183)
+    2. Use Decimal, decimal, change context
+    3. math.fsum() for accurate sum
+    """
     import math
     print(math.log(2.7183))
     print(math.log(10,10))
     print(math.floor(0.4))
+
+    # 2
+    from decimal import Decimal, localcontext
+    with localcontext () as ctx: 
+        ctx.prec = 3
+        a = Decimal(3)
+        b = Decimal(5)
+        print("3 digits: ", b/a, "while without context: ")
+
+    # 3 
+    ls = [1.2e+18, 1, -1.2e+18]
+    print("sum of ls: ", sum(ls), ", while using math.fsum: ", math.fsum(ls))
+
 
 def test_div(): 
     a = -12
@@ -60,7 +78,7 @@ def test_enum():
 
 if __name__=="__main__":
     # test_warning()
-    # test_math()
-    test_or()
+    test_math()
+    # test_or()
     # test_enum()
     # test_div()
