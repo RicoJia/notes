@@ -1,4 +1,53 @@
 import numpy as np
+def np_basics1(): 
+    """
+    1. np allocates memory like C, so it's contiguous. 
+    2. Math operations can be applied to all elements, which is a lot faster than for loop and use math module: 
+        - +,-, * /
+        - np.sqrt(), np, cos
+        - select sub-region and change it
+        - broadcast is to apply a row/cln to the array. You can even use a LIST 
+        - Conditional Assignments using np.where
+            - np.where(cond, val1, val2). if arr1 meets cond, output arr1, else output arr2
+            - np.where(cond), return x, y idex of elements that meet certain criteria: 
+    3. np matrix - matrix stuff
+        1. solve linalg
+        2. eigen values, determinant
+    """
+    # 1 
+    arr = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]])
+    print("the original: ", arr)
+    print("everything * 3: ", arr * 3)
+    print("everything sqrt: ", np.sqrt(arr))
+    print("everything sin: ", np.sin(arr))
+
+    # 2
+    print("region [0:3,2] + 3: ", arr[0:3, 2] + 3, ", you just see the affected region right")
+
+    # 3 broadcast a row, 
+    print("Broadcasting row to the arr: ", arr + [10, 20, 30, 40])
+
+    # 4 
+    print("using np where to make elements 1/10", np.where(arr < 10, 1, 10))
+    print("using np where to cap elements < 10", np.where(arr < 10, arr, 10))
+    x_idx, y_idx = np.where(arr>10)
+    print("using np where to find x, y indices of elements which are > 10: x_idx: ", x_idx, "y: ", y_idx)
+
+    # 5 
+    m = np.matrix([[1,-2,3],[0,4,5],[7,8,-9]])
+    print("matrix transpose: ", m.T)
+    print("matrix inverse: ", m.I)
+    print("array to matrix: ", np.asmatrix(arr))
+    v = np.matrix([[2],[3],[4]])
+    print("arr multiplication: ", m@v)
+
+    # 6 solve linear systems
+    x = np.linalg.solve(m,v)
+    print("solving: ", x)
+
+    # eigen values
+    print("eigen values: ", np.linalg.eigvals(m))
+    print("det: ", np.linalg.det(m))
 
 def np_filter():
     arr = np.ones((4,3))
@@ -22,7 +71,7 @@ def test_math():
     # see cube root 
     print(np.cbrt([1,8,27]))
 
-def invert_arr(): 
+def invert_arr():
     # ::-1 is how you invert the arrays
     arr = np.ones((2,3,4))
     arr[1,0,1] = 99
@@ -59,8 +108,9 @@ def np_random():
     print(random.randint(-4, 10, size = (3,3)))
 
 if __name__=="__main__":
+    np_basics1()
     # test_empty_arr()
     # test_math()
     # invert_arr()
     # test_flatten()
-    np_random()
+    # np_random()

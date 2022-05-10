@@ -47,6 +47,21 @@ def test_math():
     print("number of bytes of byte string: ", len(data))
     print("from bytes, little", int.from_bytes(data, "little"))
 
+def test_more_math(): 
+    """
+    1. math.isinf(), int/inf = 0; inf/inf=nan; inf-inf = nan
+    2. math.isnan();    
+        - NAN cannot be compared against.
+        - nan + - / 1 = nan, literally anything
+    """
+    from math import isinf, isnan
+    inf = float("inf")
+    print("isinf: ", isinf(inf))
+    nan = float("nan")
+    print("isnan: ", isnan(nan))
+    nan2 = float("nan")
+    print("nan CANNOT be compared to nan (no errors tho): ", nan == nan2, "neither by using is: ", nan is nan2)
+
 def test_div(): 
     a = -12
     b = 7
@@ -64,6 +79,19 @@ def test_div():
     print(math.fmod(-10, 3))    #3*-3-1 = -10
     print(math.fmod(-5, 3))    #1*-3 - 2 = -5
     print(math.fmod(5, -3))    #-3*-1 + 2 = 5
+
+def test_fractions(): 
+    """
+    1. fractions.Fraction() can allow: fraction, and closest approximate 
+    """
+    from fractions import Fraction
+    a = Fraction(35)
+    b = Fraction(64)
+    c = a/b
+    print("a/b: ", c, "numerator: ", c.numerator, ", to float: ", float(c))
+    print("a float number to fraction: ", Fraction(0.4), ", you see a crazy fraction, right")
+    print("Now it should be a lot better: ", Fraction(0.4).limit_denominator(10))
+
 
 def test_warning():
     import warnings
@@ -102,7 +130,9 @@ def test_enum():
 
 if __name__=="__main__":
     # test_warning()
-    test_math()
+    # test_math()
+    # test_more_math()
+    test_fractions()
     # test_or()
     # test_enum()
     # test_div()
