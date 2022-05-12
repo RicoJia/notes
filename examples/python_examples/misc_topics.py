@@ -80,6 +80,48 @@ def test_div():
     print(math.fmod(-5, 3))    #1*-3 - 2 = -5
     print(math.fmod(5, -3))    #-3*-1 + 2 = 5
 
+def test_random(): 
+    """
+    1. random is deterministic using Mersenne Twister. so specify seed.
+    2. random functions work on lists directly.
+    """
+    import random
+    import time
+    random.seed(time.time())
+    ls = [1,2,3,4,5,6]
+    print("random.choice chooses 1 element: ", random.choice(ls))
+    print("random.sample: ", random.sample(ls, 2))
+    random.shuffle(ls)
+    print("random.shuffle: ", ls)
+
+def test_datetime(): 
+    """
+    1. simple manipulation of days & time. 
+        - timedelta can specify hours, but just shows days, total_seconds, seconds. No hours.
+        - Can create an object using datetime()
+        - Is aware of leap years
+    2. dateutil.relativedelta(months) as a supplement for months, and it works with datetime.datetime
+        - a =- 4; =- is interpreted as 2 tokens. So a = -4
+    """
+    # 1
+    from datetime import timedelta
+    a = timedelta(weeks=1, days=2, hours = 3)
+    b = timedelta(weeks=1, days=2, hours = 3)
+    print("sum of timedelta: ", a + b, ". # of days: ", (a+b).days, " # of seconds, on top of # of days: ", (a+b).seconds, " # of total seconds: ", (a+b).total_seconds())
+    
+    # 2
+    from datetime import datetime
+    a = datetime(2020, 2, 28)
+    b = datetime(2020, 3, 1)
+    print("a-b in 2020: ", a-b) # see -2 days
+    a = datetime(2021, 2, 28)
+    b = datetime(2021, 3, 1)
+    print("a-b in 2021: ", a-b) # see -1 days
+
+    # 3
+    from dateutil.relativedelta import relativedelta
+    print("relative delta: ", a + relativedelta(months = 2))
+
 def test_fractions(): 
     """
     1. fractions.Fraction() can allow: fraction, and closest approximate 
@@ -132,7 +174,9 @@ if __name__=="__main__":
     # test_warning()
     # test_math()
     # test_more_math()
-    test_fractions()
+    # test_fractions()
+    # test_random()
+    test_datetime()
     # test_or()
     # test_enum()
     # test_div()
