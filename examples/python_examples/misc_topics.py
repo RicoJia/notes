@@ -102,6 +102,7 @@ def test_datetime():
         - Is aware of leap years
     2. dateutil.relativedelta(months) as a supplement for months, and it works with datetime.datetime
         - a =- 4; =- is interpreted as 2 tokens. So a = -4
+    3. Use str.split("-") rather than datetime.strip(), which was written in python and not fast.
     """
     # 1
     from datetime import timedelta
@@ -121,6 +122,10 @@ def test_datetime():
     # 3
     from dateutil.relativedelta import relativedelta
     print("relative delta: ", a + relativedelta(months = 2))
+
+    text = '2012-09-20'
+    yr, mon, day = text.split("-")
+    print("yr, mon, day: ", int(yr), int(mon), int(day))
 
 def test_fractions(): 
     """
