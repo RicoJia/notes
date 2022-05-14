@@ -17,10 +17,18 @@ def test_gradient():
         - tensor[:, 0] = 0 is valid
         - conversion: t = torch.from_numpy(arr); arr = t.numpy()
         - view is like array.reshape
+    - "tensor" = "np array"
+    - "backbone" = feature extractor (feature map)
+    - "autograd": pytorch uses this to calculate gradient
     3. tensor can calculate gradient, using Autograd
         - do cost.backward()    # calculate gradient using the dynamic computation graph 
         - then x.grad()     # returns 2x2 gradient
     4. dynamic computation graph will store: function that creates variable (x doesn't have one, but y and z do)
+    5. Terms 
+        - "tensor" = "np array"
+        - "backbone" = feature extractor (feature map)
+        - "autograd": pytorch uses this to calculate gradient
+
     """
     # Variables wrap a Tensor
     x = Variable(torch.ones(2, 2), requires_grad=True)

@@ -3,7 +3,7 @@ def test_string():
     """
     1. ljust returns a 20 char long str, with "O" padding char
     2. to split a string into a list of words, based on delim
-    3. str.strip() remove trailing/ leading spaces
+    3. str.strip() only remove trailing/ leading spaces
     4. See if start with, end with 
     5. find substring start index
     6. Print number with certain digits f"{12.456:10.1f}"
@@ -22,7 +22,7 @@ def test_string():
     print(str_.center(15, "*"))
 
     # 3
-    txt = "     banana     "
+    txt = "     banana     bananana     "
     x = txt.strip()
     print(x)
 
