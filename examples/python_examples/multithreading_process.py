@@ -68,6 +68,7 @@ def test_process():
             - os.kill(pid, signal)
                 - os.getppid() is to get parent pid
                 - os.getpid() will return the pid
+                - process.pid can be used to get pid
         3. launch process, https://zhuanlan.zhihu.com/p/64702600
     """
     def getter(): 
@@ -91,8 +92,11 @@ def test_process():
     # The default behavior of a signal with no handler, e.g., os.killpg(os.getppid(), signal.SIGUSR2) is to print out message: "User defined signal1"
     print("time to kill")
     # Get current process group id
+    # method 1: send signal to group
     pgid = os.getpgid(os.getpid())
     os.killpg(pgid, signal.SIGUSR2)
+    # method 2: send signal to a specific process
+    os.kill(pset.pid, signal.SIGUSR2)
     pset.join()
 
 def test_multiprocess_queue(): 
