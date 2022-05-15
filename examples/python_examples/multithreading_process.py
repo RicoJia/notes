@@ -69,21 +69,23 @@ def test_process():
         def sig_handler_usr2(signum, frame):
             nonlocal shutdown
             shutdown = True
-            print("usr2 is called")
-        signal.signal(signal.SIGUSR2, sig_handler_usr2)
+            print("usr2 is called")    
+            signal.signal(signal.SIGUSR2, sig_handler_usr2)
         print(f"getter sleeping, os pid: {os.getppid()}")
         while not shutdown:
             time.sleep(0.5)
+
+    def sig_handler_usr2_parent(signum, frame):
+        print("parent sigusr2")
+    signal.signal(signal.SIGUSR2, sig_handler_usr2_parent)
 
     pset = Process(target=getter,args=()) #实例化进程对象
     pset.start()
     time.sleep(1)
     # get parent pid
-    # The default behavior of a signal with no handler, e.g., os.killpg(os.getppid(), signal.SIGUSR2) 
-    # is to print out message: "User defined signal1"
-    print("child PID: ", pset.pid, "current pid: ", os.getpid())
-    # os.killpg(pset.pid, signal.SIGUSR2)
-    pset.send_signal(signal.SIGUSR2)
+    # The default behavior of a signal with no handler, e.g., os.killpg(os.getppid(), signal.SIGUSR2) is to print out message: "User defined signal1"
+    print("time to kill")
+    os.killpg(os.getppid(), signal.SIGUSR2)
     pset.join()
 
 def test_multiprocess_queue(): 
