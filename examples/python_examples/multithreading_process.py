@@ -52,6 +52,11 @@ import signal
 import time
 import os
 from multiprocessing import  Process
+def test_subprocess(): 
+    """
+    1. Subprocess is to open anything over command line as a process. multiprocessing allows to divide a program
+    """
+    pass
 def test_process(): 
     """
     Theory: 
@@ -59,36 +64,53 @@ def test_process():
         2. Use signal handler like below
         3. launch process, https://zhuanlan.zhihu.com/p/64702600
     """
-    def setter(): 
-        print("setter")
-        time.sleep(1)
-        # get parent pid
-        # The default behavior of a signal with no handler, e.g., os.killpg(os.getppid(), signal.SIGUSR2) 
-        # is to print out message: "User defined signal1"
-        os.killpg(os.getppid(), signal.SIGUSR2)
-    pset = Process(target=setter,args=()) #实例化进程对象
-    pset.start()
-    shutdown = False
-    def sig_handler_usr2(signum, frame):
-        nonlocal shutdown
-        shutdown = True
-        print("usr2 is called")
-    signal.signal(signal.SIGUSR2, sig_handler_usr2)
-    print("sleeping")
-    while not shutdown:
-        time.sleep(0.5)
+    def getter(): 
+        shutdown = False
+        def sig_handler_usr2(signum, frame):
+            nonlocal shutdown
+            shutdown = True
+            print("usr2 is called")
+        signal.signal(signal.SIGUSR2, sig_handler_usr2)
+        print(f"getter sleeping, os pid: {os.getppid()}")
+        while not shutdown:
+            time.sleep(0.5)
 
+    pset = Process(target=getter,args=()) #实例化进程对象
+    pset.start()
+    time.sleep(1)
+    # get parent pid
+    # The default behavior of a signal with no handler, e.g., os.killpg(os.getppid(), signal.SIGUSR2) 
+    # is to print out message: "User defined signal1"
+    print("child PID: ", pset.pid, "current pid: ", os.getpid())
+    # os.killpg(pset.pid, signal.SIGUSR2)
+    pset.send_signal(signal.SIGUSR2)
     pset.join()
 
 def test_multiprocess_queue(): 
     """
+    # cv2.imread  cannot work with non-english filenames
     1. Queue(max_size)
     2. queue.put(), queue.get() by default will block the main thread and wait for an item to come
+        - multiprocessing.Queue.get() will yield Queue.Empty if empty
     3. queue.put_nowait(), queue.get_nowait() will not block
     """
     from multiprocessing import Queue
     q = Queue(4)
+    print("putting an item onto the queue")
     q.put(1)
+    q.get(block = True, timeout = 0.1)
+    print("q needs to be cleared")
+
+    # multiprocessing.Queue ACTUALLY uses the queue Module,
+    from queue import Empty
+    try: 
+        q.get(block = False)
+    except Empty: 
+        print("when queue is empty, Queue.Empty is raised")
+
+
+
+
     
 def test_forking(): 
     """
@@ -113,5 +135,6 @@ def test_forking():
 
 if __name__ == "__main__": 
     # test_lock()
-    # test_process()
-    test_forking()
+    test_process()
+    # test_forking()
+    # test_multiprocess_queue()
