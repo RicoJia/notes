@@ -62,6 +62,12 @@ def test_process():
     Theory: 
         1. you have SIGUSR1, SIGUSR2 to communicate between processes. 
         2. Use signal handler like below
+            - Linux has a "process group", parent process, child process belongs to the same process group. 
+            - os.killpg(pid_group, signal)
+                - pgid = os.getpgid(os.getpid())
+            - os.kill(pid, signal)
+                - os.getppid() is to get parent pid
+                - os.getpid() will return the pid
         3. launch process, https://zhuanlan.zhihu.com/p/64702600
     """
     def getter(): 
@@ -70,22 +76,23 @@ def test_process():
             nonlocal shutdown
             shutdown = True
             print("usr2 is called")    
-            signal.signal(signal.SIGUSR2, sig_handler_usr2)
+        signal.signal(signal.SIGUSR2, sig_handler_usr2)
         print(f"getter sleeping, os pid: {os.getppid()}")
         while not shutdown:
             time.sleep(0.5)
 
     def sig_handler_usr2_parent(signum, frame):
         print("parent sigusr2")
+        pass
     signal.signal(signal.SIGUSR2, sig_handler_usr2_parent)
-
     pset = Process(target=getter,args=()) #实例化进程对象
     pset.start()
     time.sleep(1)
-    # get parent pid
     # The default behavior of a signal with no handler, e.g., os.killpg(os.getppid(), signal.SIGUSR2) is to print out message: "User defined signal1"
     print("time to kill")
-    os.killpg(os.getppid(), signal.SIGUSR2)
+    # Get current process group id
+    pgid = os.getpgid(os.getpid())
+    os.killpg(pgid, signal.SIGUSR2)
     pset.join()
 
 def test_multiprocess_queue(): 
