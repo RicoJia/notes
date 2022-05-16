@@ -62,6 +62,7 @@ def test_gradient():
     t = torch.from_numpy(arr)
     print("t from numpy: ", t)
     print("arr from tensor: ", t.numpy())
+    print("t to scalar: ", t.data[0].item())
 
 def test_backward_propagation(): 
     """
@@ -199,6 +200,6 @@ def test_small_nn():
     import torch.optim as optim
     optimizer = optim.SGD(n.parameters(), lr=0.001, momentum=0.9)
 if __name__ == "__main__": 
-    # test_gradient()
+    test_gradient()
     # test_backward_propagation()
-    test_small_nn()
+    # test_small_nn()
