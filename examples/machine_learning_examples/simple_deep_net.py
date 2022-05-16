@@ -28,7 +28,7 @@ def test_gradient():
         - "tensor" = "np array"
         - "backbone" = feature extractor (feature map)
         - "autograd": pytorch uses this to calculate gradient
-
+        - epochs? # iterations of the whole dataset
     """
     # Variables wrap a Tensor
     x = Variable(torch.ones(2, 2), requires_grad=True)
