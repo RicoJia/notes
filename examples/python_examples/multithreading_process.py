@@ -121,10 +121,12 @@ def test_multiprocess_queue():
     except Empty: 
         print("when queue is empty, Queue.Empty is raised")
 
+    # But to quit safelly, in case the queue object has been garbage collected, 
+    # Indicate that no more data will be put on this queue by the current process. Background thread will quit once it has flushed all buffered data to the pipe
+    q.close()
+    # Ensures all data in the buffer has been flushed
+    q.join_thread()
 
-
-
-    
 def test_forking(): 
     """
     1. Forking is to spawn a child process from the "fork" point. All data is copied to the child process. 
