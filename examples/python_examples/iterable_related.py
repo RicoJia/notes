@@ -200,6 +200,9 @@ def test_named_tuples():
     """
     1. Still a tuple, can be unpacked, but instead of [1], you use field name
     2. Can use _replace() to make a new namedtuple with new fields
+    3. Note: if you define the namedtuple inside function, pickle cannot find it
+        - https://stackoverflow.com/questions/16377215/how-to-pickle-a-namedtuple-instance-correctly
+        - multiprocessing.Queue actually uses this...
     """
     from collections import namedtuple
     Subscriber = namedtuple("some_name", ["addr", "name"])
