@@ -121,6 +121,7 @@ def generator_basics():
     """
     1. Use yield, which is like return, but returns a generator object, which can be iterated only once. 
         - Do not store all values in memory at once, generated on the fly
+        - Responds to next() calls, like iterator. But it could be easier
     2. By default, it raises StopIteration exception
     3. So use for i in.... For loop returns a generator
     4. Design Patterns: 
