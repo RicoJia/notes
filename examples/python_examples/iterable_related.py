@@ -66,20 +66,39 @@ def iterator_basics():
     1. Iterable is something you can iterate over, like a list, dictionary, using the iterator inside them. 
     2. you must have ```__iter__``` and ```__next__``` for iterators
         - Use next() on iterables
-        - Use ```iter()``` to get an iterator
+        - Iterator is an object with next(). Use ```iter()``` to get an iterator. 
+    3. iterable is an object with __iter__(), which returns an iterator
         - Use ```for i in ``` to loop over
-
     """
-    class Bday:
-        def __iter__(self):
-            return self
+    # 1
+    class BdayIterator:
+        def __init__(self): 
+            self.count = 0
         def __next__(self):
-            return 100
-            # raise StopIteration   #or do this
+            self.count += 1
+            if self.count < 10: 
+                return 100
+            else:
+                raise StopIteration   #or do this
+
     # __iter__ returns an iterator
-    bday = Bday()         
-    # __next__ returns the next value of the iterable
-    print(next(bday))
+    bday = BdayIterator()
+
+    # manually iterating
+    while True: 
+        # __next__ returns the next value of the iterable
+        try: 
+            num = next(bday) 
+        except StopIteration: 
+            print("Iteration stopped")
+            break
+
+    # 2
+    class BdayIterable():
+        def __iter__(self): 
+            return BdayIterator()
+    for i in BdayIterable(): 
+        print("bday iterable: ", i) 
 
 def test_iterator_on_iterable(): 
     """
@@ -530,8 +549,9 @@ def useful_list_features():
 if __name__ == "__main__": 
     # set_funcs()
     # deep_copy()
+    iterator_basics()
     # dict_operations()
-    dictionary_basics()
+    # dictionary_basics()
     # test_ordereddict()
     # test_dict_less_known_features()
     # list_basics()
