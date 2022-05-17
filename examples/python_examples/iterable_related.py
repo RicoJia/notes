@@ -117,13 +117,42 @@ def test_iterator_on_iterable():
     dict_iterator = iter(di)
     print(next(dict_iterator))
 
+def test_reversed(): 
+    """
+    1. reversed(iterable) is to call __reversed()__
+    """
+    class MagicNumberIterable: 
+        def __init__(self): 
+            self.count = 0
+        def __iter__(self): 
+            while self.count < 10: 
+                yield self.count
+                self.count += 1
+            # reset it so you can iterate multiple times
+            self.count = 0
+        def __reversed__(self): 
+            self.count = 9
+            while self.count >= 0: 
+                yield self.count
+                self.count -= 1
+    mni = MagicNumberIterable()
+    for i in mni: 
+        print("directly on iterable: ", i)
+    # When we call iter on an iterator it will always give us itself back. So in for loop it will be iter(iter(mni)), which is fine
+    for i in iter(mni): 
+        print("iter: ", i)
+    while True: 
+        print("next", next(iter(mni)))
+    for i in reversed(mni): 
+        print("reversed: ", i)
+
 def generator_basics(): 
     """
-    1. Use yield, which is like return, but returns a generator object, which can be iterated only once. 
+    1. Use yield, which is like return, but returns a generator object, which can be iterated only once. Generators are iterators
         - Do not store all values in memory at once, generated on the fly
         - Responds to next() calls, like iterator. But it could be easier
     2. By default, it raises StopIteration exception
-    3. So use for i in.... For loop returns a generator
+    3. So use for i in.... For loop calls next(iter(iterable)), and returns a generator
     4. Design Patterns: 
         1. Good for stuff that's generated indefinitely, real time
         2. Good for search, which decouples search process from the upper stream code
@@ -306,7 +335,7 @@ def dictionary_basics():
     print("descending by key: ", sorted_items)
     sorted_items = sorted(dic.items())
     print("descending by key, default key: ", sorted_items)
-    sorted_items = sorted(dic.items(), reverse=True, key=lambda x:x[1])
+    sorted_items = sorted(dic.items(), reversed=True, key=lambda x:x[1])
     print("ascending: ", sorted_items)
 
 def test_dict_less_known_features(): 
@@ -470,7 +499,7 @@ def list_basics():
     """
     1. None in list works with if statement
     2. sorted will sort the list in place
-    3. ls.reverse() will also does the job in place
+    3. ls.reversed() will also does the job in place
     4. Create object with identical elements
         - see 'aaaa'. * in python will create APPEND the object with 1. Identical elements for immutables, and references for mutables
         - so USE LIST  comprehension if we want to have real duplicates
@@ -489,7 +518,7 @@ def list_basics():
 
     # 3
     ls = [1,2,3]
-    ls.reverse()
+    ls.reversed()
     print(ls)
 
     # 4
@@ -550,7 +579,7 @@ def useful_list_features():
 if __name__ == "__main__": 
     # set_funcs()
     # deep_copy()
-    iterator_basics()
+    # iterator_basics()
     # dict_operations()
     # dictionary_basics()
     # test_ordereddict()
@@ -567,3 +596,4 @@ if __name__ == "__main__":
     # generateor_uses()
     # test_zip()
     # useful_list_features()
+    test_reversed()
