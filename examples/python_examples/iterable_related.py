@@ -1,6 +1,17 @@
 #!/usr/bin/python3
 import numpy as np
 #========================================================================
+def test_zip(): 
+    """
+    Note zip creates an iterator (so it can be iterated only once)
+    """
+    di = {1:"a", 2:"b"}
+    foo = zip(di.values(), di.keys())
+    for i in foo: 
+        print(i)
+    print("not going to print anything afterwards")
+    for i in foo: 
+        print(i)
 def deep_copy():
     di = {1:"a", 2:"b"}
     di2 = di.copy()
@@ -64,11 +75,14 @@ def test_unpack():
 def iterator_basics(): 
     """
     1. Iterable is something you can iterate over, like a list, dictionary, using the iterator inside them. 
+        - Called Iterable protocol
     2. you must have ```__iter__``` and ```__next__``` for iterators
         - Use next() on iterables
         - Iterator is an object with next(). Use ```iter()``` to get an iterator. 
+        - Once we have reached the bottom of an iterator, raises StopIteration 
     3. iterable is an object with __iter__(), which returns an iterator
         - Use ```for i in ``` to loop over
+    4. . dict is an iterable. But iter(di) gives you the keys
     """
     # 1
     class BdayIterator:
@@ -100,13 +114,7 @@ def iterator_basics():
     for i in BdayIterable(): 
         print("bday iterable: ", i) 
 
-def test_iterator_on_iterable(): 
-    """
-    1. You have to get an iterator, Then you can do next()
-    2. or ```for i in``` calls the iterator inside an iterable
-    3. dict is an iterable. But iter(di) gives you the keys
-    4. Once we have reached the bottom of an iterator, raises StopIteration 
-    """
+    # 4
     ls = [1,2,3]
     ls_iter = iter(ls)
     # see 1, 2
@@ -117,40 +125,11 @@ def test_iterator_on_iterable():
     dict_iterator = iter(di)
     print(next(dict_iterator))
 
-def test_reversed(): 
-    """
-    1. reversed(iterable) is to call __reversed()__
-    """
-    class MagicNumberIterable: 
-        def __init__(self): 
-            self.count = 0
-        def __iter__(self): 
-            while self.count < 10: 
-                yield self.count
-                self.count += 1
-            # reset it so you can iterate multiple times
-            self.count = 0
-        def __reversed__(self): 
-            self.count = 9
-            while self.count >= 0: 
-                yield self.count
-                self.count -= 1
-    mni = MagicNumberIterable()
-    for i in mni: 
-        print("directly on iterable: ", i)
-    # When we call iter on an iterator it will always give us itself back. So in for loop it will be iter(iter(mni)), which is fine
-    for i in iter(mni): 
-        print("iter: ", i)
-    while True: 
-        print("next", next(iter(mni)))
-    for i in reversed(mni): 
-        print("reversed: ", i)
-
 def generator_basics(): 
     """
     1. Use yield, which is like return, but returns a generator object, which can be iterated only once. Generators are iterators
         - Do not store all values in memory at once, generated on the fly
-        - Responds to next() calls, like iterator. But it could be easier
+        - It's a generator function, which has __next__(), like iterator. But it could be easier
     2. By default, it raises StopIteration exception
     3. So use for i in.... For loop calls next(iter(iterable)), and returns a generator
     4. Design Patterns: 
@@ -209,17 +188,53 @@ def generateor_uses():
     nums = [1,2,3,45]
     print("sum using generator: ", sum(n for n in nums))
 
-def test_zip(): 
+def test_reversed(): 
     """
-    Note zip creates an iterator (so it can be iterated only once)
+    1. reversed(iterable) is to call __reversed()__
     """
-    di = {1:"a", 2:"b"}
-    foo = zip(di.values(), di.keys())
-    for i in foo: 
-        print(i)
-    print("not going to print anything afterwards")
-    for i in foo: 
-        print(i)
+    class MagicNumberIterable: 
+        def __init__(self): 
+            self.count = 0
+        def __iter__(self): 
+            while self.count < 10: 
+                yield self.count
+                self.count += 1
+            # reset it so you can iterate multiple times
+            self.count = 0
+        def __reversed__(self): 
+            self.count = 9
+            while self.count >= 0: 
+                yield self.count
+                self.count -= 1
+    mni = MagicNumberIterable()
+    for i in mni: 
+        print("directly on iterable: ", i)
+    # When we call iter on an iterator it will always give us itself back. So in for loop it will be iter(iter(mni)), which is fine
+    for i in iter(mni): 
+        print("iter: ", i)
+    for i in reversed(mni): 
+        print("reversed: ", i)
+
+def test_iterable_extra_state(): 
+    """
+    1. Have extra state in the object: make iterable and add the state to it
+        - enumuerate(ls, start_index)
+    """
+    from collections import deque
+    class ReaderWithExtraState:
+        def __init__(self, ls): 
+            self.history = deque()
+            self.list = ls
+        def __iter__(self): 
+            for item_num, item in enumerate(self.list, 2): 
+                self.history.append((item_num, item))
+                yield item
+
+    ls = [5,4,3,2,1]
+    rwes = ReaderWithExtraState(ls)
+    for item in rwes: 
+        # you will see the history growing every step of the way
+        print("history: ", rwes.history)
     
 #========================================================================
 def test_tuples():
@@ -591,9 +606,9 @@ if __name__ == "__main__":
     # test_chain_map()
     # test_range()
     # test_unpack()
-    # test_iterator_on_iterable()
     # generator_basics()
     # generateor_uses()
     # test_zip()
     # useful_list_features()
-    test_reversed()
+    # test_reversed()
+    test_iterable_extra_state()

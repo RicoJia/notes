@@ -20,6 +20,20 @@ def test_counter():
     print("subtracting counts: ", cnt - cnt_2)
     
 
+def test_serial():
+    """
+    1. convert byte using to_bytes
+    2. serial write, read, etc.
+        - ord(char) -> unicode int
+    """ 
+    import serial 
+    ser = serial.Serial("/dev/ttyUSB2", 9600, timeout=2)
+    byte = (0xFF).to_bytes(1, "little")
+    ser.write(byte)
+    while True: 
+      a = ser.read(1)
+      if a: 
+        print(ord(a))
 
 if __name__ == "__main__":
     test_counter()
