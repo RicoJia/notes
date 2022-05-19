@@ -3,7 +3,9 @@ import numpy as np
 #========================================================================
 def test_zip(): 
     """
-    Note zip creates an iterator (so it can be iterated only once)
+    1. Note zip creates an iterator (so it can be iterated only once), which returns a tuple. 
+        - stops at the smallest sequence
+    2. zip(ls1, ls2, ls3) you can zip multiple files
     """
     di = {1:"a", 2:"b"}
     foo = zip(di.values(), di.keys())
@@ -12,6 +14,13 @@ def test_zip():
     print("not going to print anything afterwards")
     for i in foo: 
         print(i)
+
+    ls1 = [1,2]
+    ls2 = [-1,-2, -3]
+    ls3 = [1,-2, -3, 4]
+    for i in zip(ls1, ls2, ls3): 
+        print(i)
+
 def deep_copy():
     di = {1:"a", 2:"b"}
     di2 = di.copy()
@@ -236,6 +245,51 @@ def test_iterable_extra_state():
         # you will see the history growing every step of the way
         print("history: ", rwes.history)
     
+def test_slice_iterator(): 
+    """
+    1. itertools.islice(generator_func, start_id, end_id)
+        - does consume the generator 
+
+    2. itertools.dropwhile(lambda, generator_func)
+    """
+    # 1
+    def count(n):
+        while n < 200: 
+            yield n
+            n += 1
+    c=  count(0)
+    from itertools import islice
+    for i in islice(c,10, 20): 
+        print(i)
+
+    # 2
+    from itertools import dropwhile
+    c=  count(0)
+    def is_positive(n):
+        return n < 6 
+      
+    value_list =[5, 6, -8, -4, 2]
+    result = list(dropwhile(is_positive, value_list))
+    print("res: ", result)
+
+    def is_good(x): 
+        return True
+    ls = list(dropwhile(is_positive, c)) 
+    print(ls)
+
+def test_permutations():
+    """
+    1. permutations: all possible permutation
+    2. Of smaller length
+    """
+    items = [4,3,2,1]
+    from itertools import permutations
+    for p in permutations(items): 
+        print(p)
+    # 2
+    for p in permutations(items, 2): 
+        print(p)
+
 #========================================================================
 def test_tuples():
     """
@@ -458,6 +512,17 @@ def test_chain_map():
     print("adding an empty dict to chainmap: ", chain.new_child())
     print("new chainmap without the first dict: ", chain.parents)
 
+def test_chain(): 
+    """
+    1. chain(iterable1, iterable2 ...) will make sa list of references to each element in the iterables. 
+        - Everytime you have need complex iter tools, come to itertools
+        - GREAT thing about chain: the iterables DO NOT HAVE TO BE of the same type.
+    """
+    from itertools import chain
+    ls = [1,2,3]
+    s = {4,5,6}
+    for i in chain(ls, s): 
+        print(i)
 
 def set_funcs(): 
     """
@@ -611,4 +676,7 @@ if __name__ == "__main__":
     # test_zip()
     # useful_list_features()
     # test_reversed()
-    test_iterable_extra_state()
+    # test_iterable_extra_state()
+    # test_slice_iterator()
+    # test_permutations()
+    test_chain()

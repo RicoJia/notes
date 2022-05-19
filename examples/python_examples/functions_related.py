@@ -2,6 +2,12 @@
 import numpy as np
 
 global_var = "global"
+def test_lambda(): 
+    """
+    lambda can be called like this
+    """
+    print((lambda x: x > 10)(11))
+
 def test_scope():
     """
     1. The outer function variables are by-default read only. If you declare a variable locally without nonlocal or global, then that will be a local variable, nothing to do with the outer one
