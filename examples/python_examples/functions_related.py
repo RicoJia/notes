@@ -222,6 +222,8 @@ def test_decorator():
     @function_decorator
     def test():
         print('1, Hello World!')
+    # execute wrapped_func
+    test()
 
     # 2. func(a)(b) is actually calling a nested function 
     def bar(a):
@@ -239,32 +241,32 @@ def test_decorator():
         return a+1
     print("barred function: ", barred_func) 
 
-    # 3
-    import time 
-    from functools import wraps
-    def timethis(func): 
-         @wraps(func)
-         # have to use args and kwargs to wrap a function with.
-         def wrapper(*args, **kwargs):
-             start = time.time() 
-             result = func(*args, **kwargs) 
-             end = time.time() 
-             print(func.__name__, end-start) 
-             # return the same thing as a convention
-             return result 
-         return wrapper
-    # decorator is just equivalent to a wrapper
-    def foo(): 
-        print("foo")
-    foo = timethis(foo)
-    foo()
-
-    @timethis
-    def some_func(): 
-        print('hehe')
-    some_func()
-    print("function attributes: ", some_func.__name__)
-    some_func.__wrapped__()
+    # # 3
+    # import time 
+    # from functools import wraps
+    # def timethis(func): 
+    #      @wraps(func)
+    #      # have to use args and kwargs to wrap a function with.
+    #      def wrapper(*args, **kwargs):
+    #          start = time.time() 
+    #          result = func(*args, **kwargs) 
+    #          end = time.time() 
+    #          print(func.__name__, end-start) 
+    #          # return the same thing as a convention
+    #          return result 
+    #      return wrapper
+    # # decorator is just equivalent to a wrapper
+    # def foo(): 
+    #     print("foo")
+    # foo = timethis(foo)
+    # foo()
+    #
+    # @timethis
+    # def some_func(): 
+    #     print('hehe')
+    # some_func()
+    # print("function attributes: ", some_func.__name__)
+    # some_func.__wrapped__()
 
 def test_chaining_decorators(): 
     """
