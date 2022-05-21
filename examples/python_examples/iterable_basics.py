@@ -8,7 +8,7 @@ def iterator_basics():
     2. you must have ```__iter__``` and ```__next__``` for iterators
         - Use next() on iterables
         - Iterator is an object with next(). Use ```iter()``` to get an iterator. 
-        - Once we have reached the bottom of an iterator, raises StopIteration 
+        - Once we have reached the bottom of an iterator, raises StopIteration. 
     3. iterable is an object with __iter__(), which returns an iterator
         - Use ```for i in ``` to loop over
     4. . dict is an iterable. But iter(di) gives you the keys
@@ -56,10 +56,11 @@ def iterator_basics():
 
 def generator_basics(): 
     """
-    1. Use yield, which is like return, but returns a generator object, which can be iterated only once. Generators are iterators
+    1. Generators are iterators
+        - Use yield, which is like return, but returns a generator object, which can be iterated only once. 
         - Do not store all values in memory at once, generated on the fly
         - It's a generator function, which has __next__(), like iterator. But it could be easier
-    2. By default, it raises StopIteration exception
+    2. By default, StopIteration exception when the last value is yielded. So you don't have to write this explicitly
     3. So use for i in.... For loop calls next(iter(iterable)), and returns a generator
     4. Design Patterns: 
         1. Good for stuff that's generated indefinitely, real time
@@ -116,6 +117,73 @@ def generateor_uses():
     print(min(p["shares"] for p in portfolio))
     nums = [1,2,3,45]
     print("sum using generator: ", sum(n for n in nums))
+
+
+def test_yield_from(): 
+    """
+    1. yield from => (python 3.3)
+        for i in generator_func_yielded_from: 
+          yield i
+        - do not put this in your main function, else your main function will become a generator function, and needs to be called next on!
+    2. After yield, you can return as well
+        - You will see that as StopIteration: return_value if you call the generator using next()
+        - After everything in yield from is ended, what's after will be finished
+        - If you manually call next() just enough times to finish yielding, what's after yield from won't be executed, which is consistent with yield's behaviour
+    """
+    # 1
+    def test(n): 
+        i = 0
+        while i < n: 
+            print("test i: ", i)
+            yield i
+            i+=1
+    def yield_from_func(n): 
+        print("Start: ")
+        j = yield from test(n)
+        print("j: ", j)
+        print("========")
+        yield from test(n)
+        print("End: ")
+
+    # This line doesn't do anything, sense it's a generator
+    yield_from_func(4)
+    for i in yield_from_func(4): 
+        print("main loop i: ", i)
+
+    # 2
+    print("After yield, you can return as well. But")
+    print("You will see that as StopIteration: return_value if you call the generator using next()")
+    def some_gen(): 
+        yield 0
+        yield 1
+        return "Done0"
+        # this will not be executed
+        return "Done1"
+
+    g = some_gen()
+    print(next(g))
+    # see StopIteration: Done
+    # print(next(g))
+
+    print("After yield, you can return, but you won't see the return value if you don't use yield from: ")
+    g = some_gen()
+    for i in g: 
+        print(i)
+
+    def test_some_gen():
+        g = some_gen()
+        res = yield from g
+        print(res)
+        print("After everything in yield from is ended, what's after will be finished")
+    print("using yield from: ")
+    for i in test_some_gen():
+        print(i)
+    print("If you manually call next() just enough times to finish yielding, what's after yield from won't be executed, which is consistent with yield's behaviour")
+    tsg = test_some_gen()
+    next(tsg)
+    next(tsg)
+    # next(tsg) # this will finish the part after yield from, but will also raise stopiteration
+    
 
 def test_reversed(): 
     """
@@ -291,34 +359,6 @@ def test_coroutine():
     consumer = init_coroutine(consumer)
     producer(consumer())
 
-
-def test_yield_from(): 
-    """
-    python 3.3
-    yield from => 
-    for i in generator_func_yielded_from: 
-      yield i
-    """
-    def test(n): 
-        i = 0
-        while i < n: 
-            print("test i: ", i)
-            yield i
-            i+=1
-    def yield_from_func(n): 
-        print("Start: ")
-        j = yield from test(n)
-        print("j: ", j)
-        print("========")
-        yield from test(n)
-        print("End: ")
-
-    # This line doesn't do anything, sense it's a generator
-    yield_from_func(4)
-
-    for i in yield_from_func(4): 
-        print("main loop i: ", i)
-
 def test_asyncio(): 
     """
     1. async.coroutine is like this having the init_coroutine decorator
@@ -348,7 +388,8 @@ def test_asyncio():
     loop.close()
 
 if __name__ == "__main__": 
+    # generator_basics()
+    test_yield_from()
     # test_coroutine_basic_idea()
-    # test_yield_from()
-    test_coroutine()
+    # test_coroutine()
     # test_asyncio()
