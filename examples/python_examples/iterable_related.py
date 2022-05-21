@@ -460,27 +460,20 @@ def useful_list_features():
     more_than_5 = [c>5 for c in counts]
     print(list(compress(addresses, more_than_5)))
 
+def test_heapq_merge(): 
+    """
+    1. heapq merge can be used to merge two sorted list. This is working on iterables, and it doesn't create tmps!
+    """
+    from heapq import merge
+    ls1 = [4,2,56,7]
+    ls2 = [42,52,51,7]
+
+    ls1 = sorted(ls1)
+    ls2 = sorted(ls2)
+    merged_gen = merge(ls1, ls2)
+    for m in merged_gen:
+        print(m)
+
 if __name__ == "__main__": 
-    # set_funcs()
-    # deep_copy()
-    # iterator_basics()
-    # dict_operations()
-    # dictionary_basics()
-    # test_ordereddict()
-    # test_dict_less_known_features()
-    # list_basics()
-    # test_tuples()
-    # test_named_tuples()
-    # test_default_dict()
-    # test_chain_map()
-    # test_range()
-    # test_unpack()
-    # generator_basics()
-    # generateor_uses()
-    # test_zip()
-    # useful_list_features()
-    # test_reversed()
-    # test_iterable_extra_state()
-    # test_slice_iterator()
-    # test_permutations()
-    test_chain()
+    # test_chain()
+    test_heapq_merge()
