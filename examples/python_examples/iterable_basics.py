@@ -49,7 +49,7 @@ def iterator_basics():
     # see 1, 2
     print(next(ls_iter), next(ls_iter))
 
-    #create an iterable from dictionary
+    # create an iterable from dictionary
     di =  {"one": 1, "two":2}
     dict_iterator = iter(di)
     print(next(dict_iterator))
@@ -118,7 +118,6 @@ def generateor_uses():
     nums = [1,2,3,45]
     print("sum using generator: ", sum(n for n in nums))
 
-
 def test_yield_from(): 
     """
     1. yield from => (python 3.3)
@@ -183,7 +182,6 @@ def test_yield_from():
     next(tsg)
     next(tsg)
     # next(tsg) # this will finish the part after yield from, but will also raise stopiteration
-    
 
 def test_reversed(): 
     """
@@ -233,7 +231,7 @@ def test_iterable_extra_state():
         # you will see the history growing every step of the way
         print("history: ", rwes.history)
     
-def test_slice_iterator(): 
+def test_slice_iterator():
     """
     1. itertools.islice(generator_func, start_id, end_id)
         - does consume the generator 
@@ -311,7 +309,6 @@ def test_coroutine():
         - In C++, guess you can use simple functions with static vars. 
         - In Python, no static vars
         - Note that in Coroutine, yield is a consumer, consuming data from send()
-    2. we need a function that calls next on a producer
     """
     def consumer():
         print("[CONSUMER] start")
@@ -326,7 +323,7 @@ def test_coroutine():
 
 
     def producer(c):
-        # 启动generatora, see [consumer start here]
+        # 启动generator a, see [consumer start here]
         start_value = c.send(None)
         print("start_value: ", start_value)
         n = 0
@@ -342,29 +339,59 @@ def test_coroutine():
     # 传入generator
     producer(c)
 
-    # 2
-    def init_coroutine(func):
-        def wrapper(*args, **kwargs):
-            print("2 build wrapped function")
-            rs = func(*args, **kwargs)
-            print("3 call next on wrapped function")
-            next(rs)
-            print("4 return generator")
-            return rs
-        print("1 just create a wrapper, generator function not running")
-        return wrapper
-    
-    # equivalent to decorating consumer
-    print("=================2 ")
-    consumer = init_coroutine(consumer)
-    producer(consumer())
 
 def test_asyncio(): 
     """
-    1. async.coroutine is like this having the init_coroutine decorator
+    1. asyncio.coroutine is a wrapper that calls next() on the function. Python3.4 - 3.10
+        - So it's basically a middle man, emit all values from yield, and catch return value
+        - Of course, if you call it manually, return value will surface after StopIteration
+        - this is where "async.run_until_complete" becomes handy
+
+    2. async.coroutine is like this having the init_coroutine decorator
         https://www.fythonfang.com/blog/2017/5/18/Python3-Coroutine-and-asyncio
     """
     # 1
+    import functools
+    import types
+    def init_coroutine(func):
+        # 将普通函数变成generator
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            rs = func(*args, **kwargs)
+            # res is any return value at the very end of rs
+            res = yield from rs
+            return res
+        wrapper = types.coroutine(wrapper)
+        return wrapper
+    
+    # equivalent to decorating consumer
+    print("test init_coroutine: ")
+    @init_coroutine
+    def test_c(): 
+        yield 1
+        return "done"
+    c = test_c()
+    print("next c: ", next(c))
+    try: 
+        print("next c: ", next(c))
+    except StopIteration as e: 
+        print("Of course, if you call it manually, return value will surface after StopIteration")
+        print(e)
+
+    import asyncio
+    @asyncio.coroutine 
+    def another_test_c(): 
+        # yield 1 throws "Task got bad yield" error?
+        yield
+        print("about to be done")
+        return "done"
+    print("test_c is coroutine:",asyncio.iscoroutinefunction(another_test_c))
+    print("test_c() is coroutine: ", asyncio.iscoroutine(another_test_c()))
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(another_test_c())
+    loop.close()
+
+    # 2
     import asyncio
     # @asyncio.coroutine
     def compute(x, y):
@@ -389,7 +416,7 @@ def test_asyncio():
 
 if __name__ == "__main__": 
     # generator_basics()
-    test_yield_from()
+    # test_yield_from()
     # test_coroutine_basic_idea()
     # test_coroutine()
-    # test_asyncio()
+    test_asyncio()
