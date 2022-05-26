@@ -20,6 +20,8 @@ void test_map(){
     mp.insert({3,6}); 
     cout<<mp[3]<<endl;
     mp.erase(3);
+
+    cout<<"try to find: "<<(mp.find(4) == mp.end())<<endl;
 }
 
 //TODO
@@ -47,6 +49,6 @@ void test_multimap(){
 int main()
 {
     // test_unordered_map();
-    // test_map(); 
-    test_multimap();
+    test_map(); 
+    // test_multimap();
 }
