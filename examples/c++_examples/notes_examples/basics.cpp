@@ -14,6 +14,7 @@ using namespace std;
     2. <string>, stoi(string) -> int
     3. while(getline(std::cin, line, ",")) will get you a line with the delimeters
     4. stringstream is in <sstream>
+    5. string.substr(start, len)
  */
 void argparser() {
     auto decompose_str_to_deq = [](const std::string& line){
