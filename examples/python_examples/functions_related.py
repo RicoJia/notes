@@ -70,7 +70,11 @@ def test_optional_arg():
 
 def kwargs_test(): 
     """
-    kwargs is just a dictionary
+    1. kwargs(keyworded arguments) is just a dictionary
+    2. args(positional args) and kwargs for the same function
+        - remember kwargs don't have an order, so have them at the very last
+        - also whatever comes after *args will be kwargs
+    3. You can enforce functions to have only keyworded,
     """
     def test_args(*args): 
         print(args) # should see a tuple
@@ -84,6 +88,21 @@ def kwargs_test():
 
     test_kwargs(foo="bar", love=101)
     test_args(101, "123")
+
+    # 2
+    def test_args_kwargs(*args, b, **kwargs): 
+        print("args: ", args)
+        print("b: ", b)
+        print("kwargs: ", kwargs)
+    test_args_kwargs(1,2,3,4, b="asdf", LOL=12)
+
+    # 3
+    def recv(**kwargs): 
+        print("kwargs is enforced: ", kwargs)
+    def recv2(*, block): 
+        print("1 keyworded arg is enforced: ", block)
+    recv(LOL="23")
+    recv2(block="asdf")
 
 def test_partial():
     """
@@ -107,6 +126,7 @@ def test_partial():
 def test_type_hints(): 
     """
     1. Python's type hints are NOT enforced, but can be used by IDE. 
+        - stored in func.__annotation__. just call func.__annotation__
     2. Use string as default value for funcs whose args are defined later
     3. for < python 3.9, you need typing to indicate what exactly goes into the container
     4. typing.sequence can be used to refer to list, tuple
@@ -363,6 +383,7 @@ if __name__ == "__main__":
     # test_nested_func_in_class()
     # test_scope()
     # test_optional_arg()
-    # test_type_hints()
-    test_decorator()
+    test_type_hints()
+    # test_decorator()
+    # kwargs_test()
     # test_class_decorator()
