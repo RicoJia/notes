@@ -273,6 +273,7 @@ def test_coroutine_basic_idea():
     2. To start the generator object, you need to call __next__. 
         - generator object has the function send(), which is a bi-directional communcation to/from the generator
         - Note that __next__ is essentially send(None). So you're only retrieving the yielded value back.
+        - NOTE: TO start a generator, you MUST send(None)
     3. Each send() (including __next__()) function from consumer will start a new cycle: 
         1. producer gets consumer's message from send()
         2. Producer does its thing 
@@ -294,6 +295,7 @@ def test_coroutine_basic_idea():
     print("\n---------------\n")
 
     # 启动generator
+    # see generator start, next_result = 1; but now received value because yield will be finished, but received_value will come from the next call
     next_result = generator.__next__()
     print("next_result = %d" % next_result)
 
@@ -301,6 +303,7 @@ def test_coroutine_basic_idea():
 
     # 发送值给yield表达式
     yielded_result = generator.send(666)
+    # see received 666, and yielded result = 2
     print("yielded_result = %d" % yielded_result)
 
 def test_coroutine(): 
@@ -417,6 +420,6 @@ def test_asyncio():
 if __name__ == "__main__": 
     # generator_basics()
     # test_yield_from()
-    # test_coroutine_basic_idea()
+    test_coroutine_basic_idea()
     # test_coroutine()
-    test_asyncio()
+    # test_asyncio()

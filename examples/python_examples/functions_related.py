@@ -4,9 +4,25 @@ import numpy as np
 global_var = "global"
 def test_lambda(): 
     """
-    lambda can be called like this
+    1. lambda can be called like this
+    2. Lambda can capture values, but they're again references bound at runtime.
+    3. If you want to store value of lambda, store it.
     """
+    # 1 
     print((lambda x: x > 10)(11))
+
+    # 2 
+    x = 10
+    lam = lambda y: y+x
+    x = 300
+    print("Lambda can capture values, but they're again references bound at runtime: ", lam(20), " see 320 instead of 30")
+
+    # 3
+    x = 10
+    lam  = lambda y, x = x: y+x
+    x = 300
+    print(f"If you want to store value of lambda, store it. See {lam(20)} instead of 320")
+    
 
 def test_scope():
     """
@@ -68,6 +84,67 @@ def test_optional_arg():
     func(None)
     func2(2)
 
+def test_default_arg():
+    """
+    1. use immutables only as default args. mutables, such as list, is shared with future function calls, hence they can be changed
+        - This is really tricky!
+    """
+    def test_l(l = []): 
+        l.append(123)
+        return l
+    l1 = test_l()
+    l2 = test_l()
+    # see [123, 123], [123, 123]
+    print("two different function calls share the same mutable: ", l1, l2)
+
+def test_control_flow(): 
+    """
+    1. decorator that wraps a generator function, which launches an output queue 
+        - test() is the generator class here
+        - send(None) to start generator
+    2. Return Async, which takes in lambda as a computation func and a callback
+    """
+    def apply_async(func, args, *, callback): 
+        # do computation, then put result on to the queue
+        result = func(*args)
+        callback(result)
+
+    from queue import Queue 
+    from functools import wraps
+    def inlined_async(func): 
+        # TODO?
+        @wraps(func) 
+        def wrapper(*args): 
+            f = func(*args) 
+
+            result_queue = Queue()
+            # start the generator f.
+            result_queue.put(None)
+            while True:
+                result = result_queue.get()
+                try:
+                    # first you send None, get Async, apply_async, next iteration you send 5, get stop_iteration
+                    a = f.send(result)
+                    # do computation, then put result on to the queue
+                    apply_async(a.func, a.args, callback=result_queue.put)
+                except StopIteration: 
+                    break
+        return wrapper
+
+    add = lambda x,y: x+y
+    class Async: 
+        def __init__(self, func, args): 
+            self.func = func 
+            self.args = args
+            print("async constructed")
+
+    @inlined_async
+    def test():
+        r = yield Async(add, (2,3))
+        print("test r: ", r)
+
+    test()
+
 def kwargs_test(): 
     """
     1. kwargs(keyworded arguments) is just a dictionary
@@ -106,22 +183,33 @@ def kwargs_test():
 
 def test_partial():
     """
-    How it works: (apart from kwargs support). partial is returning a wrapper with extended args
-    def partial(func, *part_args):
-        def wrapper(*extra_args):
-            args = list(part_args)
-            args.extend(extra_args)
-            return func(*args)
-        return wrapper
-    func_wrapper = partial(func, 1)
-    func_wrapper(12)        # pass 12 in as extra_args
+    1. How it works: (apart from kwargs support). partial is returning a wrapper with extended args
+    2. equivalent implementation
     """
-    # partial
+    # 1 partial
     from functools import partial
     def func(a, b): 
-        print(a, b)
+        print("func: ", a, b)
     func_w = partial(func, b = 12)
     func_w(a = 13)
+
+    def rico_partial(func, *args, **kwargs):
+        # simplified version
+        # def wrapper(a): 
+        #     # kwargs here is a dict, need to unpack it
+        #     return func(a, **kwargs)
+        # return wrapper
+        def wrapper(*extra_args, **extra_kwargs):
+            # need nonlocal since we are reusing args, and kwargs, which will be true local vars
+            nonlocal args, kwargs
+            # args here is a tuple already
+            args = list(args)
+            args.extend(extra_args)
+            kwargs = {**kwargs, **extra_kwargs}
+            return func(*args, **kwargs)
+        return wrapper
+    rico_func_w = rico_partial(func, b = 12)
+    rico_func_w(a=13)
 
 def test_type_hints(): 
     """
@@ -135,7 +223,7 @@ def test_type_hints():
     7. Union: an arg can be one of any types here. Optional is Union(type, None)
     8. Callable: Can be a function, or a class with __call__. See below for how to use it
     9. Any: wildcard
-    10. Template T in C++
+    10.Template T in C++
     """
     # basic - type hint with default val
     def func1(age: int = 20): 
@@ -383,7 +471,11 @@ if __name__ == "__main__":
     # test_nested_func_in_class()
     # test_scope()
     # test_optional_arg()
-    test_type_hints()
+    # test_type_hints()
     # test_decorator()
     # kwargs_test()
     # test_class_decorator()
+    # test_default_arg()
+    # test_lambda()
+    # test_partial()
+    test_control_flow()
