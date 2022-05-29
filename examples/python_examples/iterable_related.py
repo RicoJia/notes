@@ -220,6 +220,7 @@ def test_dict_less_known_features():
         - just return the value of the min key. 
     3. Finding commonalities bw two dicts: items-view, keys-view objects support set operations, but not values-view objects pq values can have duplicates. 
         - Make a new dict with certain elements removed 
+    4. dictionary.update(), insert items into dictionary
     """
     # 1
     my_array = np.array([1,2,3])
@@ -244,6 +245,10 @@ def test_dict_less_known_features():
     my_dict_2 = {"1": 100, "2": 99, "3": 98}
     c = {key: my_dict_2[key] for key in my_dict_2.keys() - {"1"}}
     print("certain key removed: ", c)
+
+    # 5
+    my_dict.update({"lol": "all"})
+    print("after update, dict: ", my_dict)
 
 def test_ordereddict():
     """
@@ -476,4 +481,5 @@ def test_heapq_merge():
 
 if __name__ == "__main__": 
     # test_chain()
-    test_heapq_merge()
+    # test_heapq_merge()
+    test_dict_less_known_features()
