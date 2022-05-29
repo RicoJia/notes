@@ -102,6 +102,7 @@ def test_control_flow():
     1. decorator that wraps a generator function, which launches an output queue 
         - test() is the generator class here
         - send(None) to start generator
+        - THE POINT OF THIS DECORATOR is to step thru all yield functions in just oneline
     2. Return Async, which takes in lambda as a computation func and a callback
     """
     def apply_async(func, args, *, callback): 
@@ -308,6 +309,59 @@ def test_type_hints():
     # this will complain since we have mixed types
     func9(1, "sr")
 
+def test_closure_func(): 
+    """
+    1. closure function 
+        - can hold extra internal states, which is really useful
+        - again, global variables are bound in runtime
+    2. To modify the internal states, expose them as methods of function project
+        - Yes you can add attributes to a function object!
+    """
+    # 1
+    x = 20
+    def wrap():
+        some_num = 9
+        def func(*args):
+            s = sum(args) + x + some_num
+            return s
+        return func
+
+    x = 10
+    w = wrap()
+    x = 100
+    print(w(3,4,5))
+
+    # 2
+    def another_wrap():
+        some_num = 9
+        def func(*args):
+            s = sum(args) + some_num
+            return s
+        
+        def set_some_num(val):
+            # must use nonlocal as we're modifying upper level variable
+            nonlocal some_num
+            some_num = val
+        def get_some_num(): 
+            return some_num
+
+        func.set_some_num = set_some_num
+        func.get_some_num = get_some_num
+        print("1")
+        return func
+    
+    aw = another_wrap()
+    aw.set_some_num(100)
+    print(f"some_num now is 100: {aw.get_some_num()}, so sum is {aw(0)}")
+
+    # 3 
+    def stack_in_closure(): 
+        items = []
+        def push(val): 
+            items.append(val)
+        def pop():
+            return items.pop()
+
 def test_decorator(): 
     """
     1. Decorator is not to execute a function with extra args. Instead it's a fucntion returning a wrapped function
@@ -478,4 +532,5 @@ if __name__ == "__main__":
     # test_default_arg()
     # test_lambda()
     # test_partial()
-    test_control_flow()
+    # test_control_flow()
+    test_closure_func()
