@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 import numpy as np
 
+###############################################################################
+### Basics
+###############################################################################
 global_var = "global"
 def test_lambda(): 
     """
@@ -22,7 +25,6 @@ def test_lambda():
     lam  = lambda y, x = x: y+x
     x = 300
     print(f"If you want to store value of lambda, store it. See {lam(20)} instead of 320")
-    
 
 def test_scope():
     """
@@ -47,22 +49,6 @@ def test_scope():
     print(some_var)
     print(ls_cp)
 
-def test_nested_func_in_class(): 
-    """
-    1. nested function can modify the same member in class
-    """
-    # 1
-    class Foo(object):
-        def __init__(self):
-           self.haha = "mark" 
-        def nested_func(self): 
-            def another_func(): 
-                self.haha = "markhaha"
-            another_func()
-            print("modify member in class: ", self.haha)
-    f = Foo()
-    f.nested_func()
-
 def property_test():
     class foo: 
         pass
@@ -71,6 +57,20 @@ def property_test():
     print(f.temperature)
     print(f.__class__.__name__)
 
+def get_current_funcs_info():
+    """
+    1. func name: {sys._getframe(0).f_code.co_name}, file name: {__file__}, line number: {sys._getframe(0).f_lineno}
+    2. all params: {sys._getframe(0).f_locals}
+    """
+    def dummy_method():
+        pass
+    import sys
+    print(f"func name: {sys._getframe(0).f_code.co_name}, file name: {__file__}, line number: {sys._getframe(0).f_lineno}")
+    print(f"all params: {sys._getframe(0).f_locals}")
+
+###############################################################################
+### Args
+###############################################################################
 def test_optional_arg(): 
     from typing import Optional, Union
     # telling the type checker that an object of the specific type is required
@@ -96,55 +96,6 @@ def test_default_arg():
     l2 = test_l()
     # see [123, 123], [123, 123]
     print("two different function calls share the same mutable: ", l1, l2)
-
-def test_control_flow(): 
-    """
-    1. decorator that wraps a generator function, which launches an output queue 
-        - test() is the generator class here
-        - send(None) to start generator
-        - THE POINT OF THIS DECORATOR is to step thru all yield functions in just oneline
-    2. Return Async, which takes in lambda as a computation func and a callback
-    """
-    def apply_async(func, args, *, callback): 
-        # do computation, then put result on to the queue
-        result = func(*args)
-        callback(result)
-
-    from queue import Queue 
-    from functools import wraps
-    def inlined_async(func): 
-        # TODO?
-        @wraps(func) 
-        def wrapper(*args): 
-            f = func(*args) 
-
-            result_queue = Queue()
-            # start the generator f.
-            result_queue.put(None)
-            while True:
-                result = result_queue.get()
-                try:
-                    # first you send None, get Async, apply_async, next iteration you send 5, get stop_iteration
-                    a = f.send(result)
-                    # do computation, then put result on to the queue
-                    apply_async(a.func, a.args, callback=result_queue.put)
-                except StopIteration: 
-                    break
-        return wrapper
-
-    add = lambda x,y: x+y
-    class Async: 
-        def __init__(self, func, args): 
-            self.func = func 
-            self.args = args
-            print("async constructed")
-
-    @inlined_async
-    def test():
-        r = yield Async(add, (2,3))
-        print("test r: ", r)
-
-    test()
 
 def kwargs_test(): 
     """
@@ -211,6 +162,59 @@ def test_partial():
         return wrapper
     rico_func_w = rico_partial(func, b = 12)
     rico_func_w(a=13)
+
+###############################################################################
+### Misc
+###############################################################################
+
+def test_control_flow(): 
+    """
+    1. decorator that wraps a generator function, which launches an output queue 
+        - test() is the generator class here
+        - send(None) to start generator
+        - THE POINT OF THIS DECORATOR is to step thru all yield functions in just oneline
+    2. Return Async, which takes in lambda as a computation func and a callback
+    """
+    def apply_async(func, args, *, callback): 
+        # do computation, then put result on to the queue
+        result = func(*args)
+        callback(result)
+
+    from queue import Queue 
+    from functools import wraps
+    def inlined_async(func): 
+        # TODO?
+        @wraps(func) 
+        def wrapper(*args): 
+            f = func(*args) 
+
+            result_queue = Queue()
+            # start the generator f.
+            result_queue.put(None)
+            while True:
+                result = result_queue.get()
+                try:
+                    # first you send None, get Async, apply_async, next iteration you send 5, get stop_iteration
+                    a = f.send(result)
+                    # do computation, then put result on to the queue
+                    apply_async(a.func, a.args, callback=result_queue.put)
+                except StopIteration: 
+                    break
+        return wrapper
+
+    add = lambda x,y: x+y
+    class Async: 
+        def __init__(self, func, args): 
+            self.func = func 
+            self.args = args
+            print("async constructed")
+
+    @inlined_async
+    def test():
+        r = yield Async(add, (2,3))
+        print("test r: ", r)
+
+    test()
 
 def test_type_hints(): 
     """
@@ -309,6 +313,26 @@ def test_type_hints():
     # this will complain since we have mixed types
     func9(1, "sr")
 
+###############################################################################
+### Closure, Nested Functions, decorator
+###############################################################################
+
+def test_nested_func_in_class(): 
+    """
+    1. nested function can modify the same member in class
+    """
+    # 1
+    class Foo(object):
+        def __init__(self):
+           self.haha = "mark" 
+        def nested_func(self): 
+            def another_func(): 
+                self.haha = "markhaha"
+            another_func()
+            print("modify member in class: ", self.haha)
+    f = Foo()
+    f.nested_func()
+
 def test_closure_func(): 
     """
     1. closure function 
@@ -353,14 +377,6 @@ def test_closure_func():
     aw = another_wrap()
     aw.set_some_num(100)
     print(f"some_num now is 100: {aw.get_some_num()}, so sum is {aw(0)}")
-
-    # 3 
-    def stack_in_closure(): 
-        items = []
-        def push(val): 
-            items.append(val)
-        def pop():
-            return items.pop()
 
 def test_decorator(): 
     """
@@ -429,6 +445,37 @@ def test_decorator():
     # some_func()
     # print("function attributes: ", some_func.__name__)
     # some_func.__wrapped__()
+
+def test_closure_as_class():
+    """
+    1. You can make a fake class by using a function: 
+        1. In the current function, you can get the functions using sys._getframe(1).f_locals
+        2. You can add attributes to the class by adding to self.__dict__
+        3. callable(value) to see if the value is a callable
+    2. This method is a bit faster than the conventional method because we are using a function, which doesn't have self. 
+    """
+    import sys
+    class ClosureReturn():
+        def __init__(self):
+           locals = sys._getframe(1).f_locals 
+           print("here are the local attributes: ", locals)
+           self.__dict__.update((key, value) for key, value in locals.items() if callable(value))
+
+    def stack_in_closure(): 
+        items = []
+        def push(val): 
+            items.append(val)
+        def pop():
+            return items.pop()
+        def lube(): 
+            print("LUBE")
+
+        return ClosureReturn()
+    
+    fake_stack = stack_in_closure()
+    fake_stack.push(12)
+    print("fake stack is popping: ", fake_stack.pop())
+    fake_stack.lube()
 
 def test_chaining_decorators(): 
     """
@@ -522,6 +569,8 @@ def test_class_decorator():
     print(REGISTERED_SPECS)
 
 if __name__ == "__main__": 
+    get_current_funcs_info()
+    test_closure_as_class()
     # test_nested_func_in_class()
     # test_scope()
     # test_optional_arg()
@@ -533,4 +582,4 @@ if __name__ == "__main__":
     # test_lambda()
     # test_partial()
     # test_control_flow()
-    test_closure_func()
+    # test_closure_func()
