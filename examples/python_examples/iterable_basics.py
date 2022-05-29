@@ -350,39 +350,40 @@ def test_asyncio():
     2. async.coroutine is like this having the init_coroutine decorator
         https://www.fythonfang.com/blog/2017/5/18/Python3-Coroutine-and-asyncio
     """
-    # 1
-    import functools
-    import types
-    def init_coroutine(func):
-        # 将普通函数变成generator
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            rs = func(*args, **kwargs)
-            # res is any return value at the very end of rs
-            res = yield from rs
-            return res
-        wrapper = types.coroutine(wrapper)
-        return wrapper
-    
-    # equivalent to decorating consumer
-    print("test init_coroutine: ")
-    @init_coroutine
-    def test_c(): 
-        yield 1
-        return "done"
-    c = test_c()
-    print("next c: ", next(c))
-    try: 
-        print("next c: ", next(c))
-    except StopIteration as e: 
-        print("Of course, if you call it manually, return value will surface after StopIteration")
-        print(e)
+    # # 1
+    # import functools
+    # import types
+    # def init_coroutine(func):
+    #     # 将普通函数变成generator
+    #     @functools.wraps(func)
+    #     def wrapper(*args, **kwargs):
+    #         rs = func(*args, **kwargs)
+    #         # res is any return value at the very end of rs
+    #         res = yield from rs
+    #         return res
+    #     wrapper = types.coroutine(wrapper)
+    #     return wrapper
+    #
+    # # equivalent to decorating consumer
+    # print("test init_coroutine: ")
+    # @init_coroutine
+    # def test_c(): 
+    #     yield 1
+    #     return "done"
+    # c = test_c()
+    # print("next c: ", next(c))
+    # try: 
+    #     print("next c: ", next(c))
+    # except StopIteration as e: 
+    #     print("Of course, if you call it manually, return value will surface after StopIteration")
+    #     print(e)
 
+    # 1. does asyncio only work with yield from?
     import asyncio
     @asyncio.coroutine 
     def another_test_c(): 
         # yield 1 throws "Task got bad yield" error?
-        yield
+        yield 1
         print("about to be done")
         return "done"
     print("test_c is coroutine:",asyncio.iscoroutinefunction(another_test_c))
@@ -391,28 +392,28 @@ def test_asyncio():
     loop.run_until_complete(another_test_c())
     loop.close()
 
-    # 2
-    import asyncio
+    # # 2
+    # import asyncio
+    # # @asyncio.coroutine
+    # def compute(x, y):
+    #     print("Compute %s + %s ..." % (x, y))
+    #     # yield x + y
+    #     yield from asyncio.sleep(1.0)
+    #     print("compute")
+    #     return x + y
+    #
     # @asyncio.coroutine
-    def compute(x, y):
-        print("Compute %s + %s ..." % (x, y))
-        # yield x + y
-        yield from asyncio.sleep(1.0)
-        print("compute")
-        return x + y
-
-    @asyncio.coroutine
-    def print_sum(x, y):
-        # yield x + y
-        result = yield from compute(x, y)
-        print("%s + %s = %s" % (x, y, result))
-
-    loop = asyncio.get_event_loop()
-    print("start")
-    # 中断调用，直到协程执行结束
-    loop.run_until_complete(print_sum(1, 2))
-    print("end")
-    loop.close()
+    # def print_sum(x, y):
+    #     # yield x + y
+    #     result = yield from compute(x, y)
+    #     print("%s + %s = %s" % (x, y, result))
+    #
+    # loop = asyncio.get_event_loop()
+    # print("start")
+    # # 中断调用，直到协程执行结束
+    # loop.run_until_complete(print_sum(1, 2))
+    # print("end")
+    # loop.close()
 
 if __name__ == "__main__": 
     # generator_basics()
