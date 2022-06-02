@@ -467,7 +467,7 @@ def test_closure_as_class():
             items.append(val)
         def pop():
             return items.pop()
-        def lube(): 
+        def lube():
             print("LUBE")
 
         return ClosureReturn()
@@ -568,6 +568,17 @@ def test_class_decorator():
     mc = Foo()
     print(REGISTERED_SPECS)
 
+def test_function_frame(): 
+    """
+    Callstack is LIFO, so getting into a function pushes a frame on to the stack
+        - so the current function is stack[0]
+    """
+    a = 2
+    import sys
+    print("getframe(0): ", sys._getframe(0).f_locals)
+    print("getframe(1): ", sys._getframe(1).f_locals)
+    # print("getframe(2): ", sys._getframe(2).f_locals)
+
 if __name__ == "__main__": 
     get_current_funcs_info()
     test_closure_as_class()
@@ -583,3 +594,4 @@ if __name__ == "__main__":
     # test_partial()
     # test_control_flow()
     # test_closure_func()
+    test_function_frame()
