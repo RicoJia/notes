@@ -11,6 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
     tf2_ros
     message_generation
     )
+find_package(Eigen3 REQUIRED)
+
 
 add_service_files(
     FILES
@@ -31,7 +33,7 @@ catkin_package(
 #  DEPENDS system_lib
 )
 # Specify locations for headers!
-include_directories(${catkin_INCLUDE_DIRS})
+include_directories(${catkin_INCLUDE_DIRS} ${Eigen3_INCLUDE_DIR})
 add_executable(${PROJECT_NAME}_pub_sub_node src/test_pubsub.cpp)
 # Linking executable to packages in find_package
 target_link_libraries(${PROJECT_NAME}_pub_sub_node

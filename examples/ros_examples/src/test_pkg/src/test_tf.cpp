@@ -3,7 +3,8 @@
 #include <tf2_ros/transform_listener.h>
 #include <tf2/LinearMath/Quaternion.h>
 #include <geometry_msgs/TransformStamped.h>
-#include <Eigen/Dense>
+// #include <Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 #include "tf/message_filter.h"
 
 using std::cout; using std::endl; 

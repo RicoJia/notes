@@ -143,6 +143,8 @@ def dict_operations():
         1. Use operator.itemgetter is a bit faster. itemgetter is a callable that calls __getitem__ 
         1. you can do sorted(dic, key = lambda k : dic[k])
     3. max, min can use itemgetter as well
+    4. dict Basics
+        - dict uses hash to map to a hash bucket. If multiple keys don't have hash conflicts, hten get, set is o(1). But list is O(1) for get and set...
     """
     # 1
     di = {1:"a", 2:"b"}

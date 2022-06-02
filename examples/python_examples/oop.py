@@ -184,8 +184,27 @@ def test_task_managed_class():
 
 def test_slots():
     """
-    1. __slots__ makes the class a () instead of a dictionary. The memory
+    1. __slots__ makes the class a small list instead of a dictionary. 
+        - any additional attribute will throw "object Foo has no attribute.."
+        - so the class is a tuple, not a dictionary.
+        - saves a lot of memory
+        - list's get and set uses only O(1), so they're faster
+    2. sys.getsizeof(obj) is how you can see the size of it, but it will ignore referenced object such as self.__dict__
     """
+    class Foo:
+        __slots__=["name", "grade", "f1", "f2"]
+        def __init__(self, name, grade, f1=2, f2 = 4):
+            self.grade = grade
+            self.name = name
+            self.f1 = f1
+            self.f2 = f2
+            # self.dum = 1
+
+    f = Foo("1", 2)
+    import sys
+    print("sys.getsizeof object f's size: ", sys.getsizeof(f))
+    from pympler import asizeof
+    print("pympler getsizeof: ", asizeof.asizeof(f))
 
 if __name__ == "__main__": 
     # inheritance_basics()
@@ -196,4 +215,5 @@ if __name__ == "__main__":
     # test_sort_by_attr()
     # test_hasattr()
     # test_class_representations()
-    test_task_managed_class()
+    # test_task_managed_class()
+    test_slots()

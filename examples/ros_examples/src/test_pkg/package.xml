@@ -22,6 +22,8 @@
   <exec_depend>tf2</exec_depend>
   <build_depend>tf2_ros</build_depend>
   <exec_depend>tf2_ros</exec_depend>
+  <build_depend>eigen3</build_depend>
+  <exec_depend>eigen3</exec_depend>
 
   <!-- needed for ros topics and srvs -->
     <exec_depend>message_runtime</exec_depend>
