@@ -1,5 +1,10 @@
 #!/usr/bin/python3
 def inheritance_basics():
+    """
+    1. What does super() do?
+    2. name mangling using __var, also do something like lambda_ for vars that has names like keys
+        - __mangled_var can not be inherited, because it will be called self.Class_Name_mangled_var
+    """
     # Parent class calls function in derived class
     class A:
         def foo(self):
@@ -14,81 +19,13 @@ def inheritance_basics():
 
         def bar(self):
             print("from B")
+            # 2
+            self.lambda_ = 3
 
     B().foo()   #calls "from B"
 
     #print_class_name(): 
     print("class name: ", B().__class__.__name__)
-
-def test_class_variable(): 
-    """
-    1. Class variable is like static variable. But more versatile. You can change the value for one specific instance, or change the class variable itself.
-        - Python you can add another variable that doesn't exist on the go. So once you change the value for a specific instance, you create the instance's own copy
-    2. Need default value
-    3. Class itself is a dictionary. Can use this to see class variables
-    """
-    class Foo: 
-        var = 1
-    f = Foo()
-    g = Foo()
-    Foo.var = 2
-    print(g.var, f.var)
-    # can see what's inside the class, and what's inside the instance, using dict
-    print(Foo.__dict__, f.__dict__)
-    
-    # create the instance's own copy, which is NOT being affected by the class variable anymore.
-    f.bar = 12
-    Foo.var = 2
-    f.var = 12
-    print("Foo var is", Foo.var, "while f.bar : ", f.bar, "and f.var: ", f.var, " and g.var: ", g.var)
-    print(Foo.__dict__, f.__dict__)
-
-def test_sort_by_attr():
-    """
-    1. by default, sorted is ascending order. operator.attrgetter
-    2. attrgetter gets attribute like attrgetter("attr")(obj)
-    3. If we are sorting a dictionary, itemgetter is the way to go.
-        - bit faster than using lambda, as well as attrgetter
-    """
-    # 1
-    class Foo():
-        def __init__(self, name, grade):
-            self.name = name
-            self.grade = grade
-    ls = [Foo("Lee", 12), Foo("Chen", 10), Foo("Yoon", 9), Foo("Jia", 11)]
-    from operator import attrgetter
-    ls = sorted(ls, key=attrgetter("grade"))
-    [print("sorted list by attributes: ", item.name) for item in ls]
-    
-    # 2
-    print(f"attrgetter: {attrgetter('name')(ls[0])}")
-
-    # 3 
-    di = [{"name": "Lee", "grade": 12}, {"name": "Chen", "grade": 10}, {"name": "Yoon", "grade": 9}]
-    from operator import itemgetter
-    ls = sorted(di, key=itemgetter("grade"))
-    print("sorted list: ", ls)
-    
-def test_abstract_method():
-    """
-    1. abstract function is parent class function with no implementation. Parent class having at least 1 abstract function is an abstract class. Same as in C++
-    2. Should use ABC (abstract base class), else there won't be error
-        - but abstractmethod doesn't seem to do anything? 
-    """
-    from abc import ABC, abstractmethod
-    class Foo(ABC):
-        @abstractmethod
-        def foo(self): 
-            # print("foo")
-            pass
-
-    class FooC(Foo): 
-        def bar(self): 
-            print("bar")
-
-    # will see error since Foo can not be instantiated
-    # f = FooC()
-    # f.foo()
 
 def test_enum():
     # SIMPLE WAY TO DO THIS
@@ -104,35 +41,6 @@ def test_enum():
         DOG = 1
         CAT = 2
     print(TestEnum.CAT.value)
-
-def test_get_attribute(): 
-    """
-    1. When you call a member in class A, you will call A.__getattribute__() as well. So you might get recursion error
-    2. the calling with super().__getattribute__() will access the proper attribute. Not sure why? 
-    """
-    class Foo: 
-        def __init__(self): 
-            self.dummy = 100
-        def __getattribute__(self, s):
-            """
-            s is a string.
-            """
-            print ("1")
-            # calling this directly = recursion
-            # self.dummy
-            # call with super() instead, which is equivalent to self.dummy with no ambiguity
-            print(super().__getattribute__("dummy"))
-    f = Foo()
-    f.dummy
-
-def test_hasattr(): 
-    """
-    1. hasattr can be helpful
-    """
-    class Foo: 
-        f = 1
-    foo = Foo()
-    print(hasattr(foo, "f"), hasattr(foo, "b"))
 
 def test_class_representations(): 
     """
@@ -206,6 +114,154 @@ def test_slots():
     from pympler import asizeof
     print("pympler getsizeof: ", asizeof.asizeof(f))
 
+##############################################################
+### Attributes
+##############################################################
+
+def test_class_variable(): 
+    """
+    1. Class variable is like static variable. But more versatile. You can change the value for one specific instance, or change the class variable itself.
+        - Python you can add another variable that doesn't exist on the go. So once you change the value for a specific instance, you create the instance's own copy
+    2. Need default value
+    3. Class itself is a dictionary. Can use this to see class variables
+    """
+    class Foo: 
+        var = 1
+    f = Foo()
+    g = Foo()
+    Foo.var = 2
+    print(g.var, f.var)
+    # can see what's inside the class, and what's inside the instance, using dict
+    print(Foo.__dict__, f.__dict__)
+    
+    # create the instance's own copy, which is NOT being affected by the class variable anymore.
+    f.bar = 12
+    Foo.var = 2
+    f.var = 12
+    print("Foo var is", Foo.var, "while f.bar : ", f.bar, "and f.var: ", f.var, " and g.var: ", g.var)
+    print(Foo.__dict__, f.__dict__)
+
+def test_abstract_method():
+    """
+    1. abstract function is parent class function with no implementation. Parent class having at least 1 abstract function is an abstract class. Same as in C++
+    2. Should use ABC (abstract base class), else there won't be error
+        - but abstractmethod doesn't seem to do anything?
+    """
+    from abc import ABC, abstractmethod
+    class Foo(ABC):
+        @abstractmethod
+        def foo(self):
+            # print("foo")
+            pass
+
+    class FooC(Foo):
+        def bar(self):
+            print("bar")
+
+    # will see error since Foo can not be instantiated
+    # f = FooC()
+    # f.foo()
+
+def test_property():
+    """
+    1. use property to 
+        1. do additional processing
+        2. Compute things on demand
+    2. property is a bundle of setter, getter, and deleter functions
+        - use @property to make a funciton a propertie's getter
+        - use @name.setter, @name.deleter setters and deleters
+        - Java programmers will make everything a property
+    3. getter must be defined first, setter, deleter must follow 
+        - if getter is not defined, then you'll see errors
+    4. Alternatively, you can use property(getter_func, setter_func, deleter_func) to make something a property
+    5. you can see setter, getter, deleter funcs through ClassName.attr.fget
+    """
+    class Foo(object): 
+        # 3
+        @property
+        def name(self):
+            return self.name_str 
+
+        @name.setter
+        def name(self, name:str):
+            print("setting names")
+            if not isinstance(name, str):
+                # there's TypeError
+                raise TypeError("name is not string")
+            self.name_str = name
+
+        @name.deleter
+        def name(self):
+            # there's AttributeError
+            raise AttributeError("cannot delete")
+
+    f = Foo()
+    f.name="Luis"
+    print(f.name) 
+    try: 
+        del f.name
+    except AttributeError:
+        pass
+
+    # 4
+    print("fget: ", Foo.name.fget)
+
+
+def test_sort_by_attr():
+    """
+    1. by default, sorted is ascending order. operator.attrgetter
+    2. attrgetter gets attribute like attrgetter("attr")(obj)
+    3. If we are sorting a dictionary, itemgetter is the way to go.
+        - bit faster than using lambda, as well as attrgetter
+    """
+    # 1
+    class Foo():
+        def __init__(self, name, grade):
+            self.name = name
+            self.grade = grade
+    ls = [Foo("Lee", 12), Foo("Chen", 10), Foo("Yoon", 9), Foo("Jia", 11)]
+    from operator import attrgetter
+    ls = sorted(ls, key=attrgetter("grade"))
+    [print("sorted list by attributes: ", item.name) for item in ls]
+    
+    # 2
+    print(f"attrgetter: {attrgetter('name')(ls[0])}")
+
+    # 3 
+    di = [{"name": "Lee", "grade": 12}, {"name": "Chen", "grade": 10}, {"name": "Yoon", "grade": 9}]
+    from operator import itemgetter
+    ls = sorted(di, key=itemgetter("grade"))
+    print("sorted list: ", ls)
+    
+def test_get_attribute(): 
+    """
+    1. When you call a member in class A, you will call A.__getattribute__() as well. So you might get recursion error
+    2. the calling with super().__getattribute__() will access the proper attribute. Not sure why? 
+    """
+    class Foo: 
+        def __init__(self): 
+            self.dummy = 100
+        def __getattribute__(self, s):
+            """
+            s is a string.
+            """
+            print ("1")
+            # calling this directly = recursion
+            # self.dummy
+            # call with super() instead, which is equivalent to self.dummy with no ambiguity
+            print(super().__getattribute__("dummy"))
+    f = Foo()
+    f.dummy
+
+def test_hasattr(): 
+    """
+    1. hasattr can be helpful
+    """
+    class Foo: 
+        f = 1
+    foo = Foo()
+    print(hasattr(foo, "f"), hasattr(foo, "b"))
+
 if __name__ == "__main__": 
     # inheritance_basics()
     # test_class_variable()
@@ -216,4 +272,5 @@ if __name__ == "__main__":
     # test_hasattr()
     # test_class_representations()
     # test_task_managed_class()
-    test_slots()
+    # test_slots()
+    test_property()
