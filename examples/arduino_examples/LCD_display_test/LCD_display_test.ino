@@ -1,6 +1,7 @@
 /**
 1. Manually install liquid_crystal lib: https://github.com/johnrickman/LiquidCrystal_I2C
 2. Run I2C_Scanner to find the Address of the I2C device!
+3. Wiring for ESP32: SCL:22, SDA: 21, VCC: vin, GND: GND
 **/
 
 #include <LiquidCrystal_I2C.h>
