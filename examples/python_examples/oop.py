@@ -287,6 +287,9 @@ def test_descriptor():
     """
     1. Foundation for property, classmethods, staticmethods, and larger libs
         - Only works on per-class basis
+    2. Key idea is once descriptor object is assigned to class variable, If you assign the class var to another val, 
+    the val will be pluged into __set__(instance, value)
+        - and subsequent obj.attr will trigger __get__(instance, cls)
     2. Can be used to 
          - avoid duplicating properties
          - Enforce types
@@ -300,7 +303,6 @@ def test_descriptor():
             if instance is None:
                 return self
             else:
-                # instance?
                 return instance.__dict__[self.name]
         def __set__(self, instance, value):
             print("setting value: ", value)
@@ -341,7 +343,7 @@ def test_type_check_descriptor():
             return instance.__dict__[self.name]
         def __set__(self, instance, val):
             if not isinstance(val, self.expected_type):
-                raise TypeError("not the expected type")
+                raise TypeError(f"{val} is not the expected type")
             instance.__dict__[self.name] = val
         def __delete__(self, instance):
             del instance.__dict__[self.name]
@@ -349,19 +351,28 @@ def test_type_check_descriptor():
     # a decorator
     def typeassert(**kwargs):
         def wrapper(cls):
-            # return cls
-            pass
+            for name, expected_type in kwargs.items():
+                cls.name = Typed(name, expected_type)
+                # setattr(cls, name, 2)
+                # t.__set__(None, cls.name)
+            print(cls)
+            return cls
         return wrapper
 
     #decorator(kwargs)(wrapper_kwargs)
     @typeassert(name=str, grade=int)
     class Foo:
         def __init__(self, name, grade):
+            print(">>>>>>")
             self.name = name
             self.grade = grade
 
     # typeassert(...)(Foo(...)) -> wrapper(Foo(...))
-    Foo("rico", "not_a_valid_grade")
+    try:
+        Foo("rico", "not_a_valid_grade")
+    except:
+        pass
+    print("Foo: ", Foo.__dict__)
 
 
 if __name__ == "__main__": 
