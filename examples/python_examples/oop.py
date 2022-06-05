@@ -37,7 +37,7 @@ def test_enum():
     # Enum(name_of_enumeration, all fields, with 1,2,3...)
     Animals = Enum('Animals', 'ant bee cat dog')
     print(kkk.ant.value)
-    class TestEnum(Enum): 
+    class TestEnum(Enum):
         DOG = 1
         CAT = 2
     print(TestEnum.CAT.value)
@@ -330,6 +330,7 @@ def test_descriptor():
     print(f.i)
 
 def test_type_check_descriptor():
+    # Used to check if an object's attributes are of expected types
     class Typed:
         def __init__(self, name, expected_type):
             self.name = name
@@ -345,7 +346,22 @@ def test_type_check_descriptor():
         def __delete__(self, instance):
             del instance.__dict__[self.name]
 
+    # a decorator
     def typeassert(**kwargs):
+        def wrapper(cls):
+            # return cls
+            pass
+        return wrapper
+
+    #decorator(kwargs)(wrapper_kwargs)
+    @typeassert(name=str, grade=int)
+    class Foo:
+        def __init__(self, name, grade):
+            self.name = name
+            self.grade = grade
+
+    # typeassert(...)(Foo(...)) -> wrapper(Foo(...))
+    Foo("rico", "not_a_valid_grade")
 
 
 if __name__ == "__main__": 
@@ -360,4 +376,5 @@ if __name__ == "__main__":
     # test_task_managed_class()
     # test_slots()
     # test_property()
-    test_descriptor()
+    # test_descriptor()
+    test_type_check_descriptor()
