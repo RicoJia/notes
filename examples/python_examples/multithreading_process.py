@@ -48,6 +48,30 @@ def test_lock():
         if t is not main_thread: 
             t.join()
 
+def test_multiple_threads_queue():
+    """
+    1. thread.setDaemon(True) will make a daemon thread,which automatically & immediately joins when the main thread is joined.
+        - a regular non-daemon thread will have to wait until it finishes
+    2. task_done() will let join() know when it can finish
+    """
+    from queue import Queue
+    from threading import Thread
+    def worker(q):
+        while 1:
+            print(q.get())
+            q.task_done()
+
+    q = Queue(maxsize = 0)
+    for i in range(10):
+        worker_th = Thread(target=worker, args=(q,))
+        worker_th.setDaemon(True)
+        worker_th.start()
+
+    for x in range(100):
+        q.put(x)
+    q.join()
+
+
 import signal
 import time
 import os
@@ -107,25 +131,60 @@ def test_multiprocess_queue():
         - multiprocessing.Queue.get() will yield Queue.Empty if empty
     3. queue.put_nowait(), queue.get_nowait() will not block
     """
-    from multiprocessing import Queue
-    q = Queue(4)
-    print("putting an item onto the queue")
-    q.put(1)
-    q.get(block = True, timeout = 0.1)
-    print("q needs to be cleared")
+    from multiprocessing import Process, Queue
+    import os, time, random
+    # 写数据进程执行的代码:
+    def _write(q,urls):
+        print('Process(%s) is writing...' % os.getpid())
+        for url in urls:
+            q.put(url)
+            print('Put %s to queue...' % url)
+    # 读数据进程执行的代码:
+    def _read(q):
+        print('Process(%s) is reading...' % os.getpid())
+        while True:
+            url = q.get(True)
+            print('Get %s from queue.' % url)
 
-    # multiprocessing.Queue ACTUALLY uses the queue Module,
-    from queue import Empty
-    try: 
-        q.get(block = False)
-    except Empty: 
-        print("when queue is empty, Queue.Empty is raised")
+    # 父进程创建Queue，并传给各个子进程：
+    q = Queue()
+    _writer1 = Process(target=_write, args=(q,['url_1', 'url_2', 'url_3']))
+    _writer2 = Process(target=_write, args=(q,['url_4','url_5','url_6']))
+    _reader = Process(target=_read, args=(q,))
+    # 启动子进程_writer，写入:
+    _writer1.start()
+    _writer2.start()
+    # 启动子进程_reader，读取:
+    _reader.start()
+    # 等待_writer结束:
+    _writer1.join()
+    _writer2.join()
+    time.sleep(2)
+    # _reader进程里是死循环，无法等待其结束，只能强行终止:
+    _reader.terminate()
 
-    # But to quit safelly, in case the queue object has been garbage collected, 
-    # Indicate that no more data will be put on this queue by the current process. Background thread will quit once it has flushed all buffered data to the pipe
-    q.close()
-    # Ensures all data in the buffer has been flushed
-    q.join_thread()
+    # 2 - use a message to terminate the process
+    import multiprocessing
+    def consumer(queue):
+        while True:
+            msg = queue.get()
+            print(msg)
+            if (msg == 'DONE'):
+                break
+
+    def producer(count, queue):
+        for i in range(count):
+            queue.put(i)
+        queue.put('DONE')
+
+    queue = multiprocessing.Queue()
+    consumer_process = multiprocessing.Process(target=consumer, args=[queue])
+    consumer_process.daemon = True
+    consumer_process.start()
+    count = 10**4
+    producer(count, queue)
+    consumer_process.join()
+    print("Sent {0} numbers to Queue()".format(count))
 
 def test_forking(): 
     """
@@ -148,8 +207,21 @@ def test_forking():
     # pid4 = os.fork()
     time.sleep(10)
 
+def test_process_scanning():
+    import psutil
+    for proc in psutil.process_iter():
+        print(proc.name().lower())
+        # try:
+        #     # Check if process name contains the given name string.
+        #     if processName.lower() in proc.name().lower():
+        #         return True
+        # except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+        #     pass
+
 if __name__ == "__main__": 
     # test_lock()
-    test_process()
+    # test_process()
     # test_forking()
-    # test_multiprocess_queue()
+    test_multiprocess_queue()
+    # test_process_scanning()
+    # test_multiple_threads_queue()

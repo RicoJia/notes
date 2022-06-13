@@ -7,6 +7,7 @@
 #include <vector>
 #include <sstream>
 #include <unordered_map>
+#include <unistd.h>
 using namespace std;
 
 /**
@@ -111,7 +112,18 @@ void test_namespace(){
     ublas::Foo v;
 }
 
+void test_printing(){
+    while (1){
+        // 100;100 means line 100, cln 100, though cln 100 doesn't seem to be effective. 2J is to clear the screen by moving the content to scrollback buffer, 3J is to clear the buffer
+        std::cout<<__FUNCTION__<<"\e[100;100H\e[2J\e[3J"<<std::endl;
+        std::cout<<__FUNCTION__<<": 1"<<std::endl;
+        usleep(30000);
+    }
+    
+}
+
 int main()
 {
-    test_scopeing();
+    // test_scopeing();
+    test_printing();
 }
