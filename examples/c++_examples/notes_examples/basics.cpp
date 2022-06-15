@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <string>
 #include <cmath>
 #include <cstdio>
@@ -117,13 +118,49 @@ void test_printing(){
         // 100;100 means line 100, cln 100, though cln 100 doesn't seem to be effective. 2J is to clear the screen by moving the content to scrollback buffer, 3J is to clear the buffer
         std::cout<<__FUNCTION__<<"\e[100;100H\e[2J\e[3J"<<std::endl;
         std::cout<<__FUNCTION__<<": 1"<<std::endl;
+        // sleep(double) is not preferred, as it might have side effects (unexpected delay in certain kernel calls). Use usleep() if you wish
         usleep(30000);
     }
-    
+}
+
+// printing to stdout actually caches what to print, and it will flush when print cache is full
+//  - stderr does not cache
+//  - same thing with std::cout, but std::flush or std::endl will flush
+void test_printf(){
+   while (1) {
+       std::cout<<"."<<std::flush;
+       // printf(".");
+       // fprintf(stderr, ".");
+       usleep(1e3);
+   }
+}
+
+// by default, define gets a float
+// BUT TO avoid problems, always a good idea to do const double instead of #define
+#define const1 1.44f
+#define const3 1.44
+void test_define(){
+    const double const2=1.440;
+    if(const1 == const2){
+        std::cout<<__FUNCTION__<<": equal"<<std::endl;
+    }
+    else{
+        std::cout<<__FUNCTION__<<": not equal"<<std::endl;
+    }
+
+    if(const3 == const2){
+        std::cout<<__FUNCTION__<<": equal"<<std::endl;
+    }
+    else{
+        std::cout<<__FUNCTION__<<": not equal"<<std::endl;
+    }
+
 }
 
 int main()
 {
     // test_scopeing();
-    test_printing();
+    // test_printing();
+    // test_printf();
+    test_define();
 }
