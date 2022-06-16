@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import threading
 import concurrent.futures
+import time
 
 def test_event(): 
     def foo(ev):
@@ -52,28 +53,103 @@ def test_multiple_threads_queue():
     """
     1. thread.setDaemon(True) will make a daemon thread,which automatically & immediately joins when the main thread is joined.
         - a regular non-daemon thread will have to wait until it finishes
-    2. task_done() will let join() know when it can finish
+    2. task_done() signifying one item has been processed to the queue
+    3. join() waits for a thread to finish
+    4. About shutdown:
+        1. Common Practices
+            - send a sentinel value with the message is common practice
+            - Or have a special function that sets a flag to 0. 
+        2. Pain: if you don't signal the thread, the thread will never know when to finish. Also, __del__ is not the way to go
+            - garbage collection happens when reference count = 1. But 
+                - when a daemon thread is still running, the enclosing object skips destruction, and it's garbage collected when exiting the program
+                - when a non-daemon thread is still running, the main thread will hang because it will wait for the thread to finish
+            - notes: 
+                - x.__del__() may not be called during program exit.
+                - del x doesn’t directly call x.__del__() — the former decrements the reference count for x by one, and the latter is only called when x’s reference count reaches zero.
+        3. you can't forcibly kill a thread like killing a process (implemented on SIGTERM)
     """
-    from queue import Queue
+    from queue import Queue, Empty
     from threading import Thread
-    def worker(q):
-        while 1:
-            print(q.get())
-            q.task_done()
+    class Foo:
+        def __init__(self):
+            # Note this variable MUST be instantiated before the thread function
+            self.should_run = True
+            self.q = Queue()
+            self.th = Thread(target = self.__work)
+            self.th.start()
+            #TODO 
+            print(f"th started")
 
-    q = Queue(maxsize = 0)
-    for i in range(10):
-        worker_th = Thread(target=worker, args=(q,))
-        worker_th.setDaemon(True)
-        worker_th.start()
+        def __work(self):
+            while self.should_run:
+                try: 
+                    self.q.get(timeout=1)
+                    self.q.task_done()
+                except Empty:
+                    #TODO 
+                    print(f"empty should run: ", self.should_run)
 
-    for x in range(100):
-        q.put(x)
-    q.join()
+        def put(self):
+            self.q.put(1)
+        def shutdown(self):
+            self.should_run = False
+            #TODO 
+            print(f"shutdown, should_run: ", self.should_run)
+        def __del__(self):
+            self.should_run = False
+            #TODO 
+            print(f"del, should_run: ", self.should_run)
 
+            # self.q.join()
+
+    f = Foo()
+    # f.put()
+    # not be
+    # f.__del__()
+    print("end")
+
+def test_daemon_thread():
+    """
+    1. Daemon Thread joins after the process is joined
+        - shutdown: 
+            1. If daemon thread has finished, join() succeeds and calls __del__ of daemon object
+            2. if not, it will be garbage collected and its object will live until then, whose __del__ is not guaranteed to be called
+    2. Problem: printing stuff in daemon thread is dangerous, may not be ablt to get lock for stdout at shutdown
+    """
+    from threading import Thread
+    import queue
+    import os, time, random
+    class TestDaemon:
+        def __init__(self):
+            self.ls = [1,2,3,4]
+            self.queue = queue.Queue()
+            dth = Thread(target = self.daemon_func)
+            dth.setDaemon(True)
+            dth.start()
+        def daemon_func(self):
+            print("daemon started")
+            while 1:
+                # print("daemon :)", self.ls)
+                time.sleep(0.01)
+            print("daemon end")
+        def __del__(self):
+            # queue will be joined immediately
+            self.queue.join()
+            print("Del TestDaemon")
+
+    def launch_daemon():
+        t = TestDaemon()
+        print("Launching Daemong")
+        # calls __del__ immediately if t has no daemon thread. Else, __del__ is skipped
+        
+    t = Thread(target = launch_daemon)
+    t.start()
+    time.sleep(1)
+    print("join thread")
+    t.join()
+    print("launching thread end: ")
 
 import signal
-import time
 import os
 from multiprocessing import  Process
 def test_subprocess(): 
@@ -222,6 +298,7 @@ if __name__ == "__main__":
     # test_lock()
     # test_process()
     # test_forking()
-    test_multiprocess_queue()
+    # test_multiprocess_queue()
     # test_process_scanning()
     # test_multiple_threads_queue()
+    test_daemon_thread()
