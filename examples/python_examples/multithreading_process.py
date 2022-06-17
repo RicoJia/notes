@@ -70,43 +70,31 @@ def test_multiple_threads_queue():
     """
     from queue import Queue, Empty
     from threading import Thread
-    class Foo:
+    class Example:
         def __init__(self):
-            # Note this variable MUST be instantiated before the thread function
             self.should_run = True
             self.q = Queue()
             self.th = Thread(target = self.__work)
             self.th.start()
-            #TODO 
-            print(f"th started")
-
         def __work(self):
             while self.should_run:
                 try: 
                     self.q.get(timeout=1)
                     self.q.task_done()
                 except Empty:
-                    #TODO 
-                    print(f"empty should run: ", self.should_run)
-
-        def put(self):
-            self.q.put(1)
+                    print("work should_run: ", self.should_run)
+                    pass
+        def put(self, value):
+            self.q.put(value)
         def shutdown(self):
             self.should_run = False
-            #TODO 
-            print(f"shutdown, should_run: ", self.should_run)
         def __del__(self):
             self.should_run = False
-            #TODO 
-            print(f"del, should_run: ", self.should_run)
-
-            # self.q.join()
-
-    f = Foo()
-    # f.put()
-    # not be
-    # f.__del__()
-    print("end")
+            print("del should_run: ", self.should_run)
+            self.q.join()
+    f = Example()
+    f.put(1)
+    # f.shutdown()
 
 def test_daemon_thread():
     """
@@ -118,36 +106,19 @@ def test_daemon_thread():
     """
     from threading import Thread
     import queue
-    import os, time, random
     class TestDaemon:
         def __init__(self):
-            self.ls = [1,2,3,4]
             self.queue = queue.Queue()
             dth = Thread(target = self.daemon_func)
             dth.setDaemon(True)
             dth.start()
         def daemon_func(self):
-            print("daemon started")
-            while 1:
-                # print("daemon :)", self.ls)
+            while True:
                 time.sleep(0.01)
-            print("daemon end")
         def __del__(self):
-            # queue will be joined immediately
             self.queue.join()
-            print("Del TestDaemon")
 
-    def launch_daemon():
-        t = TestDaemon()
-        print("Launching Daemong")
-        # calls __del__ immediately if t has no daemon thread. Else, __del__ is skipped
-        
-    t = Thread(target = launch_daemon)
-    t.start()
-    time.sleep(1)
-    print("join thread")
-    t.join()
-    print("launching thread end: ")
+    t = TestDaemon()
 
 import signal
 import os
@@ -300,5 +271,5 @@ if __name__ == "__main__":
     # test_forking()
     # test_multiprocess_queue()
     # test_process_scanning()
-    # test_multiple_threads_queue()
-    test_daemon_thread()
+    test_multiple_threads_queue()
+    # test_daemon_thread()
