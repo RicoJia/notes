@@ -155,4 +155,148 @@ def test_type_check_descriptor():
         pass
     print("Foo: ", Foo.__dict__)
 
+##############################################################
+### Metaclass
+##############################################################
+def test_type():
+    """
+    1. a regular class is of type 'type'
+    2. Beauty of interpreted language: class can be created on the go, using type.
+        - type(class_name, inheritance, functions)
+        - Meanwhile compiled languages will have this compiled first
+    """
+    # 1
+    class Foo:
+        def foo(self):
+            pass
+    # see class Foo, class "type"
+    f = Foo()
+    print(type(f), type(Foo))
 
+    # 2
+    def fn(self):
+        pass
+    Foo_equivalent = type('Foo', (object,), dict(foo=fn))
+    f = Foo_equivalent()
+    # see the same as above
+    print(type(f), type(Foo_equivalent))
+    
+def test_metaclass():
+    """
+    1. Except for type(), you can create a class using metaclass, i.e., a class is an instantiation of a class
+    """
+    # have Metaclass at the end of the name by convention
+    class ListMetaclass(type):
+        # so you can add another attribute to a class. At the end, return the class using type
+        def __new__(cls, class_name, bases, attrs):
+            attrs['add'] = lambda self, x: self.append(x)
+            # here sometimes you will see super() as well
+            return type.__new__(cls, class_name, bases, attrs)
+
+    # with metaclass, the magic happens
+    # Meanwhile, you need to inherit from the list class
+    class MyList(list, metaclass=ListMetaclass):
+        pass
+    l = MyList()
+    l.add(3)
+    print(l)
+
+def test_ORM():
+    """
+    ORM: object relational mapping, projecting a class to a form. (No need to manage SQL directly?)
+        1. When you create a class (before creating an object), the class will call __new__() of its own or its parent class.
+            1. Its parent class gets created first
+            2. The class gets created next, with class variables being in attrs
+                - here you can examine if the class variables and their types meet certain standards
+        2. Later, when you create an object with args, the args can be type-checked if above you're passing in a descriptor
+    """
+    # 0, see descriptor for more details
+    class Field(object):
+        def __init__(self, name, column_type):
+            self.name = name
+            self.column_type = column_type
+        def __str__(self):
+            return '<%s:%s>' % (self.__class__.__name__, self.name)
+    class StringField(Field):
+        def __init__(self, name):
+            super(StringField, self).__init__(name, 'varchar(100)')
+
+    class IntegerField(Field):
+        def __init__(self, name):
+            super(IntegerField, self).__init__(name, 'bigint')
+
+    # 1
+    class ModelMetaclass(type):
+        def __new__(cls, name, bases, attrs):
+            if name=='Model':
+                #TODO 
+                print(f"1 Model: kw: {attrs}")
+                return type.__new__(cls, name, bases, attrs)
+            #TODO 
+            print(f"2 ModelMetaclass: kw: {attrs}")
+            print('Found model: %s' % name)
+            mappings = dict()
+            for k, v in attrs.items():
+                if isinstance(v, Field):
+                    print('Found mapping: %s ==> %s' % (k, v))
+                    mappings[k] = v
+            for k in mappings.keys():
+                attrs.pop(k)
+            attrs['__mappings__'] = mappings # 保存属性和列的映射关系
+            attrs['__table__'] = name # 假设表名和类名一致
+            return type.__new__(cls, name, bases, attrs)
+
+    """
+    note Model is inherited from dict. So the only thing is: 
+       - if the class name is Model, we will return it; 
+       - else when class is a child class, for each item in {attr}, we examine if it's a type of Field. If so, we add it to attrs[__mappings__]
+    """
+
+    class Model(dict, metaclass=ModelMetaclass):
+
+        def __init__(self, **kw):
+            pass
+            # as convention we need to call the Parent class init? 
+            # super(Model, self).__init__(**kw)
+
+        def __getattr__(self, key):
+            try:
+                return self[key]
+            except KeyError:
+                raise AttributeError(r"'Model' object has no attribute '%s'" % key)
+
+        def __setattr__(self, key, value):
+            self[key] = value
+
+        def save(self):
+            fields = []
+            params = []
+            args = []
+            for k, v in self.__mappings__.items():
+                fields.append(v.name)
+                params.append('?')
+                args.append(getattr(self, k, None))
+            sql = 'insert into %s (%s) values (%s)' % (self.__table__, ','.join(fields), ','.join(params))
+            print('SQL: %s' % sql)
+            print('ARGS: %s' % str(args))
+
+    # 2 
+    # using ORM. save() is provided by Model, but fields are from ORM
+    class User(Model):
+        # calls Model.__init__() first
+        id = IntegerField('id')
+        name = StringField('username')
+        email = StringField('email')
+        password = StringField('password')
+
+    # 创建一个实例：
+    u = User(id=12345, name='Michael', email='test@orm.org', password='my-pwd')
+    print("User.__dict__: ", User.__dict__)
+    # 保存到数据库：
+    u.save()
+    print("u: ", u)
+
+if __name__ == "__main__": 
+    # test_type()
+    # test_metaclass()
+    test_ORM()
