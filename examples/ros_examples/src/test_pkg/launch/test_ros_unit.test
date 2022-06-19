@@ -1,0 +1,5 @@
+<launch>
+    <param name="/value" value="2"/>
+    <test test-name="test_params" pkg="tutorial" type="test_params.py" >
+    </test>
+</launch>
