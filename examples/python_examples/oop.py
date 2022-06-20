@@ -237,9 +237,10 @@ def test_super():
     1. if you call functions directly through parent classes' names, you will see functions exected twice
         - If you use super(), just one gets called, because it uses multiple resolution order (MRO)
         - super() returns a super object, which allows you to access parent class attributes
+
     2. MRO is a list of classes sorted using merge-sort
         - mro must be accessed thru class, like obj.__class__
-
+    3. ref: https://python-reference.readthedocs.io/en/latest/docs/functions/super.html
     """
     class Base:
         def __init__(self):
