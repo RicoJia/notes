@@ -1,3 +1,4 @@
+
 ##############################################################
 ### Property, Descriptor
 ##############################################################
@@ -10,7 +11,7 @@ def test_property():
         - use @property to make a funciton a propertie's getter
         - use @name.setter, @name.deleter setters and deleters
         - Java programmers will make everything a property
-    3. getter must be defined first, setter, deleter must follow 
+    3. getter must be defined first, setter, deleter must follow
         - if getter is not defined, then you'll see errors
     4. Alternatively, you can use property(getter_func, setter_func, deleter_func) to make something a property
         - You can call the setter, getter functions directly, especially for remote calls, which doesn't work on the properties
@@ -64,7 +65,7 @@ def test_property():
     # 5
     print("fget: ", Foo.name.fget)
 
-def test_descriptor(): 
+def test_descriptor():
     """
     1. Foundation for property, classmethods, staticmethods, and larger libs
         - Only works on per-class basis
@@ -113,6 +114,7 @@ def test_descriptor():
     print(f.i)
 
 def test_type_check_descriptor():
+
     # Used to check if an object's attributes are of expected types
     class Typed:
         def __init__(self, name, expected_type):
@@ -254,11 +256,6 @@ def test_ORM():
 
     class Model(dict, metaclass=ModelMetaclass):
 
-        def __init__(self, **kw):
-            pass
-            # as convention we need to call the Parent class init? 
-            # super(Model, self).__init__(**kw)
-
         def __getattr__(self, key):
             try:
                 return self[key]
@@ -280,8 +277,8 @@ def test_ORM():
             print('SQL: %s' % sql)
             print('ARGS: %s' % str(args))
 
-    # 2 
-    # using ORM. save() is provided by Model, but fields are from ORM
+    #2
+    # # using ORM. save() is provided by Model, but fields are from ORM
     class User(Model):
         # calls Model.__init__() first
         id = IntegerField('id')
@@ -296,7 +293,78 @@ def test_ORM():
     u.save()
     print("u: ", u)
 
-if __name__ == "__main__": 
-    # test_type()
+
+def test_singleton():
+    """
+    1. If we don't consider inheritance, then __new__ is enough 
+        - static method __new__ is called first, to create an instance 
+            object.__new__(class, *args, **kwargs)
+        - person = Person('John') =>
+            person = object.__new__(Person, 'John')
+            person.__init__('John')
+    2. Above will have problem: child's new will return the same instance as parent!
+        
+    """
+    # 1
+    class SingletonClass(object):
+      def __new__(cls):
+        if not hasattr(cls, 'instance'):
+          cls.instance = super(SingletonClass, cls).__new__(cls)
+        return cls.instance
+
+    singleton = SingletonClass()
+    new_singleton = SingletonClass()
+
+    print(singleton is new_singleton)
+    singleton.singl_variable = "Singleton Variable"
+    print(new_singleton.singl_variable)
+
+    # 2 
+    class SingletonChild(SingletonClass):
+        pass
+
+    singleton = SingletonClass()
+    child = SingletonChild()
+    print("child is singleton? ", child is singleton)
+    singleton.singl_variable = "Singleton Variable"
+    print(child.singl_variable)
+
+    # 3
+    class Singleton(type):
+        # why type?
+        def __init__(self, *args, **kwargs):
+            self.__instance = None
+            super().__init__(*args, **kwargs)
+        # what does call do here?
+        def __call__(self, *args, **kwargs):
+            print("__call__")
+            if self.__instance is None:
+                self.__instance = super().__call__(*args, **kwargs)
+                return self.__instance
+            else:
+                return self.__instance
+
+    #metaclass?
+    class Spam(metaclass=Singleton):
+        def __init__(self):
+            print("Spam")
+
+    class SpamChild(Spam):
+        pass
+    s = Spam()
+    s1 = Spam()
+    s2 = SpamChild()
+    print("s is s1: ", s is s1)
+    print("s is s2: ", s is s2)
+
+if __name__ == "__main__":
+    test_type()
     # test_metaclass()
-    test_ORM()
+    # test_ORM()
+    a = 3
+    c = [1,2,3,4]
+    b = a+1
+    c.append(13)
+    for i in c:
+        print(i)
+

@@ -232,69 +232,47 @@ def test_call():
     f= Foo()
     f()
 
-def test_singleton():
+def test_super():
     """
-    1. If we don't consider inheritance, then __new__ is enough 
-        - static method __new__ is called first, to create an instance 
-            object.__new__(class, *args, **kwargs)
-        - person = Person('John') =>
-            person = object.__new__(Person, 'John')
-            person.__init__('John')
-    2. Above will have problem: child's new will return the same instance as parent!
-        
+    1. if you call functions directly through parent classes' names, you will see functions exected twice
+        - If you use super(), just one gets called, because it uses multiple resolution order (MRO)
+        - super() returns a super object, which allows you to access parent class attributes
+    2. MRO is a list of classes sorted using merge-sort
+        - mro must be accessed thru class, like obj.__class__
+
     """
-    # 1
-    class SingletonClass(object):
-      def __new__(cls):
-        if not hasattr(cls, 'instance'):
-          cls.instance = super(SingletonClass, cls).__new__(cls)
-        return cls.instance
-
-    singleton = SingletonClass()
-    new_singleton = SingletonClass()
-
-    print(singleton is new_singleton)
-    singleton.singl_variable = "Singleton Variable"
-    print(new_singleton.singl_variable)
-
-    # 2 
-    class SingletonChild(SingletonClass):
-        pass
-
-    singleton = SingletonClass()
-    child = SingletonChild()
-    print("child is singleton? ", child is singleton)
-    singleton.singl_variable = "Singleton Variable"
-    print(child.singl_variable)
-
-    # 3
-    class Singleton(type):
-        # why type?
-        def __init__(self, *args, **kwargs):
-            self.__instance = None
-            super().__init__(*args, **kwargs)
-        # what does call do here?
-        def __call__(self, *args, **kwargs):
-            print("__call__")
-            if self.__instance is None:
-                self.__instance = super().__call__(*args, **kwargs)
-                return self.__instance
-            else:
-                return self.__instance
-    #metaclass?
-    class Spam(metaclass=Singleton):
+    class Base:
         def __init__(self):
-            print("Spam")
+            print("Base")
 
-    class SpamChild(Spam):
-        pass
-    s = Spam()
-    s1 = Spam()
-    s2 = SpamChild()
-    print("s is s1: ", s is s1)
-    print("s is s2: ", s is s2)
-            
+        def foo(self):
+            print("Base")
+
+    class Foo(Base):
+        def __init__(self):
+            print("Foo")
+        def f(self):
+            Base.foo(self)
+            print("foo")
+    class Bar(Base):
+        def __init__(self):
+            print("Bar")
+        def f(self):
+            Base.foo(self)
+            # super().f()
+            print("Bar")
     
+    # Here you see 2 inits. if using super(), you will see one
+    class Baz(Bar,Foo):
+        def __init__(self):
+            Bar.__init__(self)
+            Foo.__init__(self)
+        # def f(self):
+        #     pass
+
+    baz = Baz()
+    print(baz.__class__.__mro__)
+    baz.f()
 
 if __name__ == "__main__": 
     # inheritance_basics()
@@ -311,5 +289,6 @@ if __name__ == "__main__":
     # test_descriptor()
     # test_type_check_descriptor()
 
-    test_call()
+    # test_call()
     # test_singleton()
+    test_super()
