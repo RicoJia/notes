@@ -89,7 +89,10 @@ def test_task_managed_class():
     print("=======")
     with Divide(3,0) as d:
         d.divide()
-
+def __init__(self):
+    """_summary_
+    """
+    print("================================")
 def test_slots():
     """
     1. __slots__ makes the class a small list instead of a dictionary. 
@@ -109,10 +112,6 @@ def test_slots():
             # self.dum = 1
 
     f = Foo("1", 2)
-    import sys
-    print("sys.getsizeof object f's size: ", sys.getsizeof(f))
-    from pympler import asizeof
-    print("pympler getsizeof: ", asizeof.asizeof(f))
 
 ##############################################################
 ### Attributes
@@ -293,3 +292,4 @@ if __name__ == "__main__":
     # test_call()
     # test_singleton()
     test_super()
+    

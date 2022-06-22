@@ -2,6 +2,9 @@
 ##############################################################
 ### Property, Descriptor
 ##############################################################
+from inquirer import password
+
+
 def test_property():
     """
     1. use property to 
@@ -9,7 +12,7 @@ def test_property():
         2. Compute things on demand
     2. property is a bundle of setter, getter, and deleter functions
         - use @property to make a funciton a propertie's getter
-        - use @name.setter, @name.deleter setters and deleters
+        - ALL functions have the same name!!
         - Java programmers will make everything a property
     3. getter must be defined first, setter, deleter must follow
         - if getter is not defined, then you'll see errors
@@ -81,7 +84,8 @@ def test_descriptor():
         def __init__(self, name):
             self.name = name
         def __get__(self, instance, cls):
-            # instance is the upper level object. If Int is a class variable, cls is the class, instance is None, and it's common practice to return the object itself.
+            # instance is the upper level object. If Int is a class variable, cls is the class, instance is None, 
+            # In that case, it's common practice to return the object itself.
             if instance is None:
                 return self
             else:
@@ -111,8 +115,46 @@ def test_descriptor():
     print("equivalent to: ")
     print("Int.__get__() will return the int: ", f.i)
     Foo.i.__set__(f, 22)
-    print(f.i)
+    print(f.i)    
 
+def test_lazy_attr():
+    """
+    1. Descriptors can be used as LAZY ATTRIBUTES.
+        - ONE THING TO NOTE: you must NOT have __set__(), __delete__(). These will make the binding stronger
+    """
+    class LazyAttr(object):
+        def __init__(self, func):
+            self.__func = func
+        def __get__(self, instance, cls):
+            if not instance:
+                # when we have class variable
+                return self
+            else:
+                # store value to the instance under the same name as the func.
+                # Without storing, the object will have to call this function again.
+                value = self.__func(instance)
+                setattr(instance, self.__func.__name__,value)
+                #TODO
+                print(f"1: ", value, "func name:", self.__func.__name__)
+                return value
+        # def __set__(self, instance, value):
+        #     pass
+        # def __delete__(self, instance):
+        #     pass
+        
+    import numpy as np
+    class Circle:
+        def __init__(self, radius) -> None:
+            self.radius = radius
+        @LazyAttr
+        def circumference(self):
+            print("calculating Circumference")
+            return 2 * np.pi * self.radius
+    
+    c = Circle(2.3)
+    print("Circumference:", c.circumference, "vars: ", vars(c))
+    print("Circumference:", c.circumference)
+    
 def test_type_check_descriptor():
 
     # Used to check if an object's attributes are of expected types
@@ -156,7 +198,92 @@ def test_type_check_descriptor():
     except:
         pass
     print("Foo: ", Foo.__dict__)
+    
+def test_property_change():
+    """
+    1. Can Extend one of the proeprty functions
+        - usual signature is super(subclass, instance) 
+        - but here we'd change __set__ in super(subclass, subclass)
+    """
+    class Foo(object):
+        def __init__(self):
+            self._name="RJ-Foo"
+        @property
+        def name(self):
+            return self._name
+        @name.setter
+        def name(self, some_name):
+            self._name=some_name
 
+    class Foo_Extended(Foo):
+        @Foo.name.setter
+        def name(self, some_name):
+            print("Extension setting name right now: ", some_name)
+            super(Foo_Extended, Foo_Extended).name.__set__(self, some_name)
+        
+    f = Foo()
+    print("f name: ", f.name)
+    f.name="RJ-HA"
+    print("f name: ", f.name)
+    
+    fe = Foo_Extended()
+    fe.name="RJ"
+    print("fe name: ", fe.name)
+            
+ ################################################################
+ ### Design Patterns
+ ################################################################
+def test_base_field():
+    """
+    1. Base field has __init__, which avoids redundancy
+        - field is just a placeholder
+        - Subclasses can have their own fields.
+    2. setattr has these advantages:
+        1. programmatic
+        2. can work with properties wrapped in properties, or slotclass, 
+            - instead of like __dict__.update(another_dict)
+    """
+    class BaseField(object):
+        _fields = None
+        def __init__(self,*args, **fields):
+            if (len(fields.keys()) + len(args)>len(self._fields)):
+                raise TypeError("Fields has wrong length")
+            for name,values in zip(self._fields, args):
+                setattr(self,name,values)
+            for name, val in fields.items():
+                setattr(self, name, val)
+            print("dict supports set arithmetics: ", type(fields.keys() - self._fields))
+    class Foo(BaseField):
+        _fields = ["name", "age", "grade"]
+    f1 = Foo(1,2,3)
+    print(vars(f1))
+    f2 = Foo(shabi=100, grade=100, age= 99)
+    
+def test_abc():
+    """
+    1. An abc class's essence is that it cannot be instantiated. So it can be used as an interface.
+        - needs ALL FUNCS to be abstract functions
+    2. You can force another class to be "compatible" with the base
+    """
+    # 1 
+    from abc import ABC, abstractmethod
+    class Base(ABC):
+        # equivalent to meta=ABCMeta
+        def __init__(self, dummy):
+            pass
+        def some_Fun(self):
+            pass
+    
+    class Foo(Base):
+        pass
+    f=Foo("dummy")
+    
+    class Baz():
+        pass
+    # 2
+    Foo.register(Baz)
+    b = Baz()
+    print(isinstance(b, Base))    
 ##############################################################
 ### Metaclass
 ##############################################################
@@ -186,19 +313,23 @@ def test_type():
 def test_metaclass():
     """
     1. Except for type(), you can create a class using metaclass, i.e., a class is an instantiation of a class
+        - __new__ is called with attributes passed in. Here it assembles things together.
     """
     # have Metaclass at the end of the name by convention
     class ListMetaclass(type):
         # so you can add another attribute to a class. At the end, return the class using type
         def __new__(cls, class_name, bases, attrs):
             attrs['add'] = lambda self, x: self.append(x)
+            #TODO 
+            print(f"attrs:", attrs)
             # here sometimes you will see super() as well
             return type.__new__(cls, class_name, bases, attrs)
 
     # with metaclass, the magic happens
     # Meanwhile, you need to inherit from the list class
     class MyList(list, metaclass=ListMetaclass):
-        pass
+        def foo(self):
+            pass
     l = MyList()
     l.add(3)
     print(l)
@@ -231,10 +362,10 @@ def test_ORM():
     class ModelMetaclass(type):
         def __new__(cls, name, bases, attrs):
             if name=='Model':
-                #TODO 
+                #TODO
                 print(f"1 Model: kw: {attrs}")
                 return type.__new__(cls, name, bases, attrs)
-            #TODO 
+            #TODO
             print(f"2 ModelMetaclass: kw: {attrs}")
             print('Found model: %s' % name)
             mappings = dict()
@@ -253,7 +384,6 @@ def test_ORM():
        - if the class name is Model, we will return it; 
        - else when class is a child class, for each item in {attr}, we examine if it's a type of Field. If so, we add it to attrs[__mappings__]
     """
-
     class Model(dict, metaclass=ModelMetaclass):
 
         def __getattr__(self, key):
@@ -292,7 +422,6 @@ def test_ORM():
     # 保存到数据库：
     u.save()
     print("u: ", u)
-
 
 def test_singleton():
     """
@@ -357,14 +486,54 @@ def test_singleton():
     print("s is s1: ", s is s1)
     print("s is s2: ", s is s2)
 
-if __name__ == "__main__":
-    test_type()
-    # test_metaclass()
-    # test_ORM()
-    a = 3
-    c = [1,2,3,4]
-    b = a+1
-    c.append(13)
-    for i in c:
-        print(i)
+def test_singleton_thread(self):
+    import threading
+    from queue import Queue
+        
+    class SingletonWriter:
+        def __new__(cls):
+            if not hasattr(cls, 'instance'):
+                setattr(cls, 'instance', super(SingletonWriter, cls).__new__(cls))
+                setattr(cls, 'queue', Queue())
+                setattr(cls, 'writer_thread', threading.Thread(target=SingletonWriter.writer_func, args=(cls.queue, )))
+                cls.writer_thread.setDaemon(True)
+                cls.writer_thread.start()  
+            return cls.instance
+        def put(self, payload):
+            self.queue.put(payload)
+        @staticmethod
+        def writer_func(queue: Queue):
+            while True:
+                msg,logtimer_instance = queue.get()
+                logtimer_instance.dummy += 1
+                print(logtimer_instance.dummy)
+                print(msg)
+            
+    class LogTimerMultithreaded:
+        def __init__(self):
+            self.singleton_writer = SingletonWriter()
+            self.dummy = 0
+        def start(self, msg):
+            self.singleton_writer.put((msg, self))
 
+    ltm1 = LogTimerMultithreaded()
+    ltm2 = LogTimerMultithreaded()
+
+    print(ltm1.singleton_writer is ltm2.singleton_writer)
+
+    ltm1.start("hello world")
+    ltm2.start("hello world2")
+    ltm1.start("hello world")
+    ltm2.start("hello world2")
+
+
+
+if __name__ == "__main__":
+    # test_type()
+    test_metaclass()
+    # test_ORM()
+    # test_property_change()
+    # test_lazy_attr()
+    
+    # test_base_field()
+    # test_abc()

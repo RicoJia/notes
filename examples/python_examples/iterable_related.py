@@ -102,6 +102,7 @@ def test_tuples():
     2. del tuple[1] won't work
     3. ==, < do work, by position 
     4. Quirk about tuple: SINGLE element, we have to append ',' but no need in other cases (e.g, no elements)
+    5. New tuple from old tuple
     """
     tup = (1,2,3)
     print(type(tup), tup[1])
@@ -117,6 +118,9 @@ def test_tuples():
     # quirk
     #tuple = (1) #error
     tuple = (1, )
+
+    new_tup = tup + (1,2,3)
+    print("new_tup", new_tup)
 
 def test_named_tuples(): 
     """
@@ -484,4 +488,5 @@ def test_heapq_merge():
 if __name__ == "__main__": 
     # test_chain()
     # test_heapq_merge()
-    test_dict_less_known_features()
+    # test_dict_less_known_features()
+    test_tuples()
