@@ -2,8 +2,6 @@
 ##############################################################
 ### Property, Descriptor
 ##############################################################
-from inquirer import password
-
 
 def test_property():
     """
@@ -526,14 +524,11 @@ def test_singleton_thread(self):
     ltm1.start("hello world")
     ltm2.start("hello world2")
 
-
-
 if __name__ == "__main__":
     # test_type()
     test_metaclass()
     # test_ORM()
     # test_property_change()
     # test_lazy_attr()
-    
     # test_base_field()
     # test_abc()
