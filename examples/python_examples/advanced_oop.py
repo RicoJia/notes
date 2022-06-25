@@ -312,6 +312,10 @@ def test_metaclass():
     """
     1. Except for type(), you can create a class using metaclass, i.e., a class is an instantiation of a class
         - __new__ is called with attributes passed in. Here it assembles things together.
+    2. Mix-in class: in MyList, list is a mix-in 
+        - Mix-in technically cannot be instantiated. Its functions will 
+        be inherited. 
+        - Multiple Mix-ins can be used so this relies on Python's multi-inherited 
     """
     # have Metaclass at the end of the name by convention
     class ListMetaclass(type):
@@ -523,6 +527,26 @@ def test_singleton_thread(self):
     ltm2.start("hello world2")
     ltm1.start("hello world")
     ltm2.start("hello world2")
+
+def test_class_decorator():
+    """
+    1. class decorator is a function that returns a modified class
+    """
+    def log_getattribute(cls):
+        orig_getattribute = cls.__getattribute__
+        def getattribute(self, name):
+            print('Calling {name} from {cls_name}'.format(name=name, cls_name=cls.__name__))
+            return orig_getattribute(self, name)
+        cls.__getattribute__ = getattribute
+        return cls
+    @log_getattribute
+    class Foo(object):
+        def __init__(self, a):
+            self.a = a
+            
+    # equivalent to Foo = log_getattribute(Foo)
+    f = Foo(3)
+    f.a
 
 if __name__ == "__main__":
     # test_type()
