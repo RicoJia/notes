@@ -548,11 +548,99 @@ def test_class_decorator():
     f = Foo(3)
     f.a
 
+def test_decorator_replacing_mixin():
+    """
+    1. If you can use decorator, don't do mixin. This is 100% faster!
+    """
+
+    # Base class. Uses a descriptor to set a value 
+    class Descriptor: 
+        def __init__(self, name=None, **opts): 
+            self.name = name 
+            for key, value in opts.items(): 
+                setattr(self, key, value)
+        def __set__(self, instance, value): 
+            instance.__dict__[self.name] = value
+    # # Decorator for applying type checking 
+    # In a classic class decorator, we are allwoed to have only one argument in class_decorator(cls)
+    # TRICKY: 
+    # But we want to pass in expected_type first. So, when putting on top of class,
+    # first time, Typed(int) will make expected_type = int, and Typed will stop taking in args
+    # then it will return wrap, which is the real class decorator
+    # Second time, wrap will really take in cls, and execute the rest of Typed
+
+    def Typed(expected_type, cls=None):
+        print("Typed, cls: ", cls)
+        if cls is None:
+            # equivalent to return a wrapped function
+            def wrap(cls):
+                return Typed(expected_type, cls)
+            # return lambda cls: Typed(expected_type, cls)
+            return wrap
+        print("2")
+        print("cls 2: ", cls)
+        super_set = cls.__set__ 
+        def __set__(self, instance, value): 
+            if not isinstance(value, expected_type): 
+                raise TypeError('expected ' + str(expected_type)) 
+            super_set(self, instance, value) 
+        cls.__set__ = __set__ 
+        return cls
+
+    # Specialized descriptors 
+    # equivalent to: class Integer = Typed(int, None) = wrap(cls); 
+    @Typed(int) 
+    class Integer(Descriptor):
+        pass
+
+    # i = Integer("some_int", val=3)
+    # print(i.__dict__) 
+
+    # #decorator for unsigned values 
+    # def Unsigned(cls): 
+    #     super_set = cls.__set__
+    #     def __set__(self, instance, value): 
+    #         if value < 0: 
+    #             raise ValueError('Expected >= 0') 
+    #         super_set(self, instance, value) 
+    #     cls.__set__ = __set__ 
+    #     return cls
+    #
+    # # Decorator for allowing sized values 
+    # def MaxSized(cls): 
+    #     super_init = cls.__init__ 
+    #     def __init__(self, name=None, **opts): 
+    #         if 'size' not in opts: 
+    #             raise TypeError('missing size option') 
+    #         super_init(self, name, **opts) 
+    #     cls.__init__ = __init__
+    #     super_set = cls.__set__ Do you see a problem? Add update expects two parameters (self, and func), but here it gets only one (and actually you pass method as self).
+    #     def __set__(self, instance, value): 
+    #         if len(value) >= self.size: 
+    #             raise ValueError('size must be < ' + str(self.size)) 
+    #         super_set(self, instance, value) 
+    #     cls.__set__ = __set__ 
+    #     return cls
+
+    # @Unsigned 
+    # class UnsignedInteger(Integer): 
+    #     pass
+    # @Typed(float) 
+    # class Float(Descriptor): 
+    #     pass
+    # @Unsigned 
+    # class UnsignedFloat(Float): 
+    #     pass
+
+    # u = UnsignedFloat("sdf")
+    # print(u)
+
 if __name__ == "__main__":
     # test_type()
-    test_metaclass()
+    # test_metaclass()
     # test_ORM()
     # test_property_change()
     # test_lazy_attr()
     # test_base_field()
     # test_abc()
+    test_decorator_replacing_mixin()
