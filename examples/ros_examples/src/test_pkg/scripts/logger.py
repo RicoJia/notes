@@ -1,5 +1,5 @@
 #!/usr/bin/python3 
-
+import rospy
 import coloredlogs
 import git
 import logging
@@ -94,4 +94,11 @@ if __name__ == "__main__":
     print("done")
     # logger is not destructed?
     logger.__del__()
+
+    rospy.init_node('my_node', log_level=rospy.INFO)
+    for i in range(10):
+        rospy.loginfo("Rico!" + str(i))
+        time.sleep(1)
+    while True:
+        pass
 

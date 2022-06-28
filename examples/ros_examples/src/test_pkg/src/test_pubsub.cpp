@@ -208,11 +208,11 @@ int main(int argc, char**argv)
     // 3. will make everything (topic, etc) <node_name>/topic
     ros::NodeHandle nh("~"); 
 
-    // logging_and_sleep();
+    logging_and_sleep();
     // pub(nh); 
     // sub_bind_spin(nh); 
     // set_get_param(nh);
-    test_service(nh);
+    // test_service(nh);
 
     // shutdown the node
     // ros::shutdown();
