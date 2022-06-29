@@ -570,15 +570,12 @@ def test_decorator_replacing_mixin():
     # Second time, wrap will really take in cls, and execute the rest of Typed
 
     def Typed(expected_type, cls=None):
-        print("Typed, cls: ", cls)
         if cls is None:
             # equivalent to return a wrapped function
             def wrap(cls):
                 return Typed(expected_type, cls)
             # return lambda cls: Typed(expected_type, cls)
             return wrap
-        print("2")
-        print("cls 2: ", cls)
         super_set = cls.__set__ 
         def __set__(self, instance, value): 
             if not isinstance(value, expected_type): 
@@ -596,44 +593,27 @@ def test_decorator_replacing_mixin():
     # i = Integer("some_int", val=3)
     # print(i.__dict__) 
 
-    # #decorator for unsigned values 
-    # def Unsigned(cls): 
-    #     super_set = cls.__set__
-    #     def __set__(self, instance, value): 
-    #         if value < 0: 
-    #             raise ValueError('Expected >= 0') 
-    #         super_set(self, instance, value) 
-    #     cls.__set__ = __set__ 
-    #     return cls
-    #
-    # # Decorator for allowing sized values 
-    # def MaxSized(cls): 
-    #     super_init = cls.__init__ 
-    #     def __init__(self, name=None, **opts): 
-    #         if 'size' not in opts: 
-    #             raise TypeError('missing size option') 
-    #         super_init(self, name, **opts) 
-    #     cls.__init__ = __init__
-    #     super_set = cls.__set__ Do you see a problem? Add update expects two parameters (self, and func), but here it gets only one (and actually you pass method as self).
-    #     def __set__(self, instance, value): 
-    #         if len(value) >= self.size: 
-    #             raise ValueError('size must be < ' + str(self.size)) 
-    #         super_set(self, instance, value) 
-    #     cls.__set__ = __set__ 
-    #     return cls
+    #decorator for unsigned values: descriptor_cls + __set__. Then used as a class variable
+    def Unsigned(cls): 
+        super_set = cls.__set__
+        def __set__(self, instance, value): 
+            if value < 0: 
+                raise ValueError('Expected >= 0') 
+            super_set(self, instance, value) 
+        cls.__set__ = __set__ 
+        return cls
 
-    # @Unsigned 
-    # class UnsignedInteger(Integer): 
-    #     pass
-    # @Typed(float) 
-    # class Float(Descriptor): 
-    #     pass
-    # @Unsigned 
-    # class UnsignedFloat(Float): 
-    #     pass
-
-    # u = UnsignedFloat("sdf")
-    # print(u)
+    @Unsigned 
+    class UnsignedInteger(Integer): 
+        pass
+    
+    class Foo:
+        u = UnsignedInteger()
+    f = Foo()
+    try: 
+        f.u = -3
+    except ValueError:
+        print("This is how to use decorator to add __set__ to a descriptor")
 
 if __name__ == "__main__":
     # test_type()
