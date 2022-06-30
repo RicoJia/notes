@@ -189,13 +189,15 @@ def test_sort_by_attr():
     
 def test_get_attribute(): 
     """
-    1. When you call a member in class A, you will call A.__getattribute__() as well. So you might get recursion error
-    2. the calling with super().__getattribute__() will access the proper attribute. Not sure why? 
+    1. When you call a member in class A, you call A.__getattribute__() as well. So you might get recursion error
+    2. the calling with super().__getattribute__() will access the proper attribute, because of MRO
+    3. vs __getattr__: __getattr__ is called if no attribute is found, otherwise won't be called. So it can be used to "mute" AttributeError. But __getattribute__ will raise the error
+        - __getattribute__() will be called first if both present
     """
     class Foo: 
         def __init__(self): 
             self.dummy = 100
-        def __getattribute__(self, s):
+        def __getattribute__(self, attr_name):
             """
             s is a string.
             """
@@ -203,11 +205,24 @@ def test_get_attribute():
             # calling this directly = recursion
             # self.dummy
             # call with super() instead, which is equivalent to self.dummy with no ambiguity
-            print(super().__getattribute__("dummy"))
+            print(super().__getattribute__(attr_name))
     f = Foo()
     f.dummy
+    try:
+        f.notexistit
+    except AttributeError:
+        print("__getattribute__ will raise AttributeError")
 
-def test_hasattr(): 
+    class Baz:
+        b = 1
+        def __getattr__(self, attr_name):
+            print(f"attr name: {attr_name}")
+
+    baz = Baz()
+    baz.b
+    baz.b_notexist
+
+def test_hasattr():
     """
     1. hasattr can be helpful
     """
@@ -274,6 +289,47 @@ def test_super():
     print(baz.__class__.__mro__)
     baz.f()
 
+def test_delegation():
+    """
+    1. Delegation is to have another object to call the same attribute
+    2. use __getattr__ if there're too many attr 
+    3. __getattr__ supports non __ attributes only
+    """
+    class A:
+        def spam(self):
+            print("A spam")
+        def spam1(self):
+            print("A spam1")
+    class B:
+        def __init__(self):
+            self._a = A()
+        def spam(self):
+            #TODO 
+            print(f"b spam")
+            self._a.spam()
+        def __getattr__(self, attr_name):
+            print(f"{attr_name} not exist in B")
+            getattr(self._a, attr_name)
+
+    b = B()
+    b.spam()
+    b.spam1
+    # b.spam1()  is not valid, because it's a method, not an attribute
+
+    class ListLike:
+        l = [1,2,3,4]
+        def __getattr__(self, attr_name):
+            return getattr(self.l, attr_name)
+
+    ll = ListLike()
+    ll.append(5)
+    ll.sort()
+    print(f"append, sort both work: ")
+    try: 
+        len(ll)
+    except:
+        print("len doesn't work")
+
 if __name__ == "__main__": 
     # inheritance_basics()
     # test_class_variable()
@@ -291,5 +347,5 @@ if __name__ == "__main__":
 
     # test_call()
     # test_singleton()
-    test_super()
-    
+    # test_super()
+    test_delegation() 

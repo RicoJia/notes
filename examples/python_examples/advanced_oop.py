@@ -363,10 +363,8 @@ def test_ORM():
     class ModelMetaclass(type):
         def __new__(cls, name, bases, attrs):
             if name=='Model':
-                #TODO
                 print(f"1 Model: kw: {attrs}")
                 return type.__new__(cls, name, bases, attrs)
-            #TODO
             print(f"2 ModelMetaclass: kw: {attrs}")
             print('Found model: %s' % name)
             mappings = dict()
