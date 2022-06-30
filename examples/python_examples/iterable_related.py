@@ -485,8 +485,48 @@ def test_heapq_merge():
     for m in merged_gen:
         print(m)
 
+def test_custom_containers():
+    """
+    1. Use collections.Sequence, MutableSequence, Container, etc. to define a nice container
+        - Can check inheritance using isinstance(), and usually you can check other underlying abcs as well
+        - has slicing
+        - has "in"
+        - can set as well
+    """
+    import collections
+    import bisect
+    class NonMutableContainer(collections.Sequence):
+        def __init__(self, init=None):
+            # sorted requires a non-empty iterable
+            self.__items = sorted(init) if init is not None else []
+        def __len__():
+            return len(self.__items)
+    
+        def __setitem__(self, index, val):
+            print(f"setting index: {index} - {val}")
+            self.__items[index] = val
+        def __getitem__(self, index):
+            # this is an interesting function. Seems like index must be called for something. Otherwise This function will hang
+            i = self.__items[index]
+            return i
+
+        def add(self,item):
+            # ?
+            bisect.insort(self.__items, item) 
+
+    nmc = NonMutableContainer()
+    nmc.add(123)
+    nmc.add(45)
+    print(list(nmc))
+    print(nmc[0:2])
+    print("if 3 in nmc: ", 3 in nmc)
+    print(isinstance(nmc, collections.Iterable))
+    nmc[1] = "sdf"
+    print(list(nmc))
+
 if __name__ == "__main__": 
     # test_chain()
     # test_heapq_merge()
     # test_dict_less_known_features()
-    test_tuples()
+    # test_tuples()
+    test_custom_containers()
