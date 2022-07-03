@@ -1,8 +1,8 @@
 #!/usr/bin/python3
-
 ##############################################################
 ### OOP
 ##############################################################
+
 def inheritance_basics():
     """
     1. What does super() do?
@@ -121,6 +121,44 @@ def test_abc():
     Foo.register(Baz)
     b = Baz()
     print(isinstance(b, Base))   
+    
+def test_alternate_constructor():
+    """
+    1. Say we want to call another function with some predefined args, use a classmethod that calls __new__()
+    2. It can be also useful when we want to manually fill in attributes,
+        - Use __setattr__
+    """
+    # 1 
+    from time import localtime
+    class Date:
+        def __init__(self, yr, mo, dd):
+            self.yr = yr
+            self.mo = mo
+            self.dd = dd
+        @classmethod
+        def today(cls):
+            print("creating alternate constructor")
+            new_instance = cls.__new__(cls) 
+            t = localtime()
+            new_instance.yr = t.tm_year
+            new_instance.mo = t.tm_mon
+            new_instance.dd = t.tm_mday
+            return new_instance
+    random_date = Date(11,22,33)
+    today = Date.today()
+    
+    # 2
+    json_data = { 'year': 2012, 'month': 8, 'day': 29 }
+    class DateJSON(Date):
+        @classmethod
+        def today(cls, json_data):
+            new_instance = cls.__new__(cls)
+            for key, val in json_data.items():
+                setattr(new_instance, key, val)
+            return new_instance
+    date_from_json = DateJSON.today(json_data)
+    # json_data is a child instance of Date
+    print(vars(date_from_json), isinstance(date_from_json, Date))
     
 ##############################################################
 ### Attributes
@@ -298,21 +336,4 @@ def test_class_representations():
     
 
 if __name__ == "__main__": 
-    # inheritance_basics()
-    # test_class_variable()
-    # test_abstract_method()
-    # test_enum()
-    # test_get_attribute()
-    # test_sort_by_attr()
-    # test_hasattr()
-    # test_class_representations()
-    # test_task_managed_class()
-    # test_slots()
-    # test_property()
-    # test_descriptor()
-    # test_type_check_descriptor()
-
-    # test_call()
-    # test_singleton()
-    # test_super()
-    test_delegation() 
+    test_alternate_constructor()
