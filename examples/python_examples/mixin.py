@@ -250,7 +250,34 @@ def test_singleton_thread(self):
 ##############################################################
 ### Mixin
 ##############################################################
-
+def test_mixin():
+    """
+    1. If you want some functions to go to other classes, but they're not enough for 1 inherited base class, use mixins
+        1. Mixins are NEVER meant to be instantiated 
+        2. They shouldn't have attributes in general, cuz they never know who use them
+    """
+    class SetKeyOnce(object):
+        __slots__ = ()
+        # Going to be used on container.
+        def __setitem__(self, key, value):
+            print("self: ", self)
+            if key in self.keys():
+                raise RuntimeError("Key already exists")
+            # where the heck did this super() come in? TODO
+            # Tricky: MRO resolution order: from left to right. At each step of inheritance, 
+            # super().inherited_function() will call the next available func in the list!
+            super().__setitem__(key, value)
+            
+    from collections import defaultdict
+    class DefaultDictSetOnce(SetKeyOnce, defaultdict):
+        pass
+    ddso = DefaultDictSetOnce()
+    ddso["sd"] = 3
+    # ddso["sd"] = 4
+    print(ddso)
+    print(DefaultDictSetOnce.__mro__)
+    
+    
 def test_decorator_replacing_mixin():
     """
     1. If you can use decorator, don't do mixin. This is 100% faster!
@@ -264,7 +291,7 @@ def test_decorator_replacing_mixin():
                 setattr(self, key, value)
         def __set__(self, instance, value): 
             instance.__dict__[self.name] = value
-    # # Decorator for applying type checking 
+    # Decorator for applying type checking 
     # In a classic class decorator, we are allwoed to have only one argument in class_decorator(cls)
     # TRICKY: 
     # But we want to pass in expected_type first. So, when putting on top of class,
@@ -319,3 +346,4 @@ def test_decorator_replacing_mixin():
         print("This is how to use decorator to add __set__ to a descriptor")
 
 if __name__ == "__main__":
+    test_mixin()

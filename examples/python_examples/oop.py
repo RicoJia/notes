@@ -281,6 +281,8 @@ def test_super():
     2. MRO is a list of classes sorted using merge-sort
         - mro must be accessed thru class, like obj.__class__
     3. ref: https://python-reference.readthedocs.io/en/latest/docs/functions/super.html
+    4. MRO resolution order: from left to right. At each step of inheritance, 
+        - super().inherited_function() will call the next available func in the list!
     """
     class Base:
         def __init__(self):
