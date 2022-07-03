@@ -1,4 +1,8 @@
 #!/usr/bin/python3
+
+##############################################################
+### OOP
+##############################################################
 def inheritance_basics():
     """
     1. What does super() do?
@@ -42,25 +46,6 @@ def test_enum():
         CAT = 2
     print(TestEnum.CAT.value)
 
-def test_class_representations(): 
-    """
-    1. __repr()__ is when you type obj; __str()__ is print(obj)
-        - type(self).__name__ is how to get name inside a class
-    2. repr() calls __repr__()
-        - eval("Foo") is to run the command as a string
-    """
-    class Foo:
-        def __init__(self, f):
-            self.f = f
-        def __repr__(self):
-            return f"repr {type(self).__name__, self.__dict__}"
-        def __str__(self):
-            return f"str {type(self).__name__, self.__dict__}"
-
-    p = Foo(f=1)
-    print("p: ", p)
-    print(repr(p))
-
 def test_task_managed_class():
     """
     1. Task Management works with thread, and file system
@@ -89,10 +74,7 @@ def test_task_managed_class():
     print("=======")
     with Divide(3,0) as d:
         d.divide()
-def __init__(self):
-    """_summary_
-    """
-    print("================================")
+
 def test_slots():
     """
     1. __slots__ makes the class a small list instead of a dictionary. 
@@ -113,6 +95,33 @@ def test_slots():
 
     f = Foo("1", 2)
 
+def test_abc():
+    """
+    1. An abc class's essence is that it cannot be instantiated. So it can be used as an interface.
+        - needs ALL FUNCS to be abstract functions
+        - abstract function is parent class function with no implementation. Parent class having at least 1 abstract function is an abstract class. Same as in C++
+    2. You can force another class to be "compatible" with the base
+    """
+    # 1 
+    from abc import ABC, abstractmethod
+    class Base(ABC):
+        # equivalent to meta=ABCMeta
+        def __init__(self, dummy):
+            pass
+        def some_Fun(self):
+            pass
+    
+    class Foo(Base):
+        pass
+    f=Foo("dummy")
+    
+    class Baz():
+        pass
+    # 2
+    Foo.register(Baz)
+    b = Baz()
+    print(isinstance(b, Base))   
+    
 ##############################################################
 ### Attributes
 ##############################################################
@@ -139,27 +148,6 @@ def test_class_variable():
     f.var = 12
     print("Foo var is", Foo.var, "while f.bar : ", f.bar, "and f.var: ", f.var, " and g.var: ", g.var)
     print(Foo.__dict__, f.__dict__)
-
-def test_abstract_method():
-    """
-    1. abstract function is parent class function with no implementation. Parent class having at least 1 abstract function is an abstract class. Same as in C++
-    2. Should use ABC (abstract base class), else there won't be error
-        - but abstractmethod doesn't seem to do anything?
-    """
-    from abc import ABC, abstractmethod
-    class Foo(ABC):
-        @abstractmethod
-        def foo(self):
-            # print("foo")
-            pass
-
-    class FooC(Foo):
-        def bar(self):
-            print("bar")
-
-    # will see error since Foo can not be instantiated
-    # f = FooC()
-    # f.foo()
 
 def test_sort_by_attr():
     """
@@ -289,46 +277,25 @@ def test_super():
     print(baz.__class__.__mro__)
     baz.f()
 
-def test_delegation():
+def test_class_representations(): 
     """
-    1. Delegation is to have another object to call the same attribute
-    2. use __getattr__ if there're too many attr 
-    3. __getattr__ supports non __ attributes only
+    1. __repr()__ is when you type obj; __str()__ is print(obj)
+        - type(self).__name__ is how to get name inside a class
+    2. repr() calls __repr__()
+        - eval("Foo") is to run the command as a string
     """
-    class A:
-        def spam(self):
-            print("A spam")
-        def spam1(self):
-            print("A spam1")
-    class B:
-        def __init__(self):
-            self._a = A()
-        def spam(self):
-            #TODO 
-            print(f"b spam")
-            self._a.spam()
-        def __getattr__(self, attr_name):
-            print(f"{attr_name} not exist in B")
-            getattr(self._a, attr_name)
+    class Foo:
+        def __init__(self, f):
+            self.f = f
+        def __repr__(self):
+            return f"repr {type(self).__name__, self.__dict__}"
+        def __str__(self):
+            return f"str {type(self).__name__, self.__dict__}"
 
-    b = B()
-    b.spam()
-    b.spam1
-    # b.spam1()  is not valid, because it's a method, not an attribute
-
-    class ListLike:
-        l = [1,2,3,4]
-        def __getattr__(self, attr_name):
-            return getattr(self.l, attr_name)
-
-    ll = ListLike()
-    ll.append(5)
-    ll.sort()
-    print(f"append, sort both work: ")
-    try: 
-        len(ll)
-    except:
-        print("len doesn't work")
+    p = Foo(f=1)
+    print("p: ", p)
+    print(repr(p))
+    
 
 if __name__ == "__main__": 
     # inheritance_basics()
