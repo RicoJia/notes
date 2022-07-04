@@ -271,6 +271,22 @@ def test_call():
 
     f= Foo()
     f()
+    
+def test_call_function_by_name():
+    """
+    1. 2 ways: getattr, or operator.methodcaller
+    """
+    # 1
+    class Calculator:
+        def sum(self,x, y):
+            return x+y
+    c = Calculator()
+    print(getattr(c, 'sum')(2,4))
+    
+    # 2
+    import operator
+    print(operator.methodcaller('sum', 4,5)(c))
+    
 
 def test_super():
     """
@@ -352,4 +368,5 @@ def test_class_defined_later():
 
 if __name__ == "__main__": 
     # test_alternate_constructor()
-    test_class_defined_later()
+    # test_class_defined_later()
+    test_call_function_by_name()
