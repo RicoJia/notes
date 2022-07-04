@@ -317,6 +317,75 @@ def test_delegation():
     except:
         print("len doesn't work")
         
+def test_stateful_class():
+    """
+    1. Method 1:
+        - The key is to assign a state to a class, then call the class's static function for switching
+        - And you should have all the same functions for each state class, 
+        - So you can just call each class's function correspondingly, and let each function handles the rest
+    2. Method 2:
+        - They key is to switch the entire class to another class
+        - This however, can only be applied to simple cases!
+    """
+    # 1
+    class Connection: 
+        def __init__(self): 
+            # just calling the function below
+            self.new_state(ClosedState)
+        def new_state(self, newstate): 
+            self._state = newstate
+        # Delegate to the state class 
+        def read(self): 
+            return self._state.read(self)
+        def open(self): 
+                return self._state.open(self)
+    # Implementation of different states 
+    class ClosedState: 
+        @staticmethod 
+        def read(conn): 
+            """
+            So you can't read while during a closed state. Therefore 
+            """
+            raise RuntimeError('Not open')
+        @staticmethod
+        def open(conn):
+            conn.new_state(Open)
+    class Open: 
+        @staticmethod 
+        def read(conn): 
+            print('reading')
+        @staticmethod 
+        def open(conn): 
+            raise RuntimeError('Already open')
+    # implementation
+    c = Connection()
+    print(c._state)
+    
+    #2 
+    class State:
+        def __init__(self) -> None:
+            self.new_state(StateA)
+        def new_state(self, StateX):
+            """
+            Switching the entire class the StateX
+            """
+            self.__class__ = StateX
+            
+    class StateA(State):
+        def action(self):
+            print("State A invoked")    
+            self.new_state(StateB)
+    
+    class StateB(State):
+        def action(self):
+            print("State B")
+            self.new_state(StateA)
+    
+    s = State()
+    s.action()
+    s.action()
+    
+    
 if __name__ == "__main__":
     # test_type()
     # test_metaclass()
@@ -325,4 +394,5 @@ if __name__ == "__main__":
     # test_lazy_attr()
     # test_base_field()
     # test_abc()
-    test_decorator_replacing_mixin()
+    test_stateful_class()
+    

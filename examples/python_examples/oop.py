@@ -335,7 +335,21 @@ def test_class_representations():
     p = Foo(f=1)
     print("p: ", p)
     print(repr(p))
-    
+
+def test_class_defined_later():
+    """
+    1. Class can use a class that's defined later, 
+        - But all classes need to be read before the first instance
+    """
+    class Baz:
+        def b(self):
+            self.b_class =Foo()
+    class Foo:
+        pass
+    b = Baz()
+    b.b()
+    print(vars(b))
 
 if __name__ == "__main__": 
-    test_alternate_constructor()
+    # test_alternate_constructor()
+    test_class_defined_later()

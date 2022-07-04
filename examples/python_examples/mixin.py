@@ -255,6 +255,8 @@ def test_mixin():
     1. If you want some functions to go to other classes, but they're not enough for 1 inherited base class, use mixins
         1. Mixins are NEVER meant to be instantiated 
         2. They shouldn't have attributes in general, cuz they never know who use them
+            - use __slots__ = () to ensure that. 
+    2. Use the decorator (see next function), since it's clearer and faster
     """
     class SetKeyOnce(object):
         __slots__ = ()
