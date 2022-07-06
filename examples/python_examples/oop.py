@@ -160,6 +160,34 @@ def test_alternate_constructor():
     # json_data is a child instance of Date
     print(vars(date_from_json), isinstance(date_from_json, Date))
     
+def test_garbage_collect():
+    """
+    1. Garbage is collected when ref = 0. But by default that's thru simple reference. 
+        - __del__ is not called when we have cyclic reference? 
+            - So don't implement __del__, else we will get MEMORY LEAK
+        - Great explanation: https://zhuanlan.zhihu.com/p/124290355
+    2. To combat this, use weakref
+    3. GC happens when program exits, or gc.collect(). There might be generational garbage collection, 
+    but we don't know when that will happen.
+        - A generation is a linkedlist that tracks nodes how many times they've been deleted. 
+            - If a node has been deleted before, then it moves down by a genenration
+            - Older generation is gc'ed at a lower frequency.
+    """
+    import gc, sys
+    class Foo:
+        def __del__(self):
+            print("This is del")
+    f = Foo()
+    a = f
+    # see 3
+    print('引用次数：', sys.getrefcount(f))
+    del a
+    # see 2, the other one is Foo() itself
+    print('引用次数：', sys.getrefcount(f))
+    # won't see anything, it just releases the memory
+    gc.collect()
+    print("finish")
+    
 ##############################################################
 ### Attributes
 ##############################################################
@@ -369,4 +397,5 @@ def test_class_defined_later():
 if __name__ == "__main__": 
     # test_alternate_constructor()
     # test_class_defined_later()
-    test_call_function_by_name()
+    # test_call_function_by_name()
+    test_garbage_collect()

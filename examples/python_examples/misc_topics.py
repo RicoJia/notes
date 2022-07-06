@@ -175,13 +175,53 @@ def test_enum():
     ls = [1,2,3]
     print(ls[Animal.DOG]) 
 
+def test_lru_cache_optimization():
+    """
+    1. LRU (Least-recently-used cache) caches the input and output of function calls (memoization)
+    """
+    from functools import lru_cache
+    import time
+      
+    # Function that computes Fibonacci 
+    # numbers without lru_cache
+    def fib_without_cache(n):
+        if n < 2:
+            return n
+        return fib_without_cache(n-1) + fib_without_cache(n-2)
+          
+    # Execution start time
+    begin = time.time()
+    fib_without_cache(30)
+      
+    # Execution end time
+    end = time.time()
+      
+    print("Time taken to execute the\
+    function without lru_cache is", end-begin)
+      
+    # Function that computes Fibonacci
+    # numbers with lru_cache
+    @lru_cache(maxsize = 128)
+    def fib_with_cache(n):
+        if n < 2:
+            return n
+        return fib_with_cache(n-1) + fib_with_cache(n-2)
+          
+    begin = time.time()
+    fib_with_cache(30)
+    end = time.time()
+      
+    print("Time taken to execute the \
+    function with lru_cache is", end-begin)
+
 if __name__=="__main__":
     # test_warning()
     # test_math()
     # test_more_math()
     # test_fractions()
     # test_random()
-    test_datetime()
+    # test_datetime()
     # test_or()
     # test_enum()
     # test_div()
+    test_lru_cache_optimization()

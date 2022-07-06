@@ -385,6 +385,60 @@ def test_stateful_class():
     s.action()
     s.action()
     
+def test_visitor_pattern():
+    """
+    This might be too convulted. But the idea is:
+        1. Separate data structure from operations, 
+        2. When you apply operations, you can use getattr(instance, methname, default_value)
+    """
+    # 1. create a "tree": a node with left & right being Number
+    class Node: 
+        pass
+    class UnaryOperator(Node): 
+        def __init__(self, operand): self.operand = operand
+    class BinaryOperator(Node): 
+        def __init__(self, left, right): 
+            self.left = left 
+            self.right = right
+    
+    class Sub(BinaryOperator): 
+        pass
+    class Number(Node): 
+        def __init__(self, value): 
+            self.value = value
+    t1 = Sub(Number(3), Number(4))    
+    
+    # Node Visitor: 
+    class NodeVisitor: 
+        def visit(self, node): 
+            methname = 'visit_' + type(node).__name__ 
+            meth = getattr(self, methname, None) 
+            if meth is None: 
+                meth = self.generic_visit 
+            return meth(node)
+    def generic_visit(self, node): 
+        raise RuntimeError('No {} method'.format('visit_' + type(node).__name__))
+    
+    class Evaluator(NodeVisitor):
+        def visit_Number(self, node): 
+            return node.value
+        def visit_Add(self, node): 
+            # note there's a recursion here
+            return self.visit(node.left) + self.visit(node.right)
+        def visit_Sub(self, node): 
+            return self.visit(node.left) - self.visit(node.right)
+        def visit_Mul(self, node): 
+            return self.visit(node.left) * self.visit(node.right)
+        def visit_Div(self, node): 
+            return self.visit(node.left) / self.visit(node.right)
+        def visit_Negate(self, node): 
+            return -node.operand
+
+    e = Evaluator()
+    e.visit(t1) # calling visit_Number first. 
+    print(e.visit_Add(t1))
+    from arepl_dump import dump
+    dump()
     
 if __name__ == "__main__":
     # test_type()
@@ -394,5 +448,6 @@ if __name__ == "__main__":
     # test_lazy_attr()
     # test_base_field()
     # test_abc()
-    test_stateful_class()
+    # test_stateful_class()
+    test_visitor_pattern()
     
