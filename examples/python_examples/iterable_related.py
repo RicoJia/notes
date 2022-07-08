@@ -338,6 +338,29 @@ def test_chain():
     s = {4,5,6}
     for i in chain(ls, s): 
         print(i)
+def test_comprehensions(): 
+    """
+    1. Set comprehension
+    2. Special one is tuple comprehension. Tuple is equivalent to struct in c
+        - (i for i in range(3)) returns a generator. This is called a "generator expression"
+        - supports if statements as well.
+    """
+    # 1 "set" comprehension
+    ls = [1,2,3]
+    s4 = set(i * 2 for i in ls)
+    print(s4)
+    # removes a random value in set 
+    x = s4.pop()
+    print("after pop ", s4)
+    
+    # 2
+    #TODO
+    gen = (k for k in range(103) if 1<k and k < 10)
+    for i in gen:
+        print(i)
+    
+    from arepl_dump import dump
+    dump()
 
 def set_funcs(): 
     """
@@ -345,7 +368,6 @@ def set_funcs():
         - discard will not raise an error, pop will
         - pop() popping a random value
         - does not support +=
-    2. Set comprehension
     3. Can be used to remove duplicates in a Hashable function
     4. frozenset
         1. does not support indexing, 
@@ -364,14 +386,6 @@ def set_funcs():
     print("s2 n s", s2 & s)
     # shows S2 - (s2 & s)
     print("s2 - s", s2 - s)
-
-    # 2 "set" comprehension
-    ls = [1,2,3]
-    s4 = set(i * 2 for i in ls)
-    print(s4)
-    # removes a random value in set 
-    x = s4.pop()
-    print("after pop ", s4)
 
     # 4will see TypeError: unhashable type: 'set'
     # because this is set is a mutable, so once it's changed, its hash has to change
@@ -529,4 +543,5 @@ if __name__ == "__main__":
     # test_heapq_merge()
     # test_dict_less_known_features()
     # test_tuples()
-    test_custom_containers()
+    # test_custom_containers()
+    test_comprehensions()
