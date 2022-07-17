@@ -214,6 +214,28 @@ def test_lru_cache_optimization():
     print("Time taken to execute the \
     function with lru_cache is", end-begin)
 
+def test_memory_leak():
+    import tracemalloc
+    import numpy as np
+    tracemalloc.start()
+
+    length=10000
+    test_array=np.random.randn(length) # 分配一个定长随机数组
+    snapshot=tracemalloc.take_snapshot() # 内存摄像
+    top_stats=snapshot.statistics('lineno') # 内存占用数据获取
+
+    print ('[Top 10]')
+    for stat in top_stats[:20]: # 打印占用内存最大的10个子进程
+        print (stat)
+     
+def test_walrus_operator():
+    """
+    Assign param to a value. Do not work with (), [] in list(), dict[]
+    """
+    walrut = 3
+    # shows 4
+    print(walrut := 4)
+    
 if __name__=="__main__":
     # test_warning()
     # test_math()
@@ -224,4 +246,6 @@ if __name__=="__main__":
     # test_or()
     # test_enum()
     # test_div()
-    test_lru_cache_optimization()
+    # test_lru_cache_optimization()
+    # test_memory_leak()
+    test_walrus_operator()

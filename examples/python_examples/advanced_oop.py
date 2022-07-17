@@ -65,6 +65,63 @@ def test_property():
     # 5
     print("fget: ", Foo.name.fget)
 
+# -------------------------------- Decorator --------------------------------
+from functools import wraps
+def test_decorator():
+    def timer(func):
+        """
+        Timer doc
+        """
+        @wraps(func)
+        def wrap(*args, **kwargs):
+            """
+            1. need * args, **kwargs to make sure they are tuple and dict
+            func(*args, **kwargs) actually does the unpacking.  
+            2. @wraps is VERY important. Otherwise, foo.__name__, foo.__doc__, foo.__annotations__
+            will all be wraps. 
+            """
+            import time 
+            start = time.time()
+            # Still not sure why we need *? 
+            res = func(*args, **kwargs)
+            end = time.time()
+            print(func.__name__, end-start)
+            return res
+        return wrap
+    
+    @timer
+    def foo():
+        """
+        Foo doc
+        """
+        print("Foo")            
+            
+    print(foo.__name__, foo.__doc__, foo.__annotations__)
+    print(foo.__name__, foo.__doc__, foo.__annotations__)
+    
+
+def test_class_decorator():
+    """
+    1. class decorator is a function that returns a modified class
+    """
+    def log_getattribute(cls):
+        orig_getattribute = cls.__getattribute__
+        def getattribute(self, name):
+            print('Calling {name} from {cls_name}'.format(name=name, cls_name=cls.__name__))
+            return orig_getattribute(self, name)
+        cls.__getattribute__ = getattribute
+        return cls
+    @log_getattribute
+    class Foo(object):
+        def __init__(self, a):
+            self.a = a
+            
+    # equivalent to Foo = log_getattribute(Foo)
+    f = Foo(3)
+    f.a
+
+# -------------------------------- Descriptor --------------------------------
+
 def test_descriptor():
     """
     1. Foundation for property, classmethods, staticmethods, and larger libs
@@ -152,26 +209,6 @@ def test_lazy_attr():
     print("Circumference:", c.circumference, "vars: ", vars(c))
     print("Circumference:", c.circumference)
     
-def test_class_decorator():
-    """
-    1. class decorator is a function that returns a modified class
-    """
-    def log_getattribute(cls):
-        orig_getattribute = cls.__getattribute__
-        def getattribute(self, name):
-            print('Calling {name} from {cls_name}'.format(name=name, cls_name=cls.__name__))
-            return orig_getattribute(self, name)
-        cls.__getattribute__ = getattribute
-        return cls
-    @log_getattribute
-    class Foo(object):
-        def __init__(self, a):
-            self.a = a
-            
-    # equivalent to Foo = log_getattribute(Foo)
-    f = Foo(3)
-    f.a
-
 def test_type_check_descriptor():
 
     # Used to check if an object's attributes are of expected types
@@ -439,7 +476,50 @@ def test_visitor_pattern():
     print(e.visit_Add(t1))
     from arepl_dump import dump
     dump()
+
+def test_cyclic_datastructure():
+    """
+    1. It seems like python 3.8+ can detect cyclic data structures. But for older versions, we need weakref
+    2. Garbage collector works on reference counting. Objects whose reference count is not 0 will not be garbage collected
+    """
+    # 1 
+    class A:
+        def __init__(self):
+            print("Object A Created")
+            
+        def __del__(self):
+            print("Object A Destroyed")
+            
+    class B:
+        def __init__(self):
+            print("Object B Created")
+            
+        def __del__(self):
+            print("Object B Destroyed")
+
+    #creating two objects
+    a = A()
+    b = B()
+
+    #setting up circular reference
+    a.b = b
+    b.a = a
+
+    # #deleting objects
+    # del a
+    # del b
     
+    import gc
+    # force garbage collection
+    gc.collect()
+    
+    # 2 
+    import weakref
+    a. b = weakref.ref(b)
+    b. a = weakref.ref(a)
+
+            
+
 if __name__ == "__main__":
     # test_type()
     # test_metaclass()
@@ -449,5 +529,8 @@ if __name__ == "__main__":
     # test_base_field()
     # test_abc()
     # test_stateful_class()
-    test_visitor_pattern()
+    # test_visitor_pattern()
+    # test_cyclic_datastructure()
+    test_decorator()
+    
     

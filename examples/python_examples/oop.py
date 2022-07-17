@@ -3,6 +3,11 @@
 ### OOP
 ##############################################################
 
+from functools import total_ordering
+
+from notes.examples.python_examples.advanced_oop import test_decorator
+
+
 def inheritance_basics():
     """
     1. What does super() do?
@@ -125,6 +130,7 @@ def test_abc():
 def test_alternate_constructor():
     """
     1. Say we want to call another function with some predefined args, use a classmethod that calls __new__()
+        - classmethod: returns a classmethod, which has access to class state
     2. It can be also useful when we want to manually fill in attributes,
         - Use __setattr__
     """
@@ -393,9 +399,62 @@ def test_class_defined_later():
     b = Baz()
     b.b()
     print(vars(b))
+    
+def test_comparison():
+    """
+    use functools.total_ordering to infer all the comparison methods.
+        - __eq__ must be defined, then define another comparison func
+    it basically decides which comparison func has been defined 
+    """    
+    def rico_total_order(cls):
+        cls.__lt__ = lambda self, other: not(cls.__eq__(self, other) or cls.__gt__(self, other))  
+        cls.__le__ = lambda self, other: not(cls.__gt__(self, other))  
+        cls.__ge__ = lambda self, other: cls.__gt__(self, other) or cls.__eq__(self, other)  
+        cls.__ne__ = lambda self, other: not cls.__eq__(self, other)
+        return cls
+ 
+    from functools import total_ordering
+    # @total_ordering
+    @rico_total_order
+    class House:
+        def __init__(self, area) -> None:
+            self.area = area
+        def __eq__(self, other):
+            return self.area == other.area
+        def __gt__(self, other):
+            return self.area > other.area
+    h1 = House(3)
+    h2 = House(5)
+    print(h1 >= h2)
+   
+    # #TODO
+    # from arepl_dump import dump
+    # dump()
 
+def test_return_cached_instance():
+    """
+    Many times if you have an instance with the same args, you can return 
+    the same instance
+        - return a weak ref to the instance. Because the cache should not interfere
+    """
+    class Foo:
+        def __init__(self, name):
+            self.name = name
+
+    import weakref 
+    _spam_cache = weakref.WeakValueDictionary()
+    def get_foo(name):
+        if name not in _spam_cache:
+            f = Foo(name)
+            _spam_cache[name] = f
+        return _spam_cache[name]
+
+
+        
 if __name__ == "__main__": 
     # test_alternate_constructor()
     # test_class_defined_later()
     # test_call_function_by_name()
-    test_garbage_collect()
+    # test_garbage_collect()
+    # test_comparison()
+    
