@@ -5,9 +5,6 @@
 
 from functools import total_ordering
 
-from notes.examples.python_examples.advanced_oop import test_decorator
-
-
 def inheritance_basics():
     """
     1. What does super() do?
@@ -299,12 +296,12 @@ def test_call():
         def __init__(self):
             #TODO 
             print(f"init")
-        def __call__(self):
+        def __call__(self, name):
            #TODO 
-           print(f"call") 
+           print(f"call {name}") 
 
     f= Foo()
-    f()
+    f("baz")
     
 def test_call_function_by_name():
     """
@@ -457,4 +454,4 @@ if __name__ == "__main__":
     # test_call_function_by_name()
     # test_garbage_collect()
     # test_comparison()
-    
+    test_call() 
