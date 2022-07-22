@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 def inheritance_basics():
     """
     1. What does super() do?
@@ -25,9 +26,10 @@ def inheritance_basics():
     B().foo()   #calls "from B"
 
     #print_class_name(): 
-    print("class name: ", B().__class__.__name__)
-
-def test_enum():
+    print("class name: ", B().__class__.__name__)        
+    print(f"sdf")        
+    
+def test_enum(): 
     # SIMPLE WAY TO DO THIS
     Pen, Pencil, Eraser = range(0, 3)
     ls = [1,2,3]
@@ -36,13 +38,13 @@ def test_enum():
     from enum import Enum
     # Enum(name_of_enumeration, all fields, with 1,2,3...)
     Animals = Enum('Animals', 'ant bee cat dog')
-    print(kkk.ant.value)
+    print(kkk.ant.value)=
     class TestEnum(Enum):
         DOG = 1
         CAT = 2
     print(TestEnum.CAT.value)
 
-def test_class_representations(): 
+def test_class_representations():
     """
     1. __repr()__ is when you type obj; __str()__ is print(obj)
         - type(self).__name__ is how to get name inside a class
@@ -277,6 +279,7 @@ def test_super():
 if __name__ == "__main__": 
     # inheritance_basics()
     # test_class_variable()
+
     # test_abstract_method()
     # test_enum()
     # test_get_attribute()
@@ -288,7 +291,6 @@ if __name__ == "__main__":
     # test_property()
     # test_descriptor()
     # test_type_check_descriptor()
-
     # test_call()
     # test_singleton()
     test_super()
