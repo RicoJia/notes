@@ -27,7 +27,7 @@ void loop()
   Serial.println("Scanning...");
  
   nDevices = 0;
-  for(address = 1; address < 127; address++ )
+  for(address = 0; address < 127; address++ )
   {
     // The i2c_scanner uses the return value of
     // the Write.endTransmisstion to see if
@@ -58,5 +58,5 @@ void loop()
   else
     Serial.println("done\n");
  
-  delay(5000);           // wait 5 seconds for next scan
+  delay(1000);           // wait 5 seconds for next scan
 }

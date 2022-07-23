@@ -175,13 +175,77 @@ def test_enum():
     ls = [1,2,3]
     print(ls[Animal.DOG]) 
 
+def test_lru_cache_optimization():
+    """
+    1. LRU (Least-recently-used cache) caches the input and output of function calls (memoization)
+    """
+    from functools import lru_cache
+    import time
+      
+    # Function that computes Fibonacci 
+    # numbers without lru_cache
+    def fib_without_cache(n):
+        if n < 2:
+            return n
+        return fib_without_cache(n-1) + fib_without_cache(n-2)
+          
+    # Execution start time
+    begin = time.time()
+    fib_without_cache(30)
+      
+    # Execution end time
+    end = time.time()
+      
+    print("Time taken to execute the\
+    function without lru_cache is", end-begin)
+      
+    # Function that computes Fibonacci
+    # numbers with lru_cache
+    @lru_cache(maxsize = 128)
+    def fib_with_cache(n):
+        if n < 2:
+            return n
+        return fib_with_cache(n-1) + fib_with_cache(n-2)
+          
+    begin = time.time()
+    fib_with_cache(30)
+    end = time.time()
+      
+    print("Time taken to execute the \
+    function with lru_cache is", end-begin)
+
+def test_memory_leak():
+    import tracemalloc
+    import numpy as np
+    tracemalloc.start()
+
+    length=10000
+    test_array=np.random.randn(length) # 分配一个定长随机数组
+    snapshot=tracemalloc.take_snapshot() # 内存摄像
+    top_stats=snapshot.statistics('lineno') # 内存占用数据获取
+
+    print ('[Top 10]')
+    for stat in top_stats[:20]: # 打印占用内存最大的10个子进程
+        print (stat)
+     
+def test_walrus_operator():
+    """
+    Assign param to a value. Do not work with (), [] in list(), dict[]
+    """
+    walrut = 3
+    # shows 4
+    print(walrut := 4)
+    
 if __name__=="__main__":
     # test_warning()
     # test_math()
     # test_more_math()
     # test_fractions()
     # test_random()
-    test_datetime()
+    # test_datetime()
     # test_or()
     # test_enum()
     # test_div()
+    # test_lru_cache_optimization()
+    # test_memory_leak()
+    test_walrus_operator()

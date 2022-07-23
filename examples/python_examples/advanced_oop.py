@@ -1,7 +1,7 @@
-
 ##############################################################
 ### Property, Descriptor
 ##############################################################
+
 def test_property():
     """
     1. use property to 
@@ -9,7 +9,7 @@ def test_property():
         2. Compute things on demand
     2. property is a bundle of setter, getter, and deleter functions
         - use @property to make a funciton a propertie's getter
-        - use @name.setter, @name.deleter setters and deleters
+        - ALL functions have the same name!!
         - Java programmers will make everything a property
     3. getter must be defined first, setter, deleter must follow
         - if getter is not defined, then you'll see errors
@@ -65,6 +65,63 @@ def test_property():
     # 5
     print("fget: ", Foo.name.fget)
 
+# -------------------------------- Decorator --------------------------------
+from functools import wraps
+def test_decorator():
+    def timer(func):
+        """
+        Timer doc
+        """
+        @wraps(func)
+        def wrap(*args, **kwargs):
+            """
+            1. need * args, **kwargs to make sure they are tuple and dict
+            func(*args, **kwargs) actually does the unpacking.  
+            2. @wraps is VERY important. Otherwise, foo.__name__, foo.__doc__, foo.__annotations__
+            will all be wraps. 
+            """
+            import time 
+            start = time.time()
+            # Still not sure why we need *? 
+            res = func(*args, **kwargs)
+            end = time.time()
+            print(func.__name__, end-start)
+            return res
+        return wrap
+    
+    @timer
+    def foo():
+        """
+        Foo doc
+        """
+        print("Foo")            
+            
+    print(foo.__name__, foo.__doc__, foo.__annotations__)
+    print(foo.__name__, foo.__doc__, foo.__annotations__)
+    
+
+def test_class_decorator():
+    """
+    1. class decorator is a function that returns a modified class
+    """
+    def log_getattribute(cls):
+        orig_getattribute = cls.__getattribute__
+        def getattribute(self, name):
+            print('Calling {name} from {cls_name}'.format(name=name, cls_name=cls.__name__))
+            return orig_getattribute(self, name)
+        cls.__getattribute__ = getattribute
+        return cls
+    @log_getattribute
+    class Foo(object):
+        def __init__(self, a):
+            self.a = a
+            
+    # equivalent to Foo = log_getattribute(Foo)
+    f = Foo(3)
+    f.a
+
+# -------------------------------- Descriptor --------------------------------
+
 def test_descriptor():
     """
     1. Foundation for property, classmethods, staticmethods, and larger libs
@@ -81,7 +138,8 @@ def test_descriptor():
         def __init__(self, name):
             self.name = name
         def __get__(self, instance, cls):
-            # instance is the upper level object. If Int is a class variable, cls is the class, instance is None, and it's common practice to return the object itself.
+            # instance is the upper level object. If Int is a class variable, cls is the class, instance is None, 
+            # In that case, it's common practice to return the object itself.
             if instance is None:
                 return self
             else:
@@ -111,8 +169,46 @@ def test_descriptor():
     print("equivalent to: ")
     print("Int.__get__() will return the int: ", f.i)
     Foo.i.__set__(f, 22)
-    print(f.i)
+    print(f.i)    
 
+def test_lazy_attr():
+    """
+    1. Descriptors can be used as LAZY ATTRIBUTES.
+        - ONE THING TO NOTE: you must NOT have __set__(), __delete__(). These will make the binding stronger
+    """
+    class LazyAttr(object):
+        def __init__(self, func):
+            self.__func = func
+        def __get__(self, instance, cls):
+            if not instance:
+                # when we have class variable
+                return self
+            else:
+                # store value to the instance under the same name as the func.
+                # Without storing, the object will have to call this function again.
+                value = self.__func(instance)
+                setattr(instance, self.__func.__name__,value)
+                #TODO
+                print(f"1: ", value, "func name:", self.__func.__name__)
+                return value
+        # def __set__(self, instance, value):
+        #     pass
+        # def __delete__(self, instance):
+        #     pass
+        
+    import numpy as np
+    class Circle:
+        def __init__(self, radius) -> None:
+            self.radius = radius
+        @LazyAttr
+        def circumference(self):
+            print("calculating Circumference")
+            return 2 * np.pi * self.radius
+    
+    c = Circle(2.3)
+    print("Circumference:", c.circumference, "vars: ", vars(c))
+    print("Circumference:", c.circumference)
+    
 def test_type_check_descriptor():
 
     # Used to check if an object's attributes are of expected types
@@ -156,215 +252,285 @@ def test_type_check_descriptor():
     except:
         pass
     print("Foo: ", Foo.__dict__)
-
-##############################################################
-### Metaclass
-##############################################################
-def test_type():
-    """
-    1. a regular class is of type 'type'
-    2. Beauty of interpreted language: class can be created on the go, using type.
-        - type(class_name, inheritance, functions)
-        - Meanwhile compiled languages will have this compiled first
-    """
-    # 1
-    class Foo:
-        def foo(self):
-            pass
-    # see class Foo, class "type"
-    f = Foo()
-    print(type(f), type(Foo))
-
-    # 2
-    def fn(self):
-        pass
-    Foo_equivalent = type('Foo', (object,), dict(foo=fn))
-    f = Foo_equivalent()
-    # see the same as above
-    print(type(f), type(Foo_equivalent))
     
-def test_metaclass():
+def test_property_change():
     """
-    1. Except for type(), you can create a class using metaclass, i.e., a class is an instantiation of a class
+    1. Can Extend one of the proeprty functions
+        - usual signature is super(subclass, instance) 
+        - but here we'd change __set__ in super(subclass, subclass)
     """
-    # have Metaclass at the end of the name by convention
-    class ListMetaclass(type):
-        # so you can add another attribute to a class. At the end, return the class using type
-        def __new__(cls, class_name, bases, attrs):
-            attrs['add'] = lambda self, x: self.append(x)
-            # here sometimes you will see super() as well
-            return type.__new__(cls, class_name, bases, attrs)
-
-    # with metaclass, the magic happens
-    # Meanwhile, you need to inherit from the list class
-    class MyList(list, metaclass=ListMetaclass):
-        pass
-    l = MyList()
-    l.add(3)
-    print(l)
-
-def test_ORM():
-    """
-    ORM: object relational mapping, projecting a class to a form. (No need to manage SQL directly?)
-        1. When you create a class (before creating an object), the class will call __new__() of its own or its parent class.
-            1. Its parent class gets created first
-            2. The class gets created next, with class variables being in attrs
-                - here you can examine if the class variables and their types meet certain standards
-        2. Later, when you create an object with args, the args can be type-checked if above you're passing in a descriptor
-    """
-    # 0, see descriptor for more details
-    class Field(object):
-        def __init__(self, name, column_type):
-            self.name = name
-            self.column_type = column_type
-        def __str__(self):
-            return '<%s:%s>' % (self.__class__.__name__, self.name)
-    class StringField(Field):
-        def __init__(self, name):
-            super(StringField, self).__init__(name, 'varchar(100)')
-
-    class IntegerField(Field):
-        def __init__(self, name):
-            super(IntegerField, self).__init__(name, 'bigint')
-
-    # 1
-    class ModelMetaclass(type):
-        def __new__(cls, name, bases, attrs):
-            if name=='Model':
-                #TODO 
-                print(f"1 Model: kw: {attrs}")
-                return type.__new__(cls, name, bases, attrs)
-            #TODO 
-            print(f"2 ModelMetaclass: kw: {attrs}")
-            print('Found model: %s' % name)
-            mappings = dict()
-            for k, v in attrs.items():
-                if isinstance(v, Field):
-                    print('Found mapping: %s ==> %s' % (k, v))
-                    mappings[k] = v
-            for k in mappings.keys():
-                attrs.pop(k)
-            attrs['__mappings__'] = mappings # 保存属性和列的映射关系
-            attrs['__table__'] = name # 假设表名和类名一致
-            return type.__new__(cls, name, bases, attrs)
-
-    """
-    note Model is inherited from dict. So the only thing is: 
-       - if the class name is Model, we will return it; 
-       - else when class is a child class, for each item in {attr}, we examine if it's a type of Field. If so, we add it to attrs[__mappings__]
-    """
-
-    class Model(dict, metaclass=ModelMetaclass):
-
-        def __getattr__(self, key):
-            try:
-                return self[key]
-            except KeyError:
-                raise AttributeError(r"'Model' object has no attribute '%s'" % key)
-
-        def __setattr__(self, key, value):
-            self[key] = value
-
-        def save(self):
-            fields = []
-            params = []
-            args = []
-            for k, v in self.__mappings__.items():
-                fields.append(v.name)
-                params.append('?')
-                args.append(getattr(self, k, None))
-            sql = 'insert into %s (%s) values (%s)' % (self.__table__, ','.join(fields), ','.join(params))
-            print('SQL: %s' % sql)
-            print('ARGS: %s' % str(args))
-
-    #2
-    # # using ORM. save() is provided by Model, but fields are from ORM
-    class User(Model):
-        # calls Model.__init__() first
-        id = IntegerField('id')
-        name = StringField('username')
-        email = StringField('email')
-        password = StringField('password')
-
-    # 创建一个实例：
-    u = User(id=12345, name='Michael', email='test@orm.org', password='my-pwd')
-    print("User.__dict__: ", User.__dict__)
-    # 保存到数据库：
-    u.save()
-    print("u: ", u)
-
-
-def test_singleton():
-    """
-    1. If we don't consider inheritance, then __new__ is enough 
-        - static method __new__ is called first, to create an instance 
-            object.__new__(class, *args, **kwargs)
-        - person = Person('John') =>
-            person = object.__new__(Person, 'John')
-            person.__init__('John')
-    2. Above will have problem: child's new will return the same instance as parent!
-        
-    """
-    # 1
-    class SingletonClass(object):
-      def __new__(cls):
-        if not hasattr(cls, 'instance'):
-          cls.instance = super(SingletonClass, cls).__new__(cls)
-        return cls.instance
-
-    singleton = SingletonClass()
-    new_singleton = SingletonClass()
-
-    print(singleton is new_singleton)
-    singleton.singl_variable = "Singleton Variable"
-    print(new_singleton.singl_variable)
-
-    # 2 
-    class SingletonChild(SingletonClass):
-        pass
-
-    singleton = SingletonClass()
-    child = SingletonChild()
-    print("child is singleton? ", child is singleton)
-    singleton.singl_variable = "Singleton Variable"
-    print(child.singl_variable)
-
-    # 3
-    class Singleton(type):
-        # why type?
-        def __init__(self, *args, **kwargs):
-            self.__instance = None
-            super().__init__(*args, **kwargs)
-        # what does call do here?
-        def __call__(self, *args, **kwargs):
-            print("__call__")
-            if self.__instance is None:
-                self.__instance = super().__call__(*args, **kwargs)
-                return self.__instance
-            else:
-                return self.__instance
-
-    #metaclass?
-    class Spam(metaclass=Singleton):
+    class Foo(object):
         def __init__(self):
-            print("Spam")
+            self._name="RJ-Foo"
+        @property
+        def name(self):
+            return self._name
+        @name.setter
+        def name(self, some_name):
+            self._name=some_name
 
-    class SpamChild(Spam):
+    class Foo_Extended(Foo):
+        @Foo.name.setter
+        def name(self, some_name):
+            print("Extension setting name right now: ", some_name)
+            super(Foo_Extended, Foo_Extended).name.__set__(self, some_name)
+        
+    f = Foo()
+    print("f name: ", f.name)
+    f.name="RJ-HA"
+    print("f name: ", f.name)
+    
+    fe = Foo_Extended()
+    fe.name="RJ"
+    print("fe name: ", fe.name)
+            
+ ################################################################
+ ### Design Patterns
+ ################################################################
+def test_base_field():
+    """
+    1. Base field has __init__, which avoids redundancy
+        - field is just a placeholder
+        - Subclasses can have their own fields.
+    2. setattr has these advantages:
+        1. programmatic
+        2. can work with properties wrapped in properties, or slotclass, 
+            - instead of like __dict__.update(another_dict)
+    """
+    class BaseField(object):
+        _fields = None
+        def __init__(self,*args, **fields):
+            if (len(fields.keys()) + len(args)>len(self._fields)):
+                raise TypeError("Fields has wrong length")
+            for name,values in zip(self._fields, args):
+                setattr(self,name,values)
+            for name, val in fields.items():
+                setattr(self, name, val)
+            print("dict supports set arithmetics: ", type(fields.keys() - self._fields))
+    class Foo(BaseField):
+        _fields = ["name", "age", "grade"]
+    f1 = Foo(1,2,3)
+    print(vars(f1))
+    f2 = Foo(shabi=100, grade=100, age= 99) 
+
+def test_delegation():
+    """
+    1. Delegation is to have another object to call the same attribute
+    2. use __getattr__ if there're too many attr 
+    3. __getattr__ supports non __ attributes only
+    """
+    class A:
+        def spam(self):
+            print("A spam")
+        def spam1(self):
+            print("A spam1")
+    class B:
+        def __init__(self):
+            self._a = A()
+        def spam(self):
+            #TODO 
+            print(f"b spam")
+            self._a.spam()
+        def __getattr__(self, attr_name):
+            print(f"{attr_name} not exist in B")
+            getattr(self._a, attr_name)
+
+    b = B()
+    b.spam()
+    b.spam1
+    # b.spam1()  is not valid, because it's a method, not an attribute
+
+    class ListLike:
+        l = [1,2,3,4]
+        def __getattr__(self, attr_name):
+            return getattr(self.l, attr_name)
+
+    ll = ListLike()
+    ll.append(5)
+    ll.sort()
+    print(f"append, sort both work: ")
+    try: 
+        len(ll)
+    except:
+        print("len doesn't work")
+        
+def test_stateful_class():
+    """
+    1. Method 1:
+        - The key is to assign a state to a class, then call the class's static function for switching
+        - And you should have all the same functions for each state class, 
+        - So you can just call each class's function correspondingly, and let each function handles the rest
+    2. Method 2:
+        - They key is to switch the entire class to another class
+        - This however, can only be applied to simple cases!
+    """
+    # 1
+    class Connection: 
+        def __init__(self): 
+            # just calling the function below
+            self.new_state(ClosedState)
+        def new_state(self, newstate): 
+            self._state = newstate
+        # Delegate to the state class 
+        def read(self): 
+            return self._state.read(self)
+        def open(self): 
+                return self._state.open(self)
+    # Implementation of different states 
+    class ClosedState: 
+        @staticmethod 
+        def read(conn): 
+            """
+            So you can't read while during a closed state. Therefore 
+            """
+            raise RuntimeError('Not open')
+        @staticmethod
+        def open(conn):
+            conn.new_state(Open)
+    class Open: 
+        @staticmethod 
+        def read(conn): 
+            print('reading')
+        @staticmethod 
+        def open(conn): 
+            raise RuntimeError('Already open')
+    # implementation
+    c = Connection()
+    print(c._state)
+    
+    #2 
+    class State:
+        def __init__(self) -> None:
+            self.new_state(StateA)
+        def new_state(self, StateX):
+            """
+            Switching the entire class the StateX
+            """
+            self.__class__ = StateX
+            
+    class StateA(State):
+        def action(self):
+            print("State A invoked")    
+            self.new_state(StateB)
+    
+    class StateB(State):
+        def action(self):
+            print("State B")
+            self.new_state(StateA)
+    
+    s = State()
+    s.action()
+    s.action()
+    
+def test_visitor_pattern():
+    """
+    This might be too convulted. But the idea is:
+        1. Separate data structure from operations, 
+        2. When you apply operations, you can use getattr(instance, methname, default_value)
+    """
+    # 1. create a "tree": a node with left & right being Number
+    class Node: 
         pass
-    s = Spam()
-    s1 = Spam()
-    s2 = SpamChild()
-    print("s is s1: ", s is s1)
-    print("s is s2: ", s is s2)
+    class UnaryOperator(Node): 
+        def __init__(self, operand): self.operand = operand
+    class BinaryOperator(Node): 
+        def __init__(self, left, right): 
+            self.left = left 
+            self.right = right
+    
+    class Sub(BinaryOperator): 
+        pass
+    class Number(Node): 
+        def __init__(self, value): 
+            self.value = value
+    t1 = Sub(Number(3), Number(4))    
+    
+    # Node Visitor: 
+    class NodeVisitor: 
+        def visit(self, node): 
+            methname = 'visit_' + type(node).__name__ 
+            meth = getattr(self, methname, None) 
+            if meth is None: 
+                meth = self.generic_visit 
+            return meth(node)
+    def generic_visit(self, node): 
+        raise RuntimeError('No {} method'.format('visit_' + type(node).__name__))
+    
+    class Evaluator(NodeVisitor):
+        def visit_Number(self, node): 
+            return node.value
+        def visit_Add(self, node): 
+            # note there's a recursion here
+            return self.visit(node.left) + self.visit(node.right)
+        def visit_Sub(self, node): 
+            return self.visit(node.left) - self.visit(node.right)
+        def visit_Mul(self, node): 
+            return self.visit(node.left) * self.visit(node.right)
+        def visit_Div(self, node): 
+            return self.visit(node.left) / self.visit(node.right)
+        def visit_Negate(self, node): 
+            return -node.operand
+
+    e = Evaluator()
+    e.visit(t1) # calling visit_Number first. 
+    print(e.visit_Add(t1))
+    from arepl_dump import dump
+    dump()
+
+def test_cyclic_datastructure():
+    """
+    1. It seems like python 3.8+ can detect cyclic data structures. But for older versions, we need weakref
+    2. Garbage collector works on reference counting. Objects whose reference count is not 0 will not be garbage collected
+    """
+    # 1 
+    class A:
+        def __init__(self):
+            print("Object A Created")
+            
+        def __del__(self):
+            print("Object A Destroyed")
+            
+    class B:
+        def __init__(self):
+            print("Object B Created")
+            
+        def __del__(self):
+            print("Object B Destroyed")
+
+    #creating two objects
+    a = A()
+    b = B()
+
+    #setting up circular reference
+    a.b = b
+    b.a = a
+
+    # #deleting objects
+    # del a
+    # del b
+    
+    import gc
+    # force garbage collection
+    gc.collect()
+    
+    # 2 
+    import weakref
+    a. b = weakref.ref(b)
+    b. a = weakref.ref(a)
+
+            
 
 if __name__ == "__main__":
-    test_type()
+    # test_type()
     # test_metaclass()
     # test_ORM()
-    a = 3
-    c = [1,2,3,4]
-    b = a+1
-    c.append(13)
-    for i in c:
-        print(i)
-
+    # test_property_change()
+    # test_lazy_attr()
+    # test_base_field()
+    # test_abc()
+    # test_stateful_class()
+    # test_visitor_pattern()
+    # test_cyclic_datastructure()
+    test_decorator()
+    
+    
