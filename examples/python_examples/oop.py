@@ -4,7 +4,6 @@
 ##############################################################
 
 from functools import total_ordering
->>>>>>> d440693cec87d00d639be49a79b63347376d08b6
 
 def inheritance_basics():
     """
@@ -49,26 +48,6 @@ def test_enum():
         DOG = 1
         CAT = 2
     print(TestEnum.CAT.value)
-
-<<<<<<< HEAD
-def test_class_representations():
-    """
-    1. __repr()__ is when you type obj; __str()__ is print(obj)
-        - type(self).__name__ is how to get name inside a class
-    2. repr() calls __repr__()
-        - eval("Foo") is to run the command as a string
-    """
-    class Foo:
-        def __init__(self, f):
-            self.f = f
-        def __repr__(self):
-            return f"repr {type(self).__name__, self.__dict__}"
-        def __str__(self):
-            return f"str {type(self).__name__, self.__dict__}"
-
-    p = Foo(f=1)
-    print("p: ", p)
-    print(repr(p))
 
 def test_task_managed_class():
     """
@@ -471,29 +450,9 @@ def test_return_cached_instance():
 
         
 if __name__ == "__main__": 
-<<<<<<< HEAD
-    # inheritance_basics()
-    # test_class_variable()
-
-    # test_abstract_method()
-    # test_enum()
-    # test_get_attribute()
-    # test_sort_by_attr()
-    # test_hasattr()
-    # test_class_representations()
-    # test_task_managed_class()
-    # test_slots()
-    # test_property()
-    # test_descriptor()
-    # test_type_check_descriptor()
-    # test_call()
-    # test_singleton()
-    test_super()
-=======
     # test_alternate_constructor()
     # test_class_defined_later()
     # test_call_function_by_name()
     # test_garbage_collect()
     # test_comparison()
     test_call() 
->>>>>>> d440693cec87d00d639be49a79b63347376d08b6
