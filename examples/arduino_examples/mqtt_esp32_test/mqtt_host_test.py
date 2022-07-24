@@ -1,5 +1,7 @@
 """
 This script is a minimum example of MQTT client. In the meantime, it measures the pub-sub communication time with another MQTT client
+    MQTT Command line basics:
+        - 
 """
 import paho.mqtt.client as mqtt
 import time
