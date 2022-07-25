@@ -98,7 +98,26 @@ def test_decorator():
             
     print(foo.__name__, foo.__doc__, foo.__annotations__)
     print(foo.__name__, foo.__doc__, foo.__annotations__)
-    
+
+def test_internal_wrap():
+    '''
+    1. You need to use wraps on the decorator, or directly set __wrapped__ attribute, for the original function
+    '''
+    from functools import wraps
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            #TODO
+            print(f'lol')
+            return func(*args, **kwargs)
+        return wrapper
+    @decorator
+    def foo(num):
+        print(num)
+    foo(4)
+
+    original = foo.__wrapped__
+    print(original) 
 
 def test_class_decorator():
     """
