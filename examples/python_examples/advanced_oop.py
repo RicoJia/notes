@@ -139,6 +139,68 @@ def test_class_decorator():
     f = Foo(3)
     f.a
 
+def test_decorator_deep_dive():
+    '''
+    Misc:
+    1. setattr will call __setattr__
+    2. You can add an attribute to a function object, but not a list
+    Decorator Binding:
+    1. binding to decorator happens during function definition time, not when a function is called
+    2. How decorator works (1 layer witha args + 1 layer with func + Additional wrapper layer)
+        1. Outmost layer: if args passed into the outmost layer have all been supplied with params. Also, it returns a function (layer 1) with just 1 arg
+        2. Layer 1: takes in func as arg, which must return a function with the same number of args as func.
+        3. additional wrapper layer: it's good as long as it takes in same number of args as func
+    3. The "self-return" trick is also just following how the decorator works. 
+    '''
+    from functools import wraps, partial 
+    import logging
+    def attach_wrapper(obj, func=None): 
+        print(obj, "func", func)
+        if func is None: 
+            print("binding obj to attach_wrapper")
+            # the "self-return" trick
+            return partial(attach_wrapper, obj) 
+        print("rico2")
+        setattr(obj, func.__name__, func) 
+        return func
+        # # equivalent to
+        # def wrap2(func):
+        #     print("rico2")
+        #     return func
+        # return wrap2
+
+    def logged(level=logging.INFO, name=None, message="heh"): 
+        def decorate(func): 
+            logname = name if name else func.__module__ 
+            log = logging.getLogger(logname) 
+            logmsg = message if message else func.__name__
+
+            @wraps(func) 
+            def wrapper(*args, **kwargs): 
+                log.log(level, logmsg) 
+                return func(*args, **kwargs)
+            
+            @attach_wrapper(wrapper)
+            def set_message(newmsg): 
+                # be careful with nonlocal
+                nonlocal logmsg 
+                logmsg = newmsg
+
+            # set_message = attach_wrapper(wrapper)
+
+            return wrapper
+
+        return decorate
+
+    logging.basicConfig(level=logging.DEBUG)
+    def func(name):
+        print(name)
+
+    func = logged()(func)
+    func("rico")
+
+    func.set_message("newmsg")
+    func("rico")
 # -------------------------------- Descriptor --------------------------------
 
 def test_descriptor():
@@ -550,6 +612,6 @@ if __name__ == "__main__":
     # test_stateful_class()
     # test_visitor_pattern()
     # test_cyclic_datastructure()
-    test_decorator()
-    
+    # test_decorator()
+    test_decorator_deep_dive() 
     
