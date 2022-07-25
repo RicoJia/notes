@@ -147,7 +147,13 @@ def test_decorator_deep_dive():
     Decorator Binding:
     1. binding to decorator happens during function definition time, not when a function is called
     2. How decorator works (1 layer witha args + 1 layer with func + Additional wrapper layer)
+        @decorator(args...)
+        func(...)
         1. Outmost layer: if args passed into the outmost layer have all been supplied with params. Also, it returns a function (layer 1) with just 1 arg
+            - if the outmost layer just gets 1 arg, then it has to be func
+            - and you call it like
+                @decorator
+                func(...)
         2. Layer 1: takes in func as arg, which must return a function with the same number of args as func.
         3. additional wrapper layer: it's good as long as it takes in same number of args as func
     3. The "self-return" trick is also just following how the decorator works. 
