@@ -67,37 +67,81 @@ def test_property():
 
 # -------------------------------- Decorator --------------------------------
 from functools import wraps
-def test_decorator():
-    def timer(func):
-        """
-        Timer doc
-        """
-        @wraps(func)
-        def wrap(*args, **kwargs):
-            """
-            1. need * args, **kwargs to make sure they are tuple and dict
-            func(*args, **kwargs) actually does the unpacking.  
-            2. @wraps is VERY important. Otherwise, foo.__name__, foo.__doc__, foo.__annotations__
-            will all be wraps. 
-            """
-            import time 
-            start = time.time()
-            # Still not sure why we need *? 
-            res = func(*args, **kwargs)
-            end = time.time()
-            print(func.__name__, end-start)
-            return res
-        return wrap
-    
-    @timer
-    def foo():
-        """
-        Foo doc
-        """
-        print("Foo")            
+def test_decorator(): 
+    """
+    1. Decorate(func)(*args, **kwargs) is the canonical setup for decorator, actually calling a nested function 
+        - Decorator is just a syntactic sugar for Foo = decorate(Foo), which exeuctes the 1st layer of the wrapper, and return the second layer  
+            @decorate
+            def Foo(...):
+                pass
+        - If you're curious, you can the following, which executes 1st, 2nd layers of the wrapper, and try to store the 3rd
+            @decorate()
+            def Foo(...)
             
-    print(foo.__name__, foo.__doc__, foo.__annotations__)
-    print(foo.__name__, foo.__doc__, foo.__annotations__)
+    3. With functions.wraps, we can have: 
+        1. __name__ being "some_func" instead of "wrapper"
+        2. Access the wrapped function
+    4. Of course wraps is optional. Decorator can work without it
+    5. Decorator is not to execute a function with extra args. Instead it's a fucntion returning a wrapped function
+        - This is called "metaprogramming", which is to write a program that modified an existing program
+        - decorators heavily use closures and returns a callable
+        - **in python, an object with __call__() is a callable**
+    """
+    # 1 basic example -  decorator is a fucntion returning a wrapped function
+    # this step actually executes the function_decorator, wraps the function and return the wrapped func to the function object
+    # equivalent to calling function_decorator(decorator_kwargs)(wrapper_kwargs)
+    def function_decorator():
+        print("start function_decorator")
+        def dummy_wrap(func):
+            print("start dummy_wrap")
+            def wrapped_func():
+                print('=' * 30)
+                func()
+            print("end function_decorator")
+            return wrapped_func
+        return dummy_wrap
+    
+    @function_decorator()
+    def test():
+        print('1, Hello World!')
+    # execute wrapped_func
+    test()
+
+    # 3
+    import time 
+    from functools import wraps
+    def timethis(func): 
+        """
+        1. need * args, **kwargs to make sure they are tuple and dict
+        func(*args, **kwargs) actually does the unpacking.  
+        2. @wraps is VERY important. Otherwise, foo.__name__, foo.__doc__, foo.__annotations__
+        will all be wraps. 
+        """
+        def timer(func):
+            """
+            Timer doc
+            """
+            @wraps(func)
+            def wrap(*args, **kwargs):
+                import time 
+                start = time.time()
+                # Still not sure why we need *? 
+                res = func(*args, **kwargs)
+                end = time.time()
+                print(func.__name__, end-start)
+                return res
+            return wrap
+        
+        @timer
+        def foo():
+            """
+            Foo doc
+            """
+            print("Foo")            
+                
+        print(foo.__name__, foo.__doc__, foo.__annotations__)
+        print(foo.__name__, foo.__doc__, foo.__annotations__)
+
 
 def test_internal_wrap():
     '''
@@ -121,7 +165,9 @@ def test_internal_wrap():
 
 def test_class_decorator():
     """
-    1. class decorator is a function that returns a modified class
+    1. class decorator is a function that returns a modified class, to make all class functions decorated the same way. 
+        - Caution: __getattribute__() might be recursive
+    2. decorator(args1)(func/class)
     """
     def log_getattribute(cls):
         orig_getattribute = cls.__getattribute__
@@ -138,6 +184,29 @@ def test_class_decorator():
     # equivalent to Foo = log_getattribute(Foo)
     f = Foo(3)
     f.a
+
+def test_chaining_decorators(): 
+    """
+    1. execute top to bottom . func1(a)(b)...
+    """
+    def func1(func):
+      def inner(arg):
+        print(func1.__name__)   #this is how you print the name
+        func(arg)
+      return inner
+
+    def func2 (func):
+      def inner(arg):
+        print(func2.__name__)
+        func(arg)
+      return inner
+
+    @func1
+    @func2
+    def func(msg):      #will first execute func1, then func2.
+      print(msg)
+
+    func("holi")
 
 def test_decorator_deep_dive():
     '''
