@@ -313,6 +313,28 @@ def test_type_hints():
     # this will complain since we have mixed types
     func9(1, "sr")
 
+def test_signature():
+    '''
+    1. sig.bind_partial(values / types to bind to each arg in func). 
+        - return OrderedDict
+        - Allows partially binding a func. sig.bind does not support this
+    2. sig.parameters: stores function's original signature. 
+    '''
+    from inspect import signature
+    def func(a, b: float):
+        return a + b
+    sig = signature(func) 
+    print(sig.parameters)
+    # see a <class 'inspect._empty'> POSITIONAL_OR_KEYWORD
+    # does not change after defining bound_types
+    print(sig.parameters["a"].name, sig.parameters["a"].default, sig.parameters["a"].kind)
+
+    # OrderedDict([('a', <class 'int'>), ('b', 12)])
+    bound_types = sig.bind_partial(int,b=12).arguments
+    print(bound_types)
+    # see 'int'
+    print(bound_types["a"])
+
 ###############################################################################
 ### Closure, Nested Functions, decorator
 ###############################################################################
@@ -427,7 +449,7 @@ if __name__ == "__main__":
     # test_scope()
     # test_optional_arg()
     # test_type_hints()
-    test_decorator()
+    test_signature()
     # kwargs_test()
     # test_class_decorator()
     # test_default_arg()
