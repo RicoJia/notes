@@ -43,7 +43,7 @@ def test_enum():
     from enum import Enum
     # Enum(name_of_enumeration, all fields, with 1,2,3...)
     Animals = Enum('Animals', 'ant bee cat dog')
-    print(kkk.ant.value)=
+    print(kkk.ant.value)
     class TestEnum(Enum):
         DOG = 1
         CAT = 2
@@ -78,6 +78,60 @@ def test_task_managed_class():
     with Divide(3,0) as d:
         d.divide()
 
+def test_decorator_in_class():
+    '''
+    1. The main purpose to have decorator funcs in a class is to store data together
+        - property() returns a property descriptor with setter, getter, deleter 
+    '''
+    from functools import wraps
+    # 1 decorator as a class function
+    class Foo:
+        def decorator1(self, func):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                print("regular func wrapper")
+                return func(*args, **kwargs)
+            return wrapper
+        @classmethod
+        def decorator2(cls, func):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                print("class method wrapper")
+                return func(*args, **kwargs)
+            return wrapper
+    
+    f = Foo()
+    
+    @f.decorator1
+    def func1():
+        print("func1")
+    @Foo.decorator2
+    def func2():
+        print("func2")
+    func1()
+    func2()
+    # how's class method wrapper used
+
+    class Bar:
+        # bar is 
+        bar = property()
+        # getter function
+        # @property
+        #   def bar(self):
+        #       ...
+        # equivalent to
+        # bar = property(bar)   # a class property descriptor 
+        @bar.getter
+        def bar(self):
+            return "bar"
+        @bar.setter
+        def bar(self, value):
+            print(value)
+            pass
+    b = Bar()
+    b.bar = 3
+    print(b.bar)
+                
 def test_slots():
     """
     1. __slots__ makes the class a small list instead of a dictionary. 
@@ -455,4 +509,5 @@ if __name__ == "__main__":
     # test_call_function_by_name()
     # test_garbage_collect()
     # test_comparison()
-    test_call() 
+    # test_call() 
+    test_decorator_in_class()

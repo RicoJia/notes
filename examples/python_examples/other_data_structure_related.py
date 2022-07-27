@@ -223,10 +223,24 @@ def test_priority_q():
     print(q.pop())
     print(q.pop())
 
+def test_type_cast():
+    '''
+    1. define __int__, __str__, __float__ for type conversion
+    '''
+    class Foo:
+        def __int__(self):
+            return 100
+        def __str__(self) -> str:
+            return "hello"
+        def __float__(self) -> float:
+            return 88.0
 
+    f = Foo()
+    print(int(f), float(f), str(f))
 
 if __name__=="__main__":
-    test_string()
+    # test_string()
+    test_type_cast()
     # test_matching()
     # test_queue()
     # test_deque()
