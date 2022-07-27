@@ -94,6 +94,7 @@ def test_decorator_in_class():
             return wrapper
         @classmethod
         def decorator2(cls, func):
+            # you can do class-level things like cls.funcs.append(fucn)
             @wraps(func)
             def wrapper(*args, **kwargs):
                 print("class method wrapper")
@@ -110,17 +111,16 @@ def test_decorator_in_class():
         print("func2")
     func1()
     func2()
-    # how's class method wrapper used
 
     class Bar:
-        # bar is 
-        bar = property()
         # getter function
         # @property
         #   def bar(self):
         #       ...
         # equivalent to
         # bar = property(bar)   # a class property descriptor 
+        # but you can get an empty property object as well
+        bar = property()
         @bar.getter
         def bar(self):
             return "bar"
