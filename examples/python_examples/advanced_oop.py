@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ##############################################################
 ### Property, Descriptor
 ##############################################################
@@ -280,25 +281,32 @@ def test_decorator_deep_dive():
 
 def test_descriptor():
     """
-    1. Foundation for property, classmethods, staticmethods, and larger libs
-        - Only works on per-class basis
-    2. Key idea is once descriptor object is assigned to class variable, If you assign the class var to another val, 
-    the val will be pluged into __set__(instance, value)
-        - and subsequent obj.attr will trigger __get__(instance, cls)
-    2. Can be used to 
+    1. Key idea is descriptor is a class that "describes" the behavior of another classe's class variable, with binding behavior, if that variable is a class variable
+    . 
+        - when changed, accessed, deleted, the __get__, __set__, __delete__ will be called
+        - Won't work if assigned to a regular member variable.
+    2. You don't have to define __set__ (non-data descriptor)
+    3. Can be used to 
          - avoid duplicating properties
          - Enforce types
+         - Foundation for property, classmethods, staticmethods, and larger libs
+            - Only works on per-class basis
     """
     # 1, 2
     class Int:
         def __init__(self, name):
+            print("Int ctor")
             self.name = name
-        def __get__(self, instance, cls):
-            # instance is the upper level object. If Int is a class variable, cls is the class, instance is None, 
-            # In that case, it's common practice to return the object itself.
+        def __get__(self, instance, owner_cls):
+            # __get__ is used to provide class/instance attribute/method 
+            # owner_cls is the class, instance is None (if instance is class variable); or you get an actual instance
+            # what is instance? - instance that contains the descriptor
+            print(instance)
             if instance is None:
+                print("instance is None")
                 return self
             else:
+                print("instance is not none")
                 return instance.__dict__[self.name]
         def __set__(self, instance, value):
             print("setting value: ", value)
@@ -309,26 +317,27 @@ def test_descriptor():
             del instance.__dict__[self.name]
 
     class Foo:
-        i = Int("my_var")
+        # calls ctor
+        i = Int("name")
         def __init__(self):
             # Note: only works on per-class basis, so without the class variable, this wouldn't work
-            # self.i = Int("myvar")
-            pass
+            self.i = 32
     # 1
     f = Foo()
-    # calls Foo.i.__set__(f, 22)
-    f.i = 33
-    try:
-        f.i = 23.3
-    except TypeError:
-        pass
-    print("equivalent to: ")
-    print("Int.__get__() will return the int: ", f.i)
-    Foo.i.__set__(f, 22)
-    print(f.i)    
+    # # Foo.i.__set__(f, 22)
+    f.i 
+
+    # try:
+    #     f.i = 23.3
+    # except TypeError:
+    #     pass
+    # print("equivalent to: ")
+    # print("Int.__get__() will return the int: ", f.i)
+    # Foo.i.__set__(f, 22)
+    # print(f.i)    
 
 def test_lazy_attr():
-    """
+    """u
     1. Descriptors can be used as LAZY ATTRIBUTES.
         - ONE THING TO NOTE: you must NOT have __set__(), __delete__(). These will make the binding stronger
     """
@@ -409,6 +418,39 @@ def test_type_check_descriptor():
         pass
     print("Foo: ", Foo.__dict__)
     
+def test_property_implemented_as_descriptor():
+    '''
+    1. For the basics: need __init__ __call__ to make the function callable.
+        - functools.wraps will store the function metadata, and the function in __wrapped__
+    2. Need __get__(self, instance, owner_cls): to bind self to a class method 
+    '''
+    from functools import wraps
+    from typing import Any
+    import types
+    class FooDescriptor(object):
+        def __init__(self, func) -> None:
+            # put metadata of func in self.__wrapped__
+            wraps(func)(self)
+            print("init")
+        def __call__(self, *args: Any, **kwargs: Any) -> Any:
+            print("call, wrapped: ", self.__wrapped__)
+            return self.__wrapped__(*args, **kwargs)
+        def __get__(self, instance, owner_cls) :
+            print("self: ", self, " instance: ", instance)
+            return self
+    # 1
+    @FooDescriptor
+    def bar(a,b):
+        return a + b
+    bar(1,2)
+
+    # 2 
+    class Baz:
+        @FooDescriptor
+        def baz(self, a, b):
+            return a 
+    Baz().baz(1,2)
+
 def test_property_change():
     """
     1. Can Extend one of the proeprty functions
@@ -687,6 +729,9 @@ if __name__ == "__main__":
     # test_stateful_class()
     # test_visitor_pattern()
     # test_cyclic_datastructure()
+
     # test_decorator()
-    test_decorator_deep_dive() 
+    # test_decorator_deep_dive() 
+    test_descriptor()
+    # test_property_implemented_as_descriptor()
     

@@ -163,6 +163,128 @@ def test_partial():
     rico_func_w = rico_partial(func, b = 12)
     rico_func_w(a=13)
 
+def test_signature():
+    '''
+    1. sig.bind_partial(values / types to bind to each arg in func). 
+        - return OrderedDict
+        - Allows partially binding a func. sig.bind does not support this
+    2. sig.parameters: stores function's original signature. 
+    '''
+    from inspect import signature
+    def func(a, b: float):
+        return a + b
+    sig = signature(func) 
+    print(sig.parameters)
+    # see a <class 'inspect._empty'> POSITIONAL_OR_KEYWORD
+    # does not change after defining bound_types
+    print(sig.parameters["a"].name, sig.parameters["a"].default, sig.parameters["a"].kind)
+
+    # OrderedDict([('a', <class 'int'>), ('b', 12)])
+    bound_types = sig.bind_partial(int,b=12).arguments
+    print(bound_types)
+    # see 'int'
+    print(bound_types["a"])
+
+###############################################################################
+### Type Hints
+###############################################################################
+def test_type_hints(): 
+    """
+    1. Python's type hints are NOT enforced, but can be used by IDE. 
+        - stored in func.__annotation__. just call func.__annotation__
+    2. Use string as default value for funcs whose args are defined later
+    3. for < python 3.9, you need typing to indicate what exactly goes into the container
+    4. typing.sequence can be used to refer to list, tuple
+    5. Type alias: define custom aliases 
+    6. Optional: there may or may not be a returned value. If not, None is returned
+    7. Union: an arg can be one of any types here. Optional is Union(type, None)
+    8. Callable: Can be a function, or a class with __call__. See below for how to use it
+    9. Any: wildcard
+    10.Template T in C++
+    """
+    # basic - type hint with default val
+    def func1(age: int = 20): 
+        print (age)
+    func1()
+
+    # string for funcs whose args are defined later
+    def func2(p: 'Person') -> str: 
+        return "hello "+p.name
+    class Person: 
+        name = "hehe"
+    p = Person()
+    print(func2(p))
+
+    # for < python 3.9, you need typing to indicate what exactly goes into the container
+    from typing import tuple, dict
+    def func3(scores: tuple[int, int], di: dict[int, str]): 
+        print(scores, di)
+    func3((3,4), {1:"asdf"})
+
+    # typing for list 
+    from typing import list
+    def func3_5(scores: list[int]): 
+        print(scores)
+    func3_5([1,2,3])
+
+    # typing that stores __name__ for a class 
+    from typing import type
+    def func3(p: type): 
+        print("type.type can store __name__",  p.__name__)
+    func3(person)
+
+    # typing.sequence can be used to refer to list, tuple
+    from typing import sequence as seq1
+    def func4(seq:seq1): 
+        for item in seq: 
+            print(item)
+    func4([2,3,4])
+
+    # type alias: define custom aliases. could be useful in this case: 
+    # from production.contracts import default_pose, tree
+    # cameranodeconfigspec = tree.cameranodeconfigspec
+    from typing import tuple
+    vector2d = tuple[int, int]
+    def func5(vector: vector2d):
+        print(vector)
+    func5((1,2))
+
+    # optional: there may or may not be a returned value. if not, none is returned
+    from typing import optional
+    def func6(i : int) -> optional[int]:  
+        if i < 4: 
+            return 100
+    func6(4)
+
+    from typing import union
+    def func7(i: union[int, str]): 
+        print(i)
+    func7("str")
+
+    # callable: can be a function, or a class with __call__. see below for how to use it
+    from typing import callable
+    class bar: 
+        def __call__(self, i: int): 
+            print(i)
+    def func8(f: callable): 
+        # pass the arg here, not when you construct it.
+        f(9)
+    func8(bar())
+
+    # any: wildcard
+    from typing import any
+    def foo() -> any: 
+        return "fubar"
+    print(foo()) 
+
+    # template t in c++, t 必须是 str 或 int 其中一种
+    from typing import typevar, list
+    t = typevar('t', int, str)
+    def func9(a: t, b: t): 
+        print(a, b)
+    # this will complain since we have mixed types
+    func9(1, "sr")
+
 ###############################################################################
 ### Misc
 ###############################################################################
@@ -215,125 +337,6 @@ def test_control_flow():
         print("test r: ", r)
 
     test()
-
-def test_type_hints(): 
-    """
-    1. Python's type hints are NOT enforced, but can be used by IDE. 
-        - stored in func.__annotation__. just call func.__annotation__
-    2. Use string as default value for funcs whose args are defined later
-    3. for < python 3.9, you need typing to indicate what exactly goes into the container
-    4. typing.sequence can be used to refer to list, tuple
-    5. Type alias: define custom aliases 
-    6. Optional: there may or may not be a returned value. If not, None is returned
-    7. Union: an arg can be one of any types here. Optional is Union(type, None)
-    8. Callable: Can be a function, or a class with __call__. See below for how to use it
-    9. Any: wildcard
-    10.Template T in C++
-    """
-    # basic - type hint with default val
-    def func1(age: int = 20): 
-        print (age)
-    func1()
-
-    # string for funcs whose args are defined later
-    def func2(p: 'Person') -> str: 
-        return "hello "+p.name
-    class Person: 
-        name = "hehe"
-    p = Person()
-    print(func2(p))
-
-    # for < python 3.9, you need typing to indicate what exactly goes into the container
-    from typing import Tuple, Dict
-    def func3(scores: Tuple[int, int], di: Dict[int, str]): 
-        print(scores, di)
-    func3((3,4), {1:"asdf"})
-
-    # typing for list 
-    from typing import List
-    def func3_5(scores: List[int]): 
-        print(scores)
-    func3_5([1,2,3])
-
-    # typing that stores __name__ for a class 
-    from typing import Type
-    def func3(p: Type): 
-        print("Type.type can store __name__",  p.__name__)
-    func3(Person)
-
-    # typing.sequence can be used to refer to list, tuple
-    from typing import Sequence as Seq1
-    def func4(seq:Seq1): 
-        for item in seq: 
-            print(item)
-    func4([2,3,4])
-
-    # Type alias: define custom aliases. Could be useful in this case: 
-    # from production.contracts import DEFAULT_POSE, tree
-    # CameraNodeConfigSpec = tree.CameraNodeConfigSpec
-    from typing import Tuple
-    Vector2D = Tuple[int, int]
-    def func5(vector: Vector2D):
-        print(vector)
-    func5((1,2))
-
-    # Optional: there may or may not be a returned value. If not, None is returned
-    from typing import Optional
-    def func6(i : int) -> Optional[int]:  
-        if i < 4: 
-            return 100
-    func6(4)
-
-    from typing import Union
-    def func7(i: Union[int, str]): 
-        print(i)
-    func7("str")
-
-    # Callable: Can be a function, or a class with __call__. See below for how to use it
-    from typing import Callable
-    class Bar: 
-        def __call__(self, i: int): 
-            print(i)
-    def func8(f: Callable): 
-        # pass the arg here, not when you construct it.
-        f(9)
-    func8(Bar())
-
-    # Any: wildcard
-    from typing import Any
-    def foo() -> Any: 
-        return "FUBAR"
-    print(foo()) 
-
-    # Template T in C++, T 必须是 str 或 int 其中一种
-    from typing import TypeVar, List
-    T = TypeVar('T', int, str)
-    def func9(a: T, b: T): 
-        print(a, b)
-    # this will complain since we have mixed types
-    func9(1, "sr")
-
-def test_signature():
-    '''
-    1. sig.bind_partial(values / types to bind to each arg in func). 
-        - return OrderedDict
-        - Allows partially binding a func. sig.bind does not support this
-    2. sig.parameters: stores function's original signature. 
-    '''
-    from inspect import signature
-    def func(a, b: float):
-        return a + b
-    sig = signature(func) 
-    print(sig.parameters)
-    # see a <class 'inspect._empty'> POSITIONAL_OR_KEYWORD
-    # does not change after defining bound_types
-    print(sig.parameters["a"].name, sig.parameters["a"].default, sig.parameters["a"].kind)
-
-    # OrderedDict([('a', <class 'int'>), ('b', 12)])
-    bound_types = sig.bind_partial(int,b=12).arguments
-    print(bound_types)
-    # see 'int'
-    print(bound_types["a"])
 
 ###############################################################################
 ### Closure, Nested Functions, decorator
@@ -442,6 +445,30 @@ def test_function_frame():
     print("getframe(1): ", sys._getframe(1).f_locals)
     # print("getframe(2): ", sys._getframe(2).f_locals)
 
+def test_bound_class_method():
+    '''
+    1. Everybody knows that self (instance) needs to be bound to a class method. How?
+    2. Function itself is also a descriptor, with __get__(self, instance, owner_cls)
+        - This is the secret sauce that binds the function to a class
+    3. 
+    '''
+    # 1
+    class Foo(object):
+        def f(self):
+            pass
+    # see unbound method
+    print(Foo.__dict__["f"])
+    # see unbound method
+    print(Foo.f)
+    # see bound method
+    print(Foo().f)
+
+    import types
+    def bar(self):
+        pass
+    bound_bar = types.MethodType(bar, Foo())
+    print("bound_bar: ", bound_bar)
+
 if __name__ == "__main__": 
     # get_current_funcs_info()
     # test_closure_as_class()
@@ -449,7 +476,7 @@ if __name__ == "__main__":
     # test_scope()
     # test_optional_arg()
     # test_type_hints()
-    test_signature()
+    # test_signature()
     # kwargs_test()
     # test_class_decorator()
     # test_default_arg()
@@ -458,3 +485,5 @@ if __name__ == "__main__":
     # test_control_flow()
     # test_closure_func()
     # test_function_frame()
+
+    test_bound_class_method()
