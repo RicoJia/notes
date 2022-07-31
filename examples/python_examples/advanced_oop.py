@@ -431,13 +431,17 @@ def test_property_implemented_as_descriptor():
         def __init__(self, func) -> None:
             # put metadata of func in self.__wrapped__
             wraps(func)(self)
-            print("init")
         def __call__(self, *args: Any, **kwargs: Any) -> Any:
-            print("call, wrapped: ", self.__wrapped__)
             return self.__wrapped__(*args, **kwargs)
         def __get__(self, instance, owner_cls) :
+            # __get__ binds the FooDescriptor instance (which is callable) to a class instance.
+            # gets called when you call the decorated method
+            # self is FooDescriptor instance. instance is Baz instance
             print("self: ", self, " instance: ", instance)
-            return self
+            if instance is None:
+                return self
+            else:
+                return types.MethodType(self, instance)
     # 1
     @FooDescriptor
     def bar(a,b):
@@ -446,10 +450,20 @@ def test_property_implemented_as_descriptor():
 
     # 2 
     class Baz:
+        # class method does not call __get__
+        @classmethod
         @FooDescriptor
         def baz(self, a, b):
             return a 
-    Baz().baz(1,2)
+        @FooDescriptor
+        def baz1(self, a, b):
+            return a 
+        @FooDescriptor
+        def baz2(self, a, b):
+            return a 
+    print("instance function 1: ", Baz().baz1(1, 2)) 
+    print("instance function 2: ", Baz().baz2(1, 2)) 
+    print("class method: ", Baz.baz(1,2))
 
 def test_property_change():
     """
@@ -732,6 +746,6 @@ if __name__ == "__main__":
 
     # test_decorator()
     # test_decorator_deep_dive() 
-    test_descriptor()
-    # test_property_implemented_as_descriptor()
+    # test_descriptor()
+    test_property_implemented_as_descriptor()
     
