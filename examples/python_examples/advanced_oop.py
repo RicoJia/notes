@@ -289,7 +289,7 @@ def test_descriptor():
     3. Can be used to 
          - avoid duplicating properties
          - Enforce types
-         - Foundation for property, classmethods, staticmethods, and larger libs
+         - Foundation for decorators, property, classmethods, staticmethods, __slots__, 
             - Only works on per-class basis
     """
     # 1, 2
@@ -326,54 +326,9 @@ def test_descriptor():
     f = Foo()
     # # Foo.i.__set__(f, 22)
     f.i 
+    # instance will be passed in as None, since it's accessed on class level
+    Foo.i
 
-    # try:
-    #     f.i = 23.3
-    # except TypeError:
-    #     pass
-    # print("equivalent to: ")
-    # print("Int.__get__() will return the int: ", f.i)
-    # Foo.i.__set__(f, 22)
-    # print(f.i)    
-
-def test_lazy_attr():
-    """u
-    1. Descriptors can be used as LAZY ATTRIBUTES.
-        - ONE THING TO NOTE: you must NOT have __set__(), __delete__(). These will make the binding stronger
-    """
-    class LazyAttr(object):
-        def __init__(self, func):
-            self.__func = func
-        def __get__(self, instance, cls):
-            if not instance:
-                # when we have class variable
-                return self
-            else:
-                # store value to the instance under the same name as the func.
-                # Without storing, the object will have to call this function again.
-                value = self.__func(instance)
-                setattr(instance, self.__func.__name__,value)
-                #TODO
-                print(f"1: ", value, "func name:", self.__func.__name__)
-                return value
-        # def __set__(self, instance, value):
-        #     pass
-        # def __delete__(self, instance):
-        #     pass
-        
-    import numpy as np
-    class Circle:
-        def __init__(self, radius) -> None:
-            self.radius = radius
-        @LazyAttr
-        def circumference(self):
-            print("calculating Circumference")
-            return 2 * np.pi * self.radius
-    
-    c = Circle(2.3)
-    print("Circumference:", c.circumference, "vars: ", vars(c))
-    print("Circumference:", c.circumference)
-    
 def test_type_check_descriptor():
 
     # Used to check if an object's attributes are of expected types
@@ -417,6 +372,44 @@ def test_type_check_descriptor():
     except:
         pass
     print("Foo: ", Foo.__dict__)
+
+def test_lazy_attr():
+    """u
+    1. Descriptors can be used as LAZY ATTRIBUTES.
+        - ONE THING TO NOTE: you must NOT have __set__(), __delete__(). These will make the binding stronger
+    """
+    class LazyAttr(object):
+        def __init__(self, func):
+            self.__func = func
+        def __get__(self, instance, cls):
+            if not instance:
+                # when we have class variable
+                return self
+            else:
+                # store value to the instance under the same name as the func.
+                # Without storing, the object will have to call this function again.
+                value = self.__func(instance)
+                setattr(instance, self.__func.__name__,value)
+                #TODO
+                print(f"1: ", value, "func name:", self.__func.__name__)
+                return value
+        # def __set__(self, instance, value):
+        #     pass
+        # def __delete__(self, instance):
+        #     pass
+        
+    import numpy as np
+    class Circle:
+        def __init__(self, radius) -> None:
+            self.radius = radius
+        @LazyAttr
+        def circumference(self):
+            print("calculating Circumference")
+            return 2 * np.pi * self.radius
+    
+    c = Circle(2.3)
+    print("Circumference:", c.circumference, "vars: ", vars(c))
+    print("Circumference:", c.circumference)
     
 def test_property_implemented_as_descriptor():
     '''
@@ -435,13 +428,17 @@ def test_property_implemented_as_descriptor():
             return self.__wrapped__(*args, **kwargs)
         def __get__(self, instance, owner_cls) :
             # __get__ binds the FooDescriptor instance (which is callable) to a class instance.
-            # gets called when you call the decorated method
+            # gets called every time you call the decorated method
             # self is FooDescriptor instance. instance is Baz instance
             print("self: ", self, " instance: ", instance)
             if instance is None:
                 return self
             else:
-                return types.MethodType(self, instance)
+                # return types.MethodType(self, instance)
+                # or 
+                def new_func(*args, **kwargs):
+                    return self.__wrapped__(instance, *args, **kwargs)
+                return new_func
     # 1
     @FooDescriptor
     def bar(a,b):
@@ -464,6 +461,36 @@ def test_property_implemented_as_descriptor():
     print("instance function 1: ", Baz().baz1(1, 2)) 
     print("instance function 2: ", Baz().baz2(1, 2)) 
     print("class method: ", Baz.baz(1,2))
+
+def test_class_method_implementation():
+    class ClassMethod(object):
+        '''
+        1. Why this prohibits a standalone function:
+            - decorated single funciton needs __call__  here
+        2. Why this doesn't work on an instance function?
+            - Because it binds the class, not the instance to the function
+        3. Why does this work on class method, see above
+        '''
+        def __init__(self, f):
+            self.f = f
+        def __call__(self, *args, **kwargs):
+            return self.f(*args, **kwargs)
+        def __get__(self, obj, klass=None):
+            print("get__")
+            print(klass)
+            if klass is None:
+                klass = type(obj)
+            def newfunc(*args):
+                print(self.f, "self: ", self)
+                return self.f(klass, *args)
+            return newfunc
+    class Foo:
+        i = 1
+        @ClassMethod
+        def f(cls):
+            print(cls)
+
+    Foo.f()
 
 def test_property_change():
     """
@@ -746,6 +773,6 @@ if __name__ == "__main__":
 
     # test_decorator()
     # test_decorator_deep_dive() 
-    # test_descriptor()
-    test_property_implemented_as_descriptor()
+    test_descriptor()
+    # test_property_implemented_as_descriptor()
     
