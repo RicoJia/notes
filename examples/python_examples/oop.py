@@ -303,36 +303,42 @@ def test_get_attribute():
     """
     1. When you call a member in class A, you call A.__getattribute__() as well. So you might get recursion error
     2. the calling with super().__getattribute__() will access the proper attribute, because of MRO
-    3. vs __getattr__: __getattr__ is called if no attribute is found, otherwise won't be called. So it can be used to "mute" AttributeError. But __getattribute__ will raise the error
-        - __getattribute__() will be called first if both present
+    3. __getattribute__ vs __getattr__: 
+        - __getattribute__ is called first, if attr not found, will try calling __getattr__. 
+        - If __getattr__ is not defined, will raise the error.  So it can be used to "mute" AttributeError. 
     """
     class Foo: 
         def __init__(self): 
             self.dummy = 100
+        def __getattr__(self, attr_name):
+            print(f"attr name: {attr_name}")
+            return super().__getattr__(attr_name)
+
         def __getattribute__(self, attr_name):
             """
             s is a string.
             """
-            print ("1")
+            print ("__getattribute__")
             # calling this directly = recursion
             # self.dummy
             # call with super() instead, which is equivalent to self.dummy with no ambiguity
-            print(super().__getattribute__(attr_name))
+            # print(super().__getattribute__(attr_name))
+            return super().__getattribute__(attr_name)
     f = Foo()
-    f.dummy
-    try:
-        f.notexistit
-    except AttributeError:
-        print("__getattribute__ will raise AttributeError")
+    print(f.dummy)
+    # try:
+    #     f.notexistit
+    # except AttributeError:
+    #     print("__getattribute__ will raise AttributeError")
 
-    class Baz:
-        b = 1
-        def __getattr__(self, attr_name):
-            print(f"attr name: {attr_name}")
+    # class Baz:
+    #     b = 1
+    #     def __getattr__(self, attr_name):
+    #         print(f"attr name: {attr_name}")
 
-    baz = Baz()
-    baz.b
-    baz.b_notexist
+    # baz = Baz()
+    # baz.b
+    # baz.b_notexist
 
 def test_hasattr():
     """
@@ -510,4 +516,6 @@ if __name__ == "__main__":
     # test_garbage_collect()
     # test_comparison()
     # test_call() 
-    test_decorator_in_class()
+    # test_decorator_in_class()
+
+    test_get_attribute()
