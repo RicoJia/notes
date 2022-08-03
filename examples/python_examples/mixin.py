@@ -16,7 +16,7 @@ def test_type():
     f = Foo()
     print(type(f), type(Foo))
 
-    # 2
+    # 2 - You are creating a class here
     def fn(self):
         pass
     Foo_equivalent = type('Foo', (object,), dict(foo=fn))
@@ -27,10 +27,16 @@ def test_type():
 def test_metaclass():
     """
     1. Except for type(), you can create a class using metaclass, i.e., a class is an instantiation of a class
-        - __new__ is called with attributes passed in. Here it assembles things together.
+        - https://lotabout.me/2018/Understanding-Python-MetaClass/
+        - How a class is created:
+            1. 找 metaclass
+            2. Prepare namespace (the __dict__)
+            3. execute body of the class definition, store methods into __dict__
+            4.  call __new__ in the metaclass. Then, this class is defined 
+            4.  call __init__ to finalize the class.
+
     2. Mix-in class: in MyList, list is a mix-in 
-        - Mix-in technically cannot be instantiated. Its functions will 
-        be inherited. 
+        - Mix-in technically cannot be instantiated. Its functions will be inherited. 
         - Multiple Mix-ins can be used so this relies on Python's multi-inherited 
     """
     # have Metaclass at the end of the name by convention
@@ -39,18 +45,34 @@ def test_metaclass():
         def __new__(cls, class_name, bases, attrs):
             attrs['add'] = lambda self, x: self.append(x)
             #TODO 
-            print(f"attrs:", attrs)
+            print(f"new: attrs:", attrs)
             # here sometimes you will see super() as well
             return type.__new__(cls, class_name, bases, attrs)
+
+        def __init__(cls, name, bases, namespace, **kwargs) -> None:
+            # super().__init__(name, bases, namespace, **kwargs)
+            print("meta class init, called as last step to create a class")
+
+        def __call__(cls, *args, **kwargs):
+            # return an instance
+            instance = type.__call__(cls, *args, **kwargs)
+            print("metaclass call", " instance: ", instance, *args, **kwargs, )
+            return instance
 
     # with metaclass, the magic happens
     # Meanwhile, you need to inherit from the list class
     class MyList(list, metaclass=ListMetaclass):
+        def __init__(self, a = 1):
+            print("regular class init")
         def foo(self):
             pass
-    l = MyList()
-    l.add(3)
-    print(l)
+        def __new__(cls, *args, **kwargs) :
+            print("instance new")
+            return super().__new__(cls, *args, **kwargs)
+    l = MyList(1)
+    l.foo()
+    # l.add(3)
+    # print(l)
 
 ##############################################################
 ### Metaclass Applications
@@ -348,4 +370,5 @@ def test_decorator_replacing_mixin():
         print("This is how to use decorator to add __set__ to a descriptor")
 
 if __name__ == "__main__":
-    test_mixin()
+    test_metaclass()
+    # test_mixin()
