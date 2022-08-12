@@ -30,10 +30,12 @@ def test_metaclass():
         - https://lotabout.me/2018/Understanding-Python-MetaClass/
         - How a class is created:
             1. 找 metaclass
-            2. Prepare namespace (the __dict__)
+            2. call meta.__prepare__ to prepare namespace (the __dict__)
+                - must return a dict, but can be used to store order of attributes by returning a OrderedDict  
             3. execute body of the class definition, store methods into __dict__
             4.  call meta.__new__ in the metaclass. (cls is type) since we're initializing the class
             5.  call meta.__init__ to finalize the class. (cls is meta already)
+                - Just used to wrap up class creation. Either __new__ or __init__.
             6*  call class A.__new__
             7*  call class A.__init__
             7*  call meta.__call__ (cls is class A, type.__call__() returns class A object)
@@ -43,8 +45,14 @@ def test_metaclass():
         - Multiple Mix-ins can be used so this relies on Python's multi-inherited 
     """
     # have Metaclass at the end of the name by convention
+    from collections import OrderedDict
     class ListMetaclass(type):
         # so you can add another attribute to a class. At the end, return the class using type
+        @classmethod
+        def __prepare__ (cls, clsname, bases):
+            print(f"prepare: {cls}, {clsname}")
+            return OrderedDict()
+            
         def __new__(cls, class_name, bases, attrs):
             attrs['add'] = lambda self, x: self.append(x)
             #TODO 

@@ -179,6 +179,7 @@ def dictionary_basics():
     4. merging 2 dicts
     5. Sort dictionary by value (ascending order) and return items in a list
         - items() seems like a tuple object, that's why you can use x[1] for accessing them
+    6. create dict using zip
     """
 
     # 1
@@ -215,7 +216,12 @@ def dictionary_basics():
     sorted_items = sorted(dic.items())
     print("descending by key, default key: ", sorted_items)
     sorted_items = sorted(dic.items(), reversed=True, key=lambda x:x[1])
-    print("ascending: ", sorted_items)
+    print("asocending: ", sorted_items)
+
+    # 6 
+    l1 = [1,2,3]
+    l2 = [3,4,5]
+    dict(zip(l1, l2))
 
 def test_dict_less_known_features(): 
     """
