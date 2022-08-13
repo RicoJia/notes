@@ -235,7 +235,26 @@ def test_walrus_operator():
     walrut = 3
     # shows 4
     print(walrut := 4)
-    
+
+def test_strip():
+    """
+    1. take out the outermost characters in strip(str)
+    """
+    txt = ",,,,,rrttgg.....banana....rrr" 
+    x = txt.strip(",.r")
+    print(x)
+
+def test_pathlib2():
+    """
+    1. pathlib2 is nice for managing parent, etc.
+    """
+    from pathlib2 import Path
+    import os
+    print(Path.cwd().parent.parent)
+    slab_path = Path.cwd() / "slab"
+    print(slab_path)
+    str(slab_path)
+
 if __name__=="__main__":
     # test_warning()
     # test_math()
