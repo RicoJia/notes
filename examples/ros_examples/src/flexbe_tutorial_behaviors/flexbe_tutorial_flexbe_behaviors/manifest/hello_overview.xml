@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="hello_overview">
+
+	<executable package_path="flexbe_tutorial_flexbe_behaviors.hello_overview_sm" class="hello_overviewSM" />
+	<tagstring></tagstring>
+	<author>RJ</author>
+	<date>Sun Aug 14 2022</date>
+	<description>
+		Test disc
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="wait_time" default="1" label="wait_time" hint="Sets the wait_time">
+			<min value="1" />
+			<max value="3" />
+		</param>
+
+	</params>
+
+
+</behavior>
