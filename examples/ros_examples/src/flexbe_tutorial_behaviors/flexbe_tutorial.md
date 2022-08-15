@@ -9,12 +9,11 @@
     - Auto complete and search 
     - How did it know which states are available?
 3. states
-    - we're overriding EventState class, one class per file.
-    - execute is executed 10hz by defaul
+    - we're overriding EventState class, one state per file.
+    - execute is executed 10hz by default
     - userdata: input, and output [example](https://github.com/RicoJia/notes/blob/master/examples/ros_examples/src/flexbe_tutorial_behaviors/flexbe_tutorial_flexbe_states/src/flexbe_tutorial_flexbe_states/example_state.py)
-        - Input of a state can come from either the state machine, when we pass information in, or from the previous state  
-        - One caveat is that you cannot change the inputs of the system, only output. 
-
+        - Input of a state can come from either the state machine, when we pass information in, or from the previous state (```userdata```) 
+        - One caveat is that you cannot change the inputs of the system, this might be an issue for reusing the state class.
         
     -**state transition: ** [link](http://wiki.ros.org/flexbe/Tutorials/The%20State%20Lifecycle)
 
