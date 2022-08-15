@@ -10,6 +10,7 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from flexbe_states.log_state import LogState
 from flexbe_tutorial_flexbe_states.example_state import ExampleState
+from flexbe_tutorial_flexbe_states.example_state2 import ExampleState2
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -60,15 +61,22 @@ class hello_overviewSM(Behavior):
 			# x:107 y:26
 			OperatableStateMachine.add('Wait',
 										ExampleState(target_time=self.wait_time),
-										transitions={'continue': 'print_greeting', 'failed': 'print_greeting'},
+										transitions={'continue': 'wait2', 'failed': 'wait2'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'hello_world_msg': 'hello_world_msg'})
+										remapping={'hello_world_msg': 'hello_world_msg', 'test_output': 'test_output', 'hello_world_msg2': 'hello_world_msg2'})
 
 			# x:107 y:176
 			OperatableStateMachine.add('print_greeting',
 										LogState(text=hello, severity=Logger.REPORT_HINT),
 										transitions={'done': 'finished'},
 										autonomy={'done': Autonomy.High})
+
+			# x:375 y:31
+			OperatableStateMachine.add('wait2',
+										ExampleState2(target_time=self.wait_time),
+										transitions={'continue': 'print_greeting', 'failed': 'print_greeting'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'hello_world_msg2': 'hello_world_msg2', 'test_output': 'test_output'})
 
 
 		return _state_machine
