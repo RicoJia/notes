@@ -38,7 +38,9 @@ class ExampleActionState(EventState):
 		# and will trigger a timeout error if it is not available.
 		# Using the proxy client provides asynchronous access to the result and status
 		# and makes sure only one client is used, no matter how often this state is used in a behavior.
+
 		self._topic = 'do_dishes'
+		# add topic, type, same as instantiating an action client
 		self._client = ProxyActionClient({self._topic: DoDishesAction}) # pass required clients as dict (topic: type)
 
 		# It may happen that the action client fails to send the action goal.
@@ -52,7 +54,7 @@ class ExampleActionState(EventState):
 		if self._error:
 			return 'command_error'
 
-		# Check if the action has been finished
+		# Check if the action has been finished, MUST specify which topic you're using 
 		if self._client.has_result(self._topic):
 			result = self._client.get_result(self._topic)
 			dishes_cleaned = result.total_dishes_cleaned

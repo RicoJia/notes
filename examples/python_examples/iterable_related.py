@@ -422,6 +422,7 @@ def list_basics():
         - extend can work with non-local variables, while += can only work with locals
         - append is used to add another element in. +=, extend doesn't do those
     6. slice is a great object to hold list indices, which is to be used over and over
+    7. reduce can be used to merge lists, get sum
     """
     # 1
     ls = [1, None]
@@ -479,6 +480,11 @@ def list_basics():
     b_slice = slice(1,3)
     print("alisce: ", items[a_slice])
     print("blice: ", items[b_slice])
+    
+    # 7 
+    ls = [[1,2,3], [4,5,6]]
+    from functools import reduce
+    reduce(lambda x, y : x + y, ls)
 
 def useful_list_features(): 
     """
