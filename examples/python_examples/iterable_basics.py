@@ -120,7 +120,7 @@ def generateor_uses():
 
 def test_yield_from(): 
     """
-    1. yield from => (python 3.3)
+    1. yield from => (python 3.3): it's to build a transparent bi-directional connection between the caller and the sub-generator
         for i in generator_func_yielded_from: 
           yield i
         - do not put this in your main function, else your main function will become a generator function, and needs to be called next on!
@@ -136,6 +136,8 @@ def test_yield_from():
             print("test i: ", i)
             yield i
             i+=1
+        print("This will be executed after the yield")
+
     def yield_from_func(n): 
         print("Start: ")
         j = yield from test(n)
