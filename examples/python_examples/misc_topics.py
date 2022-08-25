@@ -233,8 +233,8 @@ def test_walrus_operator():
     Assign param to a value. Do not work with (), [] in list(), dict[]
     """
     walrut = 3
-    # shows 4
-    print(walrut := 4)
+    # shows 4, python 3.8+
+    # print(walrut := 4)
 
 def test_strip():
     """
@@ -255,6 +255,10 @@ def test_pathlib2():
     print(slab_path)
     str(slab_path)
 
+def test_uuid():
+    import uuid 
+    print(uuid.uuid4())
+
 if __name__=="__main__":
     # test_warning()
     # test_math()
@@ -267,4 +271,5 @@ if __name__=="__main__":
     # test_div()
     # test_lru_cache_optimization()
     # test_memory_leak()
-    test_walrus_operator()
+    # test_walrus_operator()
+    test_uuid()
