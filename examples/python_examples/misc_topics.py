@@ -236,6 +236,13 @@ def test_walrus_operator():
     # shows 4, python 3.8+
     # print(walrut := 4)
 
+def test_color_printing():
+    RED = "\033[0;31m"
+    GREEN = "\033[0;32m"
+    GOLD = "\033[0;33m"
+    BOLD = "\033[1m"
+    print(f"{RED} This is red, {GREEN} this is green, {GOLD}{BOLD} this is bold GOLD")
+
 def test_strip():
     """
     1. take out the outermost characters in strip(str)
@@ -272,4 +279,5 @@ if __name__=="__main__":
     # test_lru_cache_optimization()
     # test_memory_leak()
     # test_walrus_operator()
-    test_uuid()
+    # test_uuid()
+    test_color_printing()
