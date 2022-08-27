@@ -237,6 +237,9 @@ def test_walrus_operator():
     # print(walrut := 4)
 
 def test_color_printing():
+    """
+    Ref: https://gist.github.com/rene-d/9e584a7dd2935d0f461904b9f2950007
+    """
     RED = "\033[0;31m"
     GREEN = "\033[0;32m"
     GOLD = "\033[0;33m"
