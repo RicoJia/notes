@@ -185,6 +185,28 @@ def test_signature():
     # see 'int'
     print(bound_types["a"])
 
+def test_3_level_function_signature():
+    def foo(var1, var2:str, var3:int = 99):
+        import inspect
+        sig = inspect.signature(foo)
+        configs = {}
+        default_params = {}
+        actual_params = {}
+        for param in sig.parameters.values():
+            # we are safe to use eval because we don't have any out-of-scope variables that override param.name
+            if param.default is param.empty:
+                default_params[param.name] = None
+            else:
+                default_params[param.name] = param.default
+            if eval(param.name) != default_params[param.name]:
+                actual_params[param.name] = eval(param.name)
+        # Now we have a dictionary of configs: overriding order is:
+        # user-specified args > config_yaml > default_args
+        configs = {}
+        configs.update(default_params)
+        configs.update(actual_params)
+        print("configs: ",configs, "default params: ", default_params, "actual params: ", actual_params)
+    foo(1,"haha")
 ###############################################################################
 ### Type Hints
 ###############################################################################
@@ -477,6 +499,7 @@ if __name__ == "__main__":
     # test_optional_arg()
     # test_type_hints()
     # test_signature()
+    test_3_level_function_signature()
     # kwargs_test()
     # test_class_decorator()
     # test_default_arg()
@@ -486,4 +509,4 @@ if __name__ == "__main__":
     # test_closure_func()
     # test_function_frame()
 
-    test_bound_class_method()
+    # test_bound_class_method()
