@@ -44,6 +44,8 @@ def test_string():
 
     print(f"{12.456:10.1f}")    # 10 will add blanks
 
+    print("SoMe StrinG".lower())
+
 def test_matching (): 
     """
     1. you can search for strings that starts with one of the following. But you need tuple
@@ -239,8 +241,8 @@ def test_type_cast():
     print(int(f), float(f), str(f))
 
 if __name__=="__main__":
-    # test_string()
-    test_type_cast()
+    test_string()
+    # test_type_cast()
     # test_matching()
     # test_queue()
     # test_deque()
