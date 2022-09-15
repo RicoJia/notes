@@ -47,6 +47,8 @@ def test_unpack():
     3. Star unpacking: just no more than 1 *. Good for known patterns
         - Everything comes out * is in a list.
         - use _ to ignore, or ign
+    4. Singleton tuple 
+    5. unpack map object
     """
     a,b,c,d = "1234"
     print(a)
@@ -80,6 +82,13 @@ def test_unpack():
     line = 'nobody:*:-2:-2:Unprivileged User:/var/empty:/usr/bin/false'
     uname, * fields, homedir, ign = line.split(':')
     print(homedir)
+
+    # for singleton tuple, use a trailing comma:
+    x, = (1,2)
+    print("singleton tuple: ", x)
+
+    # Unpack map obj (applies the function on everything in the list)
+    x,y,z = map(lambda x: x+1, [1,2,3]) 
 
 def test_permutations():
     """

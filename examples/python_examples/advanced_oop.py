@@ -484,13 +484,17 @@ def test_class_method_implementation():
                 print(self.f, "self: ", self)
                 return self.f(klass, *args)
             return newfunc
+
     class Foo:
         i = 1
+        def __init__(self, f):
+            self.f = f
         @ClassMethod
         def f(cls):
             print(cls)
+            return cls("some_f for creating an instance")
 
-    Foo.f()
+    some_f = Foo.f()
 
 def test_property_change():
     """
@@ -773,6 +777,7 @@ if __name__ == "__main__":
 
     # test_decorator()
     # test_decorator_deep_dive() 
-    test_descriptor()
+    # test_descriptor()
     # test_property_implemented_as_descriptor()
+    test_class_method_implementation()
     

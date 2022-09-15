@@ -47,6 +47,21 @@ def test_math():
     print("number of bytes of byte string: ", len(data))
     print("from bytes, little", int.from_bytes(data, "little"))
 
+def test_try_except():
+    """
+    1. try, except, else (if try succeeds), finally (will be executed anyway)
+    """
+    try: 
+        print("try")
+    except:
+        #TODO 
+        print(f"except")
+    else:
+        print("except")
+    finally:
+        #TODO 
+        print(f"finally")
+
 def test_more_math(): 
     """
     1. math.isinf(), int/inf = 0; inf/inf=nan; inf-inf = nan
@@ -269,6 +284,11 @@ def test_uuid():
     import uuid 
     print(uuid.uuid4())
 
+def empty_func():
+    """
+    Doc string, saved in __doc__, is a function level constant
+    """
+
 def small_tricks():
     """
     1. [1,4,2] ->[(0, 1), (1, 4), (2, 2)]
@@ -439,4 +459,6 @@ if __name__=="__main__":
 
     # small_tricks()
     # tab_complete()
-    line_buffer_tab_complete()
+    # line_buffer_tab_complete()
+
+    test_try_except()
