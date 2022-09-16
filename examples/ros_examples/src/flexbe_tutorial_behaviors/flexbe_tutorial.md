@@ -65,3 +65,7 @@
 4. Make an actionserver that synthesizes states. Flexbe can have a gui that passes in a message. [link](http://wiki.ros.org/flexbe/Tutorials/Behavior%20Synthesis%20Interface)
     - Do this when you create the state machine
     - for action result, send `StateInstantiation` back
+
+## Quirks:
+1. configure your editor to use tabs only, Python will get angry at spaces 
+2. When you load behavior, changes in behavior will update, but states are not

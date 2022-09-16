@@ -35,7 +35,8 @@ class ExampleState3(EventState):
 		# Otherwise this method is called periodically (10hz) while the state is active.  
 		# print("haha", userdata["hello_world_msg3"])
 		userdata["test_output"] = 12345
-		self.persistent_member()
+		self.persistent_member
+		print("HAHAHAH")
 		if rospy.Time.now() - self._start_time > self._target_time:
 			return 'continue' # One of the outcomes declared above.
 		
