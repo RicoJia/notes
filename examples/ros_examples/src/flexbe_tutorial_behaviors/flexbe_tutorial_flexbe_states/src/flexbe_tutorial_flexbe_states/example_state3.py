@@ -16,13 +16,14 @@ class ExampleState3(EventState):
 
 	'''
 
-	def __init__(self, target_time):
+	def __init__(self, target_time, persistent_member):
+
 		# Declare outcomes, input_keys, and output_keys by calling the super constructor with the corresponding arguments.
 		super(ExampleState3, self).__init__(outcomes = ['continue', 'failed'], input_keys=["hello_world_msg3", "dummy_input"], output_keys=["test_output"])
 
 		# Store state parameter for later use.
-		self._target_time = rospy.Duration(target_time)
-
+		self._target_time = rospy.Duration(target_time) 
+		self.persistent_member = persistent_member 
 		# The constructor is called when building the state machine, not when actually starting the behavior.
 		# Thus, we cannot save the starting time now and will do so later.
 		self._start_time = None
@@ -32,9 +33,9 @@ class ExampleState3(EventState):
 		# Main purpose is to check state conditions and trigger a corresponding outcome.
 		# If no outcome is returned, the state will stay active.
 		# Otherwise this method is called periodically (10hz) while the state is active.  
-		print("userdata: ", userdata)
-		print("haha", userdata["hello_world_msg3"])
+		# print("haha", userdata["hello_world_msg3"])
 		userdata["test_output"] = 12345
+		self.persistent_member()
 		if rospy.Time.now() - self._start_time > self._target_time:
 			return 'continue' # One of the outcomes declared above.
 		

@@ -11,6 +11,7 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from flexbe_states.log_state import LogState
 from flexbe_tutorial_flexbe_states.example_state import ExampleState
 from flexbe_tutorial_flexbe_states.example_state2 import ExampleState2
+from flexbe_tutorial_flexbe_states.example_state3 import ExampleState3
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -33,6 +34,7 @@ class hello_overviewSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('wait_time', 1)
+		self.persistent_member = "hello im persistent"
 
 		# references to used behaviors
 
@@ -44,6 +46,8 @@ class hello_overviewSM(Behavior):
 		# Behavior comments:
 
 
+	def print_persistent_member(self):
+		print(self.persistent_member)
 
 	def create(self):
 		hello = "Hello World"
@@ -65,6 +69,14 @@ class hello_overviewSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'hello_world_msg': 'hello_world_msg', 'test_output': 'test_output', 'hello_world_msg2': 'hello_world_msg2'})
 
+			# x:377 y:157
+			# Note that you can pass in a memeber of the state machine into multiple states. So you can share information across states
+			OperatableStateMachine.add('example3',
+										ExampleState3(target_time=0.4, persistent_member=self.print_persistent_member),
+										transitions={'continue': 'print_greeting', 'failed': 'print_greeting'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'hello_world_msg3': 'hello_world_msg', 'dummy_input': 'hello_world_msg2', 'test_output': 'test_output'})
+
 			# x:107 y:176
 			OperatableStateMachine.add('print_greeting',
 										LogState(text=hello, severity=Logger.REPORT_HINT),
@@ -74,7 +86,7 @@ class hello_overviewSM(Behavior):
 			# x:375 y:31
 			OperatableStateMachine.add('wait2',
 										ExampleState2(target_time=self.wait_time),
-										transitions={'continue': 'print_greeting', 'failed': 'print_greeting'},
+										transitions={'continue': 'example3', 'failed': 'print_greeting'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'hello_world_msg2': 'hello_world_msg2', 'test_output': 'test_output'})
 
