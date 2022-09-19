@@ -20,6 +20,7 @@ def np_basics1():
     print("everything * 3: ", arr * 3)
     print("everything sqrt: ", np.sqrt(arr))
     print("everything sin: ", np.sin(arr))
+    print("everything rounded to the nearest int: ", np.rint(arr))
 
     # 2
     print("region [0:3,2] + 3: ", arr[0:3, 2] + 3, ", you just see the affected region right")

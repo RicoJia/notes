@@ -140,6 +140,7 @@ def test_slots():
         - saves a lot of memory
         - list's get and set uses only O(1), so they're faster
     2. sys.getsizeof(obj) is how you can see the size of it, but it will ignore referenced object such as self.__dict__
+    3. You can directly print all attrs in a slot class, but not and their values
     """
     class Foo:
         __slots__=["name", "grade", "f1", "f2"]
@@ -151,6 +152,16 @@ def test_slots():
             # self.dum = 1
 
     f = Foo("1", 2)
+
+    # 3
+    
+    print("you can see member names in a slot class: ", f.__slots__)
+    print("But you need getattr to see each member's value")
+    def print_slot_class_members(a):
+        print("====")
+        for attr in a.__slots__:
+            print(attr, ": ", getattr(a, attr))
+    print_slot_class_members(f)
 
 def test_abc():
     """
@@ -518,4 +529,5 @@ if __name__ == "__main__":
     # test_call() 
     # test_decorator_in_class()
 
-    test_get_attribute()
+    test_slots()
+    # test_get_attribute()
