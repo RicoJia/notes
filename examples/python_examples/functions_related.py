@@ -307,6 +307,18 @@ def test_type_hints():
     # this will complain since we have mixed types
     func9(1, "sr")
 
+def test_type_hints_quirks():
+    """
+    1. If you have a function taking in itself as an argument, you need '' for type hint.
+    """
+    class Foo:
+        def __eq__(self, other: 'Foo'):
+            return True
+
+    f =Foo()
+    g = Foo()
+    print(f==g)
+
 ###############################################################################
 ### Misc
 ###############################################################################
@@ -498,8 +510,9 @@ if __name__ == "__main__":
     # test_scope()
     # test_optional_arg()
     # test_type_hints()
+    test_type_hints_quirks()
     # test_signature()
-    test_3_level_function_signature()
+    # test_3_level_function_signature()
     # kwargs_test()
     # test_class_decorator()
     # test_default_arg()

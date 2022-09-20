@@ -432,6 +432,9 @@ def list_basics():
         - append is used to add another element in. +=, extend doesn't do those
     6. slice is a great object to hold list indices, which is to be used over and over
     7. reduce can be used to merge lists, get sum
+    8. list.remove(object), will pop up error msg for not in list. 
+        - will remove all object instances
+        - requires object == object is true
     """
     # 1
     ls = [1, None]
@@ -494,6 +497,18 @@ def list_basics():
     ls = [[1,2,3], [4,5,6]]
     from functools import reduce
     reduce(lambda x, y : x + y, ls)
+
+    #8 need to define __eq__ for remove
+    class Foo:
+        __slots__ = ["a", "b"]
+        def __init__(self, a, b):
+            self.a = a
+            self.b = b
+        def __eq__(self, other) -> bool:
+            return self.a == other.a and self.b == other.b
+
+    li= [Foo(1,2), Foo(3,4), Foo(5,6), Foo(7,8)]
+    li.remove(Foo(1,2))
 
 def useful_list_features(): 
     """

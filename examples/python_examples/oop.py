@@ -438,8 +438,9 @@ def test_super():
 
 def test_class_representations(): 
     """
-    1. __repr()__ is when you type obj; __str()__ is print(obj)
+    1. __repr()__ is when you type, print, obj; 
         - type(self).__name__ is how to get name inside a class
+        - __str__() is only for printing obj, so its use cases are covered by __repr__
     2. repr() calls __repr__()
         - eval("Foo") is to run the command as a string
     """
@@ -452,6 +453,7 @@ def test_class_representations():
             return f"str {type(self).__name__, self.__dict__}"
 
     p = Foo(f=1)
+    # just directly print the object
     print("p: ", p)
     print(repr(p))
 
