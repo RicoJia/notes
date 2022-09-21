@@ -131,7 +131,22 @@ def test_decorator_in_class():
     b = Bar()
     b.bar = 3
     print(b.bar)
-                
+
+def test_inserting_to_ordered_dict():
+    def get_ordered_dict_with_items(**kwargs):
+        """This function puts input keyworded args (from left to right) into
+        an ordered dictionary. It is useful for keeping the order of insertion
+        """
+        di = OrderedDict()
+        for key, value in kwargs.items():
+            print(type(value))
+            di[key] = value
+        return di
+
+    di = get_ordered_dict_with_items(item1 = 1, item2 = 2)
+    # see {"item1": 1, "item2": 2}
+    print(di)
+
 def test_slots():
     """
     1. __slots__ makes the class a small list instead of a dictionary. 
