@@ -133,6 +133,7 @@ def test_decorator_in_class():
     print(b.bar)
 
 def test_inserting_to_ordered_dict():
+    from collections import OrderedDict
     def get_ordered_dict_with_items(**kwargs):
         """This function puts input keyworded args (from left to right) into
         an ordered dictionary. It is useful for keeping the order of insertion
@@ -546,5 +547,6 @@ if __name__ == "__main__":
     # test_call() 
     # test_decorator_in_class()
 
-    test_slots()
+    test_inserting_to_ordered_dict()
+    # test_slots()
     # test_get_attribute()

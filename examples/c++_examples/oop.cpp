@@ -25,6 +25,14 @@ private:
     int j_;
 };
 
+struct Base {
+    virtual void reimplementMe(int a) {}
+};
+// Override check - test clang-tidy modern
+struct Derived : public Base  {
+    void reimplementMe(int a) override {}
+};
+
 int main()
 {
     oop o;
