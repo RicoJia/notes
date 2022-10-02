@@ -575,9 +575,9 @@ def test_custom_containers():
     print(list(nmc))
 
 if __name__ == "__main__": 
-    # test_chain()
+    test_chain()
     # test_heapq_merge()
     # test_dict_less_known_features()
     # test_tuples()
     # test_custom_containers()
-    test_comprehensions()
+    # test_comprehensions()
