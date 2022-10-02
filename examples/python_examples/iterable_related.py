@@ -318,7 +318,8 @@ def test_default_dict():
     
 def test_chain_map(): 
     """
-    1. ChainMap keeps a list of keys of multiple dictionaries, and can behave as one. Changes on each dict -> ChainMap; changes on ChainMap -> first dict
+    1. ChainMap keeps a list of keys of multiple dictionaries, and can behave as one, so its main use case is to create a "combined dictionary", but with references only. Those dictionaries will be chained, so one queried item will be searched from the head of the chain first
+    Changes on each dict -> ChainMap; changes on ChainMap -> first dict
         - value from the first dictionary will be returned, if there're repeating keys
         - alternative: update, but that creates a totally new dict
     2. You can add ChainMap, which is useful for variables of different scope. 
@@ -575,7 +576,8 @@ def test_custom_containers():
     print(list(nmc))
 
 if __name__ == "__main__": 
-    test_chain()
+    test_chain_map()
+    # test_chain()
     # test_heapq_merge()
     # test_dict_less_known_features()
     # test_tuples()
