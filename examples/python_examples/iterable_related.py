@@ -139,6 +139,7 @@ def test_named_tuples():
         - https://stackoverflow.com/questions/16377215/how-to-pickle-a-namedtuple-instance-correctly
         - multiprocessing.Queue actually uses this...
     """
+    # collections provides an interface with containers.
     from collections import namedtuple
     Subscriber = namedtuple("some_name", ["addr", "name"])
     sub = Subscriber("123 st", "Jo")
@@ -242,6 +243,8 @@ def test_dict_less_known_features():
     3. Finding commonalities bw two dicts: items-view, keys-view objects support set operations, but not values-view objects pq values can have duplicates. 
         - Make a new dict with certain elements removed 
     4. dictionary.update(), insert items into dictionary
+    5. Subclassing an instance might be a good idea, if we want an object to behave like that container. Do not subclass dict, subclass collections.UserDict. 
+        - subclassing dict will skip your ```__getitem__```
     """
     # 1
     my_array = np.array([1,2,3])
@@ -267,9 +270,19 @@ def test_dict_less_known_features():
     c = {key: my_dict_2[key] for key in my_dict_2.keys() - {"1"}}
     print("certain key removed: ", c)
 
-    # 5
+    # 4-2
     my_dict.update({"lol": "all"})
     print("after update, dict: ", my_dict)
+
+    # 5
+    import collections
+    class MyDict(dict):
+        def __getitem__(self, key):
+            value = super().__getitem__(key)
+            return f"value: {value}"
+    # (works with dict-like objects, chainmap, but not dict)
+    print(isinstance(MyDict(), collections.abc.Mapping) )
+
 
 def test_ordereddict():
     """
@@ -511,6 +524,9 @@ def list_basics():
     li= [Foo(1,2), Foo(3,4), Foo(5,6), Foo(7,8)]
     li.remove(Foo(1,2))
 
+    # 8  ```a in list()```: which uses ```__eq__```.
+
+
 def useful_list_features(): 
     """
     1. compress can be used to filter out list items 
@@ -576,7 +592,8 @@ def test_custom_containers():
     print(list(nmc))
 
 if __name__ == "__main__": 
-    test_chain_map()
+    test_dict_less_known_features()
+    # test_chain_map()
     # test_chain()
     # test_heapq_merge()
     # test_dict_less_known_features()

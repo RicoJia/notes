@@ -283,6 +283,8 @@ def test_class_variable():
         - Python you can add another variable that doesn't exist on the go. So once you change the value for a specific instance, you create the instance's own copy
     2. Need default value
     3. Class itself is a dictionary. Can use this to see class variables
+        - ```Class.__dict__``` shows class variables. ```instance.__dict__``` shows instance vars
+        - looks at instance first, if instance not exist, looks at class space.
     """
     class Foo: 
         var = 1

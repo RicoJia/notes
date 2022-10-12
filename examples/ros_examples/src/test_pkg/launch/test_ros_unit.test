@@ -1,5 +1,5 @@
 <launch>
     <param name="/value" value="2"/>
-    <test test-name="test_params" pkg="tutorial" type="test_params.py" >
+    <test test-name="test_params" pkg="test_pkg" type="test_ros_unit.py" >
     </test>
 </launch>
