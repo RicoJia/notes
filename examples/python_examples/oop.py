@@ -380,7 +380,7 @@ def test_hasattr():
 
 def test_call():
     """
-    __call__() is invoked when f()
+    __call__() is invoked for f when f = Foo(), f().
     """
     class Foo():
         def __init__(self):
