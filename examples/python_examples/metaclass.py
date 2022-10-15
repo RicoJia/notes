@@ -33,13 +33,14 @@ def test_metaclass():
             2. call meta.__prepare__ to prepare namespace (the __dict__)
                 - must return a dict, but can be used to store order of attributes by returning a OrderedDict  
             3. execute body of the class definition, store methods into __dict__
-            4.  call meta.__new__ in the metaclass. (cls is type) since we're initializing the class
-            5.  call meta.__init__ to finalize the class. (cls is meta already)
+            4. Meta's meta's __call__
+            5.  call meta.__new__ in the metaclass. (cls is type) since we're initializing the class
+            6.  call meta.__init__ to finalize the class. (cls is meta already)
                 - Just used to wrap up class creation. Either __new__ or __init__.
-            6*  call class A.__new__
-            7*  call class A.__init__
-            7*  call meta.__call__ (cls is class A, type.__call__() returns class A object)
+            7  call meta.__call__ (cls is class A, type.__call__() returns class A object)
                 - Used to control instance creation of the following class.
+            8  call class A.__new__
+            9  call class A.__init__
     2. Mix-in class: in MyList, list is a mix-in 
         - Mix-in technically cannot be instantiated. Its functions will be inherited. 
         - Multiple Mix-ins can be used so this relies on Python's multi-inherited 
