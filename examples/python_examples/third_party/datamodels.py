@@ -23,5 +23,23 @@ def test_dataclass():
     """
     1. 
     """
+    import datetime as dt
+    from dataclasses import dataclass
+    from marshmallow import Schema, fields
+
+    @dataclass      #class deco: you can basically set the attributes right? What does this do?
+    class Album:
+        title: str
+        release_date: dt.date
+
+    class AlbumSchema(Schema):
+        title = fields.Str()
+        release_date = fields.Date()
+
+    album = Album("Beggars Banquet", dt.date(1968, 12, 6))
+    schema = AlbumSchema()
+    data = schema.dump(album)
+    data  # {'release_date': '1968-12-06', 'title': 'Beggars Banquet'}
+
 if __name__ == "__main__":
     test_basic_pydantic()
