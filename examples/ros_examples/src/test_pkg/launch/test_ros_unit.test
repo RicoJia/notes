@@ -1,4 +1,6 @@
 <launch>
+    <!-- 1. Launch this file with - -text -->
+    <!-- rosparam needs to be loaded again, even though params are already loaded  -->
     <param name="/value" value="2"/>
     <test test-name="test_params" pkg="test_pkg" type="test_ros_unit.py" >
     </test>
