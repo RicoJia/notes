@@ -39,8 +39,8 @@ def test_metaclass():
                 - Just used to wrap up class creation. Either __new__ or __init__.
             7  call meta.__call__ (cls is class A, type.__call__() returns class A object)
                 - Used to control instance creation of the following class.
-            8  call class A.__new__
-            9  call class A.__init__
+            8  call class A.__new__ to create the object
+            9  call class A.__init__ to change values of each attribute.
     2. Mix-in class: in MyList, list is a mix-in 
         - Mix-in technically cannot be instantiated. Its functions will be inherited. 
         - Multiple Mix-ins can be used so this relies on Python's multi-inherited 
