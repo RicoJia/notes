@@ -98,7 +98,12 @@ if __name__ == "__main__":
     rospy.init_node('my_node', log_level=rospy.INFO)
     for i in range(10):
         rospy.loginfo("Rico!" + str(i))
+        # python monotonic, only useful for timing durations since its start is not clear?
+        time.monotonic()
+
         time.sleep(1)
+        # rospy.sleep(n), rate.sleep() are fine with /use_sim_time, since it listens to /clock, which comes from rosbag
+
     while True:
         pass
 

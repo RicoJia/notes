@@ -251,6 +251,12 @@ def test_walrus_operator():
     # shows 4, python 3.8+
     # print(walrut := 4)
 
+def test_templated_str():
+    msg = "abc %d"
+    # note we have a tuple here
+    args = (1,)
+    print(msg % args)
+
 def test_color_printing():
     """
     Ref: https://gist.github.com/rene-d/9e584a7dd2935d0f461904b9f2950007
@@ -461,4 +467,5 @@ if __name__=="__main__":
     # tab_complete()
     # line_buffer_tab_complete()
 
-    test_try_except()
+    # test_try_except()
+    test_templated_str()

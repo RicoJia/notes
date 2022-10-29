@@ -50,12 +50,15 @@ void test_affine()
 *   1. TF2 is faster: static_transform_publisher (using latched topic)
 *       rosrun tf2_ros static_transform_publisher 0 0 0 0 0 0 /base_link /laser, publishing on /tf_static
 *   2. TF2 坐标变换监听器中的 Buffer 实现 is faster too 
+    *   - tf::buffer: cache time - will keep tf for cached time
 *   3. tf_kdl ... are instances of the templated class tf2. You can define your own, too.
 *   4. Action-based client for occasional queries for transform (instead of having a listener constntly listening)
 */
 void test_tf2(){
     geometry_msgs::TransformStamped transformStamped;
+    // without specifying cached time, it's 10s by default
     tf2_ros::Buffer tfBuffer;
+    tf2_ros::TransformListener tfListener(tfBuffer);
     try{
         // note this ros::Time(0) returns the "latest message"
       transformStamped = tfBuffer.lookupTransform("turtle2", "turtle1", ros::Time(0));
