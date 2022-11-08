@@ -1,0 +1,11 @@
+# place in /etc/systemd/system
+[Unit]
+Description=My hello shell script
+
+[Service]
+Type=oneshot
+ExecStart=/home/rjia/file_exchange_port/dummy_echo.sh
+#StandardOutput=journal+console
+
+[Install]
+WantedBy=multi-user.target
