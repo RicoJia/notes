@@ -1,0 +1,271 @@
+blockquote {
+    font-weight: 700;
+    line-height: 26px;
+    border-left: none;
+    padding: 36px;
+    position: relative;
+    background: var(--bs-primary-light);
+}
+
+blockquote:after, blockquote:before {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-width: 0;
+    border-style: solid;
+    border-color: var(--bs-primary);
+    z-index: 1;
+    -webkit-transition: var(--bs-transition);
+    transition: var(--bs-transition);
+}
+blockquote:after {
+    top: 0;
+    right: 0;
+    border-right-width: 2px;
+    border-top-width: 2px;
+}
+blockquote:before {
+    bottom: 0;
+    left: 0;
+    border-left-width: 2px;
+    border-bottom-width: 2px;
+}
+blockquote:hover:after,
+blockquote:hover:before,
+blockquote:focus-within:after,
+blockquote:focus-within:before {
+    width: 100%;
+    height: 100%;
+}
+
+blockquote span:after, blockquote span:before {
+    content: '';
+    font-family: var(--bs-font-awesome);
+    font-weight: 900;
+    font-size: 30px;
+    position: absolute;
+    color: var(--bs-primary);
+}
+
+blockquote span:after {
+    content: "\f10e";
+    bottom: -12px;
+    right: 50px;
+}
+
+blockquote span:before {
+    content: "\f10d";
+    top: -12px;
+    left: 50px;
+}
+
+blockquote p {
+    font-weight: 500;
+    line-height: 26px;
+    margin-bottom: 0;
+    margin-top: 16px;
+}
+
+blockquote cite, blockquote small {
+	line-height: 1.3;
+	padding-top: 15px;
+	display: block;
+}
+
+blockquote em, blockquote i, blockquote cite {
+    font-style: italic;
+}
+/* Gallery Css Here*/
+.gallery-icon a {
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+.gallery-icon img {
+    transition: var(--bs-transition);
+}
+
+.gallery-item:hover .gallery-icon img,
+.gallery-item:focus-within .gallery-icon img {
+    opacity: 0.25;
+}
+
+.gallery-item { 
+    background-color: #ececec;
+    padding: 0;
+    margin-right: 2.7%;
+    margin-top: 2.7%;
+    text-align: center;
+    float: left;
+}
+
+.gallery figure.gallery-item:last-child {
+    margin-bottom: 0;
+}
+
+.gallery-columns-1 .gallery-item {
+	width: 100%;	
+}
+
+.gallery-columns-2 .gallery-item {
+    width: 45%;
+}
+
+.gallery-columns-3 .gallery-item {
+    width: 31.3%;
+}
+
+.gallery-columns-4 .gallery-item {
+    width: 20%;
+}
+
+.gallery-columns-5 .gallery-item {
+    width: 17.7%;
+}
+
+.gallery-columns-6 .gallery-item {
+    width: 13.6%;
+}
+
+.gallery-columns-7 .gallery-item {
+    width: 12.25%;
+}
+
+.gallery-columns-8 .gallery-item {
+    width: 10.5%;
+}
+
+.gallery-columns-9 .gallery-item {
+    width: 9.11%;
+}
+
+.gallery-columns-1 .gallery-item:nth-child(1n),
+.gallery-columns-2 .gallery-item:nth-child(2n),
+.gallery-columns-3 .gallery-item:nth-child(3n),
+.gallery-columns-4 .gallery-item:nth-child(4n),
+.gallery-columns-5 .gallery-item:nth-child(5n),
+.gallery-columns-6 .gallery-item:nth-child(6n),
+.gallery-columns-7 .gallery-item:nth-child(7n),
+.gallery-columns-8 .gallery-item:nth-child(8n),
+.gallery-columns-9 .gallery-item:nth-child(9n) {
+    margin-right: 0;
+}
+
+.gallery dl a {
+    display: block;
+}
+
+.gallery dl a img {
+    height: auto;
+    margin: 0 auto;
+}
+
+.gallery br+br {
+    display: none;
+}
+.wp-caption-text{}
+.bypostauthor{}
+
+/*Image Alignments and captions*/
+img.alignnone{ margin: 0 auto; max-width: 100%; }
+#attachment_907 { width: 100%; }
+img.alignleft, .wp-caption.alignleft{ margin-right: 30px; }
+img.alignright, .wp-caption.alignright {
+    margin-left: 30px;
+    float: right;
+    clear: both;
+    margin-bottom: 30px;
+}
+img.wp-caption .alignnone { display: block; margin: 0 auto; height: auto; width: 100%; }
+a img.alignright { float: right; }
+a img.alignnone { margin: 5px 20px 20px 0; }
+a img.alignleft { float: left; }
+a img.aligncenter { margin-left: auto; margin-right: auto;}
+.aligncenter {  margin-top: 0.5em; margin-bottom: 0.5em; margin-left: auto; margin-right: auto; }
+.alignleft { float: left; margin: .5em 20px .5em 0; }
+.alignright { float: right; margin: .5em 0 .5em 20px; }
+.wp-caption .wp-caption-text, .gallery-caption, .entry-caption { 
+    clear: left;
+    line-height: 1.5em;
+    text-align: left;
+}
+.wp-caption.alignright { margin: 5px 0 20px 20px;}
+.wp-caption p.wp-caption-text { font-family: 'Open Sans'; font-size: 14px; margin: 12px 0; text-align: center; font-weight: 400; font-style: italic; line-height: 1.5em; }
+.wp-caption.alignleft { margin: 5px 20px 20px 0;}
+.wp-caption {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #f8f8f8;
+    border-color: #eee;
+    border-image: initial;
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px;
+    margin-bottom: 20px;
+    max-width: 100%;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 4px;
+    text-align: center;
+}
+.wp-caption > img {
+    max-width: 100%;
+}
+.bypostauthor {}
+
+form.post-password-form label, form.post-password-form input {
+    display: inline-block;
+}
+
+/*---------------------------------------
+    Screen Reader Text
+-----------------------------------------*/
+/* Accessibility */
+/* Text meant only for screen readers. */
+.screen-reader-text {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  word-wrap: normal;
+  /* Many screen reader and browser combinations announce broken words as they would appear visually. */
+}
+
+.screen-reader-text:focus {
+  background-color: #f1f1f1;
+  border-radius: 3px;
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
+  clip: auto;
+  clip-path: none;
+  color: #21759b;
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  height: auto;
+  right: 5px;
+  line-height: normal;
+  padding: 15px 23px 14px;
+  text-decoration: none;
+  top: 5px;
+  width: auto;
+  z-index: 100000;
+  /* Above WP toolbar. */
+}
+
+/* Do not show the outline on the skip link target. */
+#page, #content {
+    background: #fff;
+}
+
+#content[tabindex="-1"]:focus {
+  outline: 0;
+}
