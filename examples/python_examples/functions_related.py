@@ -238,25 +238,25 @@ def test_type_hints():
     print(func2(p))
 
     # for < python 3.9, you need typing to indicate what exactly goes into the container
-    from typing import tuple, dict
-    def func3(scores: tuple[int, int], di: dict[int, str]): 
+    from typing import Tuple, Dict
+    def func3(scores: Tuple[int, int], di: Dict[int, str]): 
         print(scores, di)
     func3((3,4), {1:"asdf"})
 
     # typing for list 
-    from typing import list
-    def func3_5(scores: list[int]): 
+    from typing import List
+    def func3_5(scores: List[int]): 
         print(scores)
     func3_5([1,2,3])
 
     # typing that stores __name__ for a class 
-    from typing import type
+    # from typing import type
     def func3(p: type): 
-        print("type.type can store __name__",  p.__name__)
-    func3(person)
+        print("type.type can store __name__",  p.__class__.__name__)
+    func3(Person())
 
     # typing.sequence can be used to refer to list, tuple
-    from typing import sequence as seq1
+    from typing import Sequence as seq1
     def func4(seq:seq1): 
         for item in seq: 
             print(item)
@@ -265,47 +265,50 @@ def test_type_hints():
     # type alias: define custom aliases. could be useful in this case: 
     # from production.contracts import default_pose, tree
     # cameranodeconfigspec = tree.cameranodeconfigspec
-    from typing import tuple
-    vector2d = tuple[int, int]
+    from typing import Tuple
+    vector2d = Tuple[int, int]
     def func5(vector: vector2d):
         print(vector)
     func5((1,2))
 
     # optional: there may or may not be a returned value. if not, none is returned
-    from typing import optional
-    def func6(i : int) -> optional[int]:  
+    from typing import Optional
+    def func6(i : int) -> Optional[int]:  
         if i < 4: 
             return 100
     func6(4)
 
-    from typing import union
-    def func7(i: union[int, str]): 
-        print(i)
-    func7("str")
-
     # callable: can be a function, or a class with __call__. see below for how to use it
-    from typing import callable
+    from typing import Callable
     class bar: 
         def __call__(self, i: int): 
             print(i)
-    def func8(f: callable): 
+    def func8(f: Callable): 
         # pass the arg here, not when you construct it.
         f(9)
     func8(bar())
 
     # any: wildcard
-    from typing import any
-    def foo() -> any: 
+    from typing import Any
+    def foo() -> Any: 
         return "fubar"
     print(foo()) 
 
     # template t in c++, t 必须是 str 或 int 其中一种
-    from typing import typevar, list
-    t = typevar('t', int, str)
+    from typing import TypeVar, List
+    # t must be int or str
+    t = TypeVar('t', int, str)
     def func9(a: t, b: t): 
         print(a, b)
-    # this will complain since we have mixed types
-    func9(1, "sr")
+    # this won't complain since we have mixed types
+    func9(1, (3,4))
+
+    import typing
+    def func10(a:typing.Union[str, bytes, int]):
+        print(a)
+
+    func10(1)
+    func10("lol")
 
 def test_type_hints_quirks():
     """
@@ -509,7 +512,7 @@ if __name__ == "__main__":
     # test_nested_func_in_class()
     # test_scope()
     # test_optional_arg()
-    # test_type_hints()
+    test_type_hints()
     test_type_hints_quirks()
     # test_signature()
     # test_3_level_function_signature()

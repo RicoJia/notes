@@ -97,7 +97,8 @@ if __name__ == "__main__":
 
     rospy.init_node('my_node', log_level=rospy.INFO)
     for i in range(10):
-        rospy.loginfo("Rico!" + str(i))
+        # Go to rqt_logger_level and change rosout to debug to see debug msgs
+        rospy.logdebug("Rico!" + str(i))
         # python monotonic, only useful for timing durations since its start is not clear?
         time.monotonic()
 
