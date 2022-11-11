@@ -1,4 +1,7 @@
-#!/usr/bin/python3 
+#!/usr/bin/env python3
+# This is the preferred way for shebang. 
+# env will search for python3 in PATH, which doesn't include functions / alias. 
+# then env will resolve into #!/usr/bin/python3
 import rospy
 import coloredlogs
 import git
