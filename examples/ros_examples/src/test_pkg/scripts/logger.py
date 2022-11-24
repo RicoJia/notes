@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # This is the preferred way for shebang. 
 # env will search for python3 in PATH, which doesn't include functions / alias. 
 # then env will resolve into #!/usr/bin/python3
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     rospy.init_node('my_node', log_level=rospy.INFO)
     for i in range(10):
         # Go to rqt_logger_level and change rosout to debug to see debug msgs
-        rospy.logdebug("Rico!" + str(i))
+        rospy.loginfo("Rico!" + str(i))
         # python monotonic, only useful for timing durations since its start is not clear?
         time.monotonic()
 

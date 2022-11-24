@@ -777,7 +777,7 @@ if __name__ == "__main__":
 
     # test_decorator()
     # test_decorator_deep_dive() 
-    # test_descriptor()
+    test_descriptor()
     # test_property_implemented_as_descriptor()
-    test_class_method_implementation()
+    # test_class_method_implementation()
     

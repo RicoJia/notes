@@ -5,3 +5,4 @@ devel
 *.so
 *.out
 *.pyc
+.catkin_tools/

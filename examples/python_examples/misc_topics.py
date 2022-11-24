@@ -249,7 +249,7 @@ def test_walrus_operator():
     """
     walrut = 3
     # shows 4, python 3.8+
-    # print(walrut := 4)
+    print(walrut := 4)
 
 def test_templated_str():
     msg = "abc %d"
@@ -459,7 +459,7 @@ if __name__=="__main__":
     # test_div()
     # test_lru_cache_optimization()
     # test_memory_leak()
-    # test_walrus_operator()
+    test_walrus_operator()
     # test_uuid()
     # test_color_printing()
 
@@ -468,4 +468,4 @@ if __name__=="__main__":
     # line_buffer_tab_complete()
 
     # test_try_except()
-    test_templated_str()
+    # test_templated_str()
