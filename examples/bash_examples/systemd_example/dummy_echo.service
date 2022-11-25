@@ -1,11 +1,25 @@
 # place in /etc/systemd/system
+# 1. output can be see in systemctl status
+# journal is logs from different services, journad daemon handles that.
+# syslog is another tool. journald is more monolith
+# journalctl -feu: -f means "following", as on tail -f; -u: service unit
+# to see logs, you need sudo journalctl
+# For debugging, if you still can't see the service, run the command yourself!**
+
+
 [Unit]
 Description=My hello shell script
+# After=Another service that runs before this
 
 [Service]
-Type=oneshot
-ExecStart=/home/rjia/file_exchange_port/dummy_echo.sh
-#StandardOutput=journal+console
+# 1. oneshot doesn't work with restart
+# Type=oneshot
+Type=simple
+ExecStart=/home/rjia/file_exchange_port/notes/examples/bash_examples/systemd_example/dummy_echo.sh
+StandardOutput=journal+console
+# 2. restart after the program exits, by default, every 100ms
+Restart=always
+RestartSec=1
 
 [Install]
 WantedBy=multi-user.target
