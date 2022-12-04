@@ -1,2 +1,3 @@
 class DirectImport:
-    pass
+    def __init__(self):
+        print("DirectImport Class")
