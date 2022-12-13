@@ -69,3 +69,11 @@ runuser -u rjia whoami
 
 # 12 logger: without anything, it just goes into /var/sys/log. with -s, it prints as stderr as well. You can pass in however many strings to print here too
 logger "hellollloo" "hola"
+
+# 13 export a shell variable
+test_shell_var=13
+export test_shell_var
+
+# set a shell variable if that var doesn't exist
+# ${RICO_VAR:-lol} will return lol if RICO_VAR doesn't exist. 
+RICO_VAR=${RICO_VAR:-lol}

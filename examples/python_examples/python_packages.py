@@ -65,3 +65,31 @@ sp = importlib.import_module("sample_package", __package__)
 sp.DirectImport()
 print("__package__: ", __package__)
 
+# 12 
+# Callback when importing something
+import sys
+import threading
+# sys.modules will have threading once you import it
+def when_imported(module):
+    def decor(func):
+        if module in sys.modules:
+            func(sys.modules[module])
+        return func
+    return decor
+
+@when_imported("threading")
+def warn_threads(mod):
+    print("threading module being imported")
+
+# 13 module is also an object
+import math 
+math.cos = lambda x: x+1
+print(math.cos(1))
+
+# 14. Virtual Environment
+# source bin/activate
+# pip freeze > requirements.txt
+# pip install -r requirements.txt
+# But ros py packages still are showing
+
+# 15. Pypi is "python package index"

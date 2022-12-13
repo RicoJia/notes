@@ -3,6 +3,9 @@ import threading
 import concurrent.futures
 import time
 
+########################################################
+## Multithreading
+########################################################
 def test_event(): 
     def foo(ev):
         print(f"flag: {ev.isSet()}")
@@ -120,14 +123,35 @@ def test_daemon_thread():
 
     t = TestDaemon()
 
+def test_threading_timer():
+    '''
+    1. Threading timer: execute a function on a different thread, after a certain timeout
+        - You can cancel that as well.
+    '''
+    import threading 
+    import time
+    def print_msg(message):
+        print(message)
+    timer = threading.Timer(3, print_msg, args=("Heellloo", ))
+    # start counting 3s
+    timer.start()
+    time.sleep(1)
+    timer.cancel()
+    print("Canceled timer") 
+
+    # thread can only be started once.
+    timer = threading.Timer(3, print_msg, args=("Heellloo", ))
+    timer.start()
+    print("Waiting for timer to fire") 
+    time.sleep(4)
+    print("Main thread will do its thing as well")
+
+################################################################
+## MultiProcessing
+################################################################
 import signal
 import os
 from multiprocessing import  Process
-def test_subprocess(): 
-    """
-    1. Subprocess is to open anything over command line as a process. multiprocessing allows to divide a program
-    """
-    pass
 def test_process(): 
     """
     Theory: 
@@ -265,11 +289,76 @@ def test_process_scanning():
         # except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
         #     pass
 
+def test_process_pipe():
+    def worker(in_p):
+        # you can do in_p.poll() as well
+        msg = in_p.recv()
+        print("msg: ", msg)
+        
+    def client(out_p):
+        import time
+        time.sleep(2)
+        out_p.send("herro")
+        
+    import multiprocessing
+    conn1, conn2 = multiprocessing.Pipe()
+    worker = multiprocessing.Process(target=worker, args=(conn1, ))
+    client = multiprocessing.Process(target=client, args=(conn2, ))
+
+    worker.start()
+    client.start()
+
+    worker.join()
+    client.join()
+
+def test_simple_server_and_client(is_client):
+    '''
+    This example is a great tool for inter-process communication.   
+    BELOW EXAMPLE CAN BE EXPANDED INTO DIFFERENT PROGRAMS, and we can use UNIX or TCP sockets!
+    1. Listener: 
+        - Can be unix, tcp sockets. The type can be inferred from the format of the address
+        - Try unix sockets
+    '''
+    from multiprocessing.connection import Listener, Client, Connection
+    AUTH_KEY = b"rico is great"
+    # 1. tcp sockets
+    # ADDR = ('', 15000)
+    # 2. Unix socket, file doesn't have to exist
+    ADDR = '/tmp/servconn3'
+    if not is_client:
+        # Note the Listener.accept() only returns the socket, no address!
+        work_listener = Listener(ADDR, authkey=AUTH_KEY)
+        while True:
+            worker_connection: Connection = work_listener.accept()
+            msg = worker_connection.recv()
+            print(f"received message from : {msg}")
+            worker_connection.send("Server has received your msg")
+    else: 
+        client_server = Client(ADDR, authkey=AUTH_KEY)
+        client_server.send("I'm a bird")
+        ret_msg = client_server.recv()
+        print(ret_msg) 
+
 if __name__ == "__main__": 
     # test_lock()
     # test_process()
     # test_forking()
     # test_multiprocess_queue()
     # test_process_scanning()
-    test_multiple_threads_queue()
+    # test_multiple_threads_queue()
     # test_daemon_thread()
+
+    # test_threading_timer()
+    test_process_pipe()
+
+    import argparse
+    parser = argparse.ArgumentParser()
+    # interesting, -- does make a difference
+    parser.add_argument("--client", action="store_true", default=False, required=False)
+    args = parser.parse_args()
+    if args.client:
+        print("client")
+    else:
+        print("server")
+
+    test_simple_server_and_client(args.client)

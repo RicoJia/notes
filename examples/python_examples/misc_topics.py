@@ -447,6 +447,17 @@ def line_buffer_tab_complete():
 
     # Prompt the user for text
     input_loop()
+
+def test_nested_quotation():
+    msg = """ this is a "fake" message, nested 'quotation' marks"""
+    print(msg)
+
+def test_executing_bash_command():
+    import subprocess
+    command = "ls -l"
+    output = subprocess.check_output(command.split(" ")).decode('utf-8')
+    print(f"here is the output: {output}")
+
 if __name__=="__main__":
     # test_warning()
     # test_math()
@@ -459,7 +470,7 @@ if __name__=="__main__":
     # test_div()
     # test_lru_cache_optimization()
     # test_memory_leak()
-    test_walrus_operator()
+    # test_walrus_operator()
     # test_uuid()
     # test_color_printing()
 
@@ -469,3 +480,5 @@ if __name__=="__main__":
 
     # test_try_except()
     # test_templated_str()
+    # test_nested_quotation()
+    test_executing_bash_command()
