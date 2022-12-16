@@ -18,6 +18,28 @@ def test_event():
     time.sleep(1)
     ev.set()
 
+def test_semaphore():
+    """
+    - Semaphore: integer shared by two processes
+        - Just like a parking lot indicator with 3 available slots. The semaphore will start at 3. When a car gets in, calls acquire(), wait() sets semaphore--. When semaphore == 0, nobody can get it. 
+        - Mutex is semaphore = 1 (binary semaphore)
+    """
+    from threading import Semaphore
+    # when Semaphore is 1, it's binary
+    s = Semaphore(7)
+    w = 0
+    def wurk():
+        nonlocal s, w
+        s.acquire()
+        print("before incrementing: ", w)
+        w += 1
+        print("after incrementing: ", w)
+        s.release()
+
+    for i in range(10):
+        t = threading.Thread(target=wurk, args=(), daemon=True)
+        t.start()
+
 
 def test_threadpool(): 
     def foo(i): 
@@ -346,6 +368,7 @@ if __name__ == "__main__":
     # test_multiprocess_queue()
     # test_process_scanning()
     # test_multiple_threads_queue()
+    test_semaphore()
     # test_daemon_thread()
 
     # test_threading_timer()
@@ -361,4 +384,4 @@ if __name__ == "__main__":
     else:
         print("server")
 
-    test_simple_server_and_client(args.client)
+    # test_simple_server_and_client(args.client)

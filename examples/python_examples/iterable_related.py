@@ -233,6 +233,10 @@ def dictionary_basics():
     l2 = [3,4,5]
     dict(zip(l1, l2))
 
+def test_dict_creation():
+    # You don't need "" for keys, because you're passing kwargs into dict.__init__
+    di = dict(dor=2, lol=4)
+
 def test_dict_less_known_features(): 
     """
     1. using np array as a key in dictionary, have to use to_bytes
