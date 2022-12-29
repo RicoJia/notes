@@ -52,7 +52,6 @@ function test_increase_variable(){
     done 
     echo "I is ${I}, B is ${B}"
 }
-test_increase_variable
 
 function test_str(){
     a='Hello'
@@ -60,20 +59,39 @@ function test_str(){
     c="${a} ${b}"
     echo "${c}"
 }
-test_str
 
 # 11. run a command as a certain user. But you need to invoke this script as the root first
 #$(command); ${var}: variable
-runuser -u "$(whoami)" echo "lol"
-runuser -u rjia whoami
+test_run_user(){
+    runuser -u "$(whoami)" echo "lol"
+    runuser -u rjia whoami
+}
 
 # 12 logger: without anything, it just goes into /var/sys/log. with -s, it prints as stderr as well. You can pass in however many strings to print here too
 logger "hellollloo" "hola"
 
 # 13 export a shell variable
-test_shell_var=13
-export test_shell_var
+test_variable_export(){
+    test_shell_var=13
+    export test_shell_var
 
-# set a shell variable if that var doesn't exist
-# ${RICO_VAR:-lol} will return lol if RICO_VAR doesn't exist. 
-RICO_VAR=${RICO_VAR:-lol}
+    # set a shell variable if that var doesn't exist
+    # ${RICO_VAR:-lol} will return lol if RICO_VAR doesn't exist. 
+    RICO_VAR=${RICO_VAR:-lol}
+}
+
+# 14 Test ls
+test_ls(){
+    # anything that starts with an o, or p.
+    # [] is the beginning of the char set
+    ls [op]*
+}
+
+# {} is called braces
+test_brace_expansion(){
+    echo abc
+    # see bad, bed, bard
+    echo b{a,e,ar}d
+    # You can do this with letters or numbers as well
+    echo {b..t}
+}
