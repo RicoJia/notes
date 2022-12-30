@@ -95,3 +95,7 @@ test_brace_expansion(){
     # You can do this with letters or numbers as well
     echo {b..t}
 }
+
+test_auto_complete(){
+    # You need to add a file to "source"
+}
