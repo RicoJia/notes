@@ -2,73 +2,6 @@
 import numpy as np
 
 ###############################################################################
-### Basics
-###############################################################################
-global_var = "global"
-def test_lambda(): 
-    """
-    1. lambda can be called like this
-    2. Lambda can capture values, but they're again references bound at runtime.
-    3. If you want to store value of lambda, store it.
-    """
-    # 1 
-    print((lambda x: x > 10)(11))
-
-    # 2 
-    x = 10
-    lam = lambda y: y+x
-    x = 300
-    print("Lambda can capture values, but they're again references bound at runtime: ", lam(20), " see 320 instead of 30")
-
-    # 3
-    x = 10
-    lam  = lambda y, x = x: y+x
-    x = 300
-    print(f"If you want to store value of lambda, store it. See {lam(20)} instead of 320")
-
-def test_scope():
-    """
-    1. The outer function variables are by-default read only. If you declare a variable locally without nonlocal or global, then that will be a local variable, nothing to do with the outer one
-        - When we use =, that is to assign the NAME of an object a new object. And that is not allowed without nonlocal/global 
-        - If else... doesn't count as a "new scope", since it's checked only at run time. 
-        - A function can get the variable of the closest upper scope. This is called "lexical scoping", > 40 yrs. 
-    2. We can modify a outside mutable WITHOUT nonlocal 
-        - e.g., ls.append() that is to modify the object itself
-    """
-    some_var = "test_scope"
-    ls_cp = []
-    def worker():
-        # nonlocal is needed here
-        global global_var
-        global_var = "inner scope"
-        nonlocal some_var 
-        some_var = "another inner scope"
-        ls_cp = [123]
-    worker()
-    print(global_var)
-    print(some_var)
-    print(ls_cp)
-
-def property_test():
-    class foo: 
-        pass
-    f = foo()
-    f.temperature = 800
-    print(f.temperature)
-    print(f.__class__.__name__)
-
-def get_current_funcs_info():
-    """
-    1. func name: {sys._getframe(0).f_code.co_name}, file name: {__file__}, line number: {sys._getframe(0).f_lineno}
-    2. all params: {sys._getframe(0).f_locals}
-    """
-    def dummy_method():
-        pass
-    import sys
-    print(f"func name: {sys._getframe(0).f_code.co_name}, file name: {__file__}, line number: {sys._getframe(0).f_lineno}")
-    print(f"all params: {sys._getframe(0).f_locals}")
-
-###############################################################################
 ### Args
 ###############################################################################
 def test_optional_arg(): 
@@ -132,36 +65,6 @@ def kwargs_test():
         print("1 keyworded arg is enforced: ", block)
     recv(LOL="23")
     recv2(block="asdf")
-
-def test_partial():
-    """
-    1. How it works: (apart from kwargs support). partial is returning a wrapper with extended args
-    2. equivalent implementation
-    """
-    # 1 partial
-    from functools import partial
-    def func(a, b): 
-        print("func: ", a, b)
-    func_w = partial(func, b = 12)
-    func_w(a = 13)
-
-    def rico_partial(func, *args, **kwargs):
-        # simplified version
-        # def wrapper(a): 
-        #     # kwargs here is a dict, need to unpack it
-        #     return func(a, **kwargs)
-        # return wrapper
-        def wrapper(*extra_args, **extra_kwargs):
-            # need nonlocal since we are reusing args, and kwargs, which will be true local vars
-            nonlocal args, kwargs
-            # args here is a tuple already
-            args = list(args)
-            args.extend(extra_args)
-            kwargs = {**kwargs, **extra_kwargs}
-            return func(*args, **kwargs)
-        return wrapper
-    rico_func_w = rico_partial(func, b = 12)
-    rico_func_w(a=13)
 
 def test_signature():
     '''
