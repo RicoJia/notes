@@ -98,4 +98,14 @@ test_brace_expansion(){
 
 test_auto_complete(){
     # You need to add a file to "source"
+    ls
 }
+
+test_trap(){
+    # set a signal to trap for: when INT or TERM comes up, do echo
+    trap 'echo "You hit ctrl-c!"' INT 
+    # This works when you do kill PID (not kill -9)
+    trap 'echo "You tried to kill me"' TERM
+    sleep 10
+}
+test_trap
