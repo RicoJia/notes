@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/rjia/file_exchange_port/notes/examples/c++_examples/vscode_c++_examples/build",
+  "command": "/usr/bin/c++      -o CMakeFiles/hello_world.dir/hello_world_vscode.cpp.o -c /home/rjia/file_exchange_port/notes/examples/c++_examples/vscode_c++_examples/hello_world_vscode.cpp",
+  "file": "/home/rjia/file_exchange_port/notes/examples/c++_examples/vscode_c++_examples/hello_world_vscode.cpp"
+},
+{
+  "directory": "/home/rjia/file_exchange_port/notes/examples/c++_examples/vscode_c++_examples/build",
+  "command": "/usr/bin/c++      -o CMakeFiles/hello_world.dir/library.cpp.o -c /home/rjia/file_exchange_port/notes/examples/c++_examples/vscode_c++_examples/library.cpp",
+  "file": "/home/rjia/file_exchange_port/notes/examples/c++_examples/vscode_c++_examples/library.cpp"
+}
+]
