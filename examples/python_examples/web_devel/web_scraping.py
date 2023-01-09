@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Example: https://automatetheboringstuff.com/2e/chapter12/
 import requests
 import bs4
 
