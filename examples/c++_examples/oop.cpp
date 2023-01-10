@@ -17,6 +17,8 @@ private:
 class oop_explicit
 {
 public:
+    // explicit keyword means "cannot be used for implicit conversions, and copy initialization
+    // implicit conversions
     // this is actually a conversion ctor. Can convert because we can pass in 1 arg
     explicit oop_explicit (int i = 3, int j = 4.0): i_(i), j_(j){}
     bool operator == (const oop_explicit& rhs){ return (rhs.i_ == i_) & (rhs.j_ == j_); }
