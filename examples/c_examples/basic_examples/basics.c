@@ -10,6 +10,11 @@ void test_print(){
     printf("%d\n", !!false);
 
 }
+
+void test_int_type(){
+    printf("%lu %s", 1UL<<10, "this is unsigned long");
+}
+
 int main(){
-    test_print();
+    test_int_type();
 }

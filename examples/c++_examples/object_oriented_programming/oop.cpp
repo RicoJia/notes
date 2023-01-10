@@ -17,7 +17,7 @@ private:
 class oop_explicit
 {
 public:
-    // explicit keyword means "cannot be used for implicit conversions, and copy initialization
+    // explicit keyword means "cannot be used for implicit conversions, and copy conversions"
     // implicit conversions
     // this is actually a conversion ctor. Can convert because we can pass in 1 arg
     explicit oop_explicit (int i = 3, int j = 4.0): i_(i), j_(j){}
