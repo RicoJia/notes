@@ -98,7 +98,9 @@ test_brace_expansion(){
 
 test_auto_complete(){
     # You need to add a file to "source"
-    ls
+    # but for simple string autocompletion (not args complete)
+    # see complete_script_to_source.bash
+
 }
 
 test_trap(){
@@ -108,4 +110,3 @@ test_trap(){
     trap 'echo "You tried to kill me"' TERM
     sleep 10
 }
-test_trap
