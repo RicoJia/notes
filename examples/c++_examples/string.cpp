@@ -35,26 +35,15 @@ void delimit(const string& str){
         cout<<s<<endl;
 }
 
+void str_to_longlong(){
+    std::string str = "12345";
+    // stoll is in <string>
+    cout<<stoll(str)<<"\n";
+}
+
 int main()
 {
-     
-     // compare();
-     find();
-     
-     // Replace
-     // char a[20] = "I do want to change";
-     // string str1 = "assholeasshole"; 
-     // str1.replace(0, 3, "d");
-     // cout<<str1<<endl; 
-
-     // delimit(a); 
-
-     // // get line 
-     // char c[20];       // note this is NOT *c[20]
-     // cin.getline(c, sizeof(c));     // get a multiword. otherwise, it regular  cin>>c; will just get  the first word. 
-     // cout<<*(c+3)<<endl;      // print out the 4th character.
-     // cout<<(c[4])<<endl;		//print out the 5th character. 
-
+    str_to_longlong();
 }
 
 

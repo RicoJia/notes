@@ -46,15 +46,8 @@ constexpr auto enumerate(T&& iterable){
 // std::begin(rvalue ref) is itr, not const_itr? 
 int main()
 {
-
     std::vector<int> vec {1,2,3,4};
     for (const auto&[index, item]: enumerate(vec)){
         // item = 100; 
     }
-    
-    // for(auto i: vec){
-    //     cout<<i<<endl;
-    // }
-
-    // foo(vec);
 }

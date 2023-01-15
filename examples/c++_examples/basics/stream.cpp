@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream> // std::stringstream
 #include <fstream>
+#include <array>
 
 using namespace std;
 
@@ -19,12 +20,18 @@ void test_file_stream(){
 }
 
 void test_output_stream(){
-    // flush is very expensive. it's done when hitting a buffer size, or endl, or program termination
+    // 1. flush is very expensive. it's done when hitting a buffer size, or endl, or program termination
     std::cout<<"std::endl will flush the output" << std::endl;
+    // 2. formating string is tricky (< C++ 20)
+    std::array<char, 32> buffer = {};
+    size_t n = 20;
+    // %zu is for size_t, added in c99
+    auto n_written = std::snprintf(buffer.data(), buffer.size(), "%020zu.log", n);
+    std::cout<<std::string{buffer.data()}<<"\n";
 }
 
 int main()
 {
-
+    test_output_stream();
     return 0;   
 }

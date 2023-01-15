@@ -9,6 +9,13 @@ import rospy
 def test_timer_cb(timer_event: rospy.timer.TimerEvent):
     print("timer cb", timer_event.__dict__)
 
+def test_rosrun_args():
+    """
+    rosrun test_pkg test_basics _test:="test" 
+    """
+    t = rospy.get_param("~test")
+    print("t: ", t)
+
 if __name__ == "__main__":
     rospy.init_node("test_basics") 
     rospy.loginfo("hello")
