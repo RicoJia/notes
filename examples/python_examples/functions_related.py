@@ -225,6 +225,16 @@ def test_type_hints_quirks():
     g = Foo()
     print(f==g)
 
+def test_factory_func_type_hints():
+    """See above for the quirk. 
+    """
+    class Foo:
+        @classmethod
+        def foo_fact(cls) -> "Foo":
+            # Class funcs are usually in factory funcs btw
+            return Foo()
+    f = Foo.foo_fact()
+
 ###############################################################################
 ### Misc
 ###############################################################################
@@ -415,8 +425,8 @@ if __name__ == "__main__":
     # test_nested_func_in_class()
     # test_scope()
     # test_optional_arg()
-    test_type_hints()
-    test_type_hints_quirks()
+    # test_type_hints()
+    # test_type_hints_quirks()
     # test_signature()
     # test_3_level_function_signature()
     # kwargs_test()
@@ -429,3 +439,4 @@ if __name__ == "__main__":
     # test_function_frame()
 
     # test_bound_class_method()
+    test_factory_func_type_hints()

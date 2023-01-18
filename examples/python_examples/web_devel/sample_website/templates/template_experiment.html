@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <!-- { { } } is for flask-->
+    <h1>{{ username }}的公众号 - {{username}}杂谈</h1>
+    <!-- filepath for function "template_experiment". relative to templates -->
+    <img alt="slime" src="{{ url_for('template_experiment', filename='/templates/imgs/atongmu.png') }}">
+    <!-- comment -->
+</body>
+</html>

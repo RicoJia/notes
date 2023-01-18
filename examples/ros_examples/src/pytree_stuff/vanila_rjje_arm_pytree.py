@@ -257,6 +257,7 @@ def check_and_create_new_tmux_window():
 
 def test_tree_printing():
     import functools
+    # 1. Adding post tick handler so after the tick, we write the tree to the output file
     def post_tick_handler(snapshot_visitor, behaviour_tree):
         os.system(f"tmux send -t '{SESSION_NAME}' 'clear' ENTER")
         tree_str = py_trees.display.unicode_tree(
@@ -264,15 +265,22 @@ def test_tree_printing():
             visited=snapshot_visitor.visited,
             previously_visited=snapshot_visitor.visited
         )
+        black_board_str = py_trees.display.unicode_blackboard(
+        )
         BEHAVIOUR_TREE_LOG = "/tmp/behavior_tree.log"
         os.system(f"""tmux send-key -R -t '{SESSION_NAME}' 'tail -f {BEHAVIOUR_TREE_LOG}' ENTER""")
         try: 
             with open(BEHAVIOUR_TREE_LOG, "a+") as f:
                 f.write(tree_str) 
+                f.write("=================================") 
+                f.write(black_board_str)
         except: 
             with open(BEHAVIOUR_TREE_LOG, "w") as f:
                 f.write(tree_str) 
+                f.write("=================================") 
+                f.write(black_board_str)
 
+    # Construct the tree
     root = py_trees.composites.Sequence("Sequence")
     for action in ["Action 1", "Action 2", "Action 3"]:
         b = py_trees.behaviours.Count(
@@ -281,14 +289,19 @@ def test_tree_printing():
                 running_until=1,
                 success_until=10)
         root.add_child(b)
+    root.add_child(GeneratePickUpLocations())
     behaviour_tree = py_trees.trees.BehaviourTree(root)
-    # snapshot_visitor = py_trees.visitors.SnapshotVisitor()
+
+     # 2. create a new tmux window
     check_and_create_new_tmux_window()
     
+    # 3 - bind snapshot visitor and the post tick handler to the tree
     snapshot_visitor = py_trees.visitors.SnapshotVisitor()
     behaviour_tree.add_post_tick_handler(
         functools.partial(post_tick_handler,
                         snapshot_visitor))
+    
+    # 4 add the snapshot visitor back to the tree 
     behaviour_tree.visitors.append(snapshot_visitor)
     behaviour_tree.tick_tock(
         period_ms=1000,
@@ -296,14 +309,13 @@ def test_tree_printing():
         pre_tick_handler=None,
     )
 
-
-
+        
 if __name__ == "__main__":
     # test_sequence()
     # test_decorators()
-    test_parallel()
+    # test_parallel()
     # test_retry_until_succeed()
     # test_retry_finite_number_of_times()
     # test_retry_finite_num_with_blackboard()
     # test_tree()
-    # test_tree_printing()
+    test_tree_printing()
