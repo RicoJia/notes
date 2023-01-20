@@ -1,5 +1,5 @@
 from sample_package import DirectImport
-# 1. Test direct import
+# 1. Test direct import (absolute import)
 d = DirectImport()
 
 # 2. Test import
@@ -50,7 +50,7 @@ print(spam_namespace.__file__)
 # 9. use pkgutil.get_data(), you can just pass in the package name in here!
 # Very convenient
 import pkgutil
-print(pkgutil.get_data("sample_package.package_2", "sample_data.dat"))
+print("package util: ", pkgutil.get_data("sample_package.package_2", "sample_data.dat"))
 
 # 10. site-packages contain manually installed packages by the user (disutils, setup.py)
 # sys.path.append("") is temporary
@@ -93,4 +93,16 @@ print(math.cos(1))
 # But ros py packages still are showing
 
 # 15. Pypi is "python package index"
+
+# 16. Try this: export PYTHONPATH="SOMEPATH". Then you can see `/home/rjia/file_exchange_port/notes/examples/python_examples/SOMEPATH` in the list:
+def test_python_path():
+    print(f'{sys.path}')
+
+# 17. Absolute import vs relative import.
+# If you run your file directly to import a module in the current directory, that's absolute import. 
+# And the module you import will show their path in __name__ (Pronounced as 'dunder_name')
+# The script (top level) running the script will show __main__ if you print(__name__)
+
+if __name__ == '__main__':
+    test_python_path()
 

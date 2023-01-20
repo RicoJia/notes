@@ -47,21 +47,6 @@ def test_math():
     print("number of bytes of byte string: ", len(data))
     print("from bytes, little", int.from_bytes(data, "little"))
 
-def test_try_except():
-    """
-    1. try, except, else (if try succeeds), finally (will be executed anyway)
-    """
-    try: 
-        print("try")
-    except:
-        #TODO 
-        print(f"except")
-    else:
-        print("except")
-    finally:
-        #TODO 
-        print(f"finally")
-
 def test_more_math(): 
     """
     1. math.isinf(), int/inf = 0; inf/inf=nan; inf-inf = nan
@@ -458,6 +443,27 @@ def test_executing_bash_command():
     output = subprocess.check_output(command.split(" ")).decode('utf-8')
     print(f"here is the output: {output}")
 
+def test_try_except_else_finally():
+    class CustomError(Exception):
+        pass
+    try:
+        # Please do not have except Exception first. It will catch all exceptions, even the value error
+        # raise ValueError("lol")
+        raise CustomError("custom errrrrorr")
+        # print("trying")
+    except CustomError as c:
+        print(f"Custom error: ", c)
+    except Exception as e:
+        #TODO
+        print(f'Exception: {e}')
+    except ValueError as v:
+        print(f"value error, ", v)
+    else:
+        print("no exception!")
+    finally:
+        #TODO
+        print(f'This will be executed anyway!')
+
 if __name__=="__main__":
     # test_warning()
     # test_math()
@@ -481,4 +487,6 @@ if __name__=="__main__":
     # test_try_except()
     # test_templated_str()
     # test_nested_quotation()
-    test_executing_bash_command()
+    # test_executing_bash_command()
+
+    test_try_except_else_finally()
