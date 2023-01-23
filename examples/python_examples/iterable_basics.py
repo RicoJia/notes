@@ -54,56 +54,6 @@ def iterator_basics():
     dict_iterator = iter(di)
     print(next(dict_iterator))
 
-def generator_basics(): 
-    """
-    1. Generators are iterators
-        - Use yield, which is like return, but returns a generator object, which can be iterated only once. 
-        - Do not store all values in memory at once, generated on the fly
-        - It's a generator function, which has __next__(), like iterator. But it could be easier
-    2. By default, StopIteration exception when the last value is yielded. So you don't have to write this explicitly
-    3. So use for i in.... For loop calls next(iter(iterable)), and returns a generator
-    4. Design Patterns: 
-        1. Good for stuff that's generated indefinitely, real time
-        2. Good for search, which decouples search process from the upper stream code
-    """
-    def Bday_Gen():
-        yield 1
-        yield 2
-    # 1. you get a StopIteration exception
-    bday_gen = Bday_Gen()
-    while (True):
-        try:
-            print(next(bday_gen))
-        except StopIteration:
-            break
-    print("Done")
-
-    # 2. Use for loop instead
-    g = (x for x in range(10))
-    print(next(g))   # this is totes valid
-    print("===============")
-    # can keep on iterating 
-    for i in g: 
-        print(i)
-
-    # 3. Illegal since it can be iterated only once
-    # for i in generator:     
-
-    # 4. use for loop 
-    bday_gen = Bday_Gen()
-    print("===============")
-    for b in bday_gen: 
-        print(b)
-
-    # 5 generator is good design pattern for search
-    ls = [1,2,3,4,5,6,7,8, 2, 2]
-    def search(num): 
-        for n in ls: 
-            if n == num: 
-                yield n
-    for s in search(2): 
-        print(s)
-
 def generateor_uses(): 
     """
     1. Elegant way to reduce and transform data. max(), sum(), join(), no need to create a list
@@ -139,10 +89,14 @@ def test_yield_from():
         print("This will be executed after the yield")
 
     def yield_from_func(n): 
+        # see start only once, because once we're in the main loop, we execute yield from
         print("Start: ")
         j = yield from test(n)
         print("j: ", j)
+        # 'This will be executed after the yield' will STILL be executed
+        # The last value of j will be None, after 
         print("========")
+        # You can have another round of generator.
         yield from test(n)
         print("End: ")
 
@@ -168,6 +122,7 @@ def test_yield_from():
 
     print("After yield, you can return, but you won't see the return value if you don't use yield from: ")
     g = some_gen()
+    # now you only see 1, because generator picks up where it left off.
     for i in g: 
         print(i)
 
@@ -422,7 +377,7 @@ def test_asyncio():
 
 if __name__ == "__main__": 
     # generator_basics()
-    # test_yield_from()
-    test_coroutine_basic_idea()
+    test_yield_from()
+    # test_coroutine_basic_idea()
     # test_coroutine()
     # test_asyncio()
