@@ -48,3 +48,5 @@ if __name__ == '__main__':
     
     # 4. HTML is the main page. Static files: they do not need to change. 
     # E.g, CSS is the layout, JS is how you interact with the page. fonts is fonts
+
+    # Use SVG images, which uses the same HTML languages. They can also be rendered in browsers

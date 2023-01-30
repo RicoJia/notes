@@ -236,6 +236,12 @@ def test_tree():
     def print_tree(tree):
         print(py_trees.display.unicode_tree(root=tree.root, show_status=True))
 
+    def shutdown_tree(button_tree): 
+        if button_tree.root.status == py_trees.common.Status.SUCCESS or \
+        button_tree.root.status == py_trees.common.Status.FAILURE: 
+            button_tree.interrupt_tick_tocking = True
+    
+    behaviour_tree.add_post_tick_handler(shutdown_tree)
     try:
         behaviour_tree.tick_tock(
             period_ms=500,
@@ -303,6 +309,7 @@ def test_tree_printing():
     
     # 4 add the snapshot visitor back to the tree 
     behaviour_tree.visitors.append(snapshot_visitor)
+    
     behaviour_tree.tick_tock(
         period_ms=1000,
         number_of_iterations=py_trees.trees.CONTINUOUS_TICK_TOCK,
@@ -317,5 +324,5 @@ if __name__ == "__main__":
     # test_retry_until_succeed()
     # test_retry_finite_number_of_times()
     # test_retry_finite_num_with_blackboard()
-    # test_tree()
-    test_tree_printing()
+    test_tree()
+    # test_tree_printing()

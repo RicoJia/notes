@@ -175,6 +175,17 @@ def test_enum():
     ls = [1,2,3]
     print(ls[Animal.DOG]) 
 
+def test_logging():
+    import logging
+    try:
+        logger = logging.getLogger("mylogger")
+    # logger with the samename is "global": so each time you get a handler attached 
+    # to the logger. If too many instances are in logger, will get OSError
+    except OSError:
+        logger = logging
+    logger.warning("Hello")
+
+
 def test_lru_cache_optimization():
     """
     1. LRU (Least-recently-used cache) caches the input and output of function calls (memoization)
@@ -489,4 +500,5 @@ if __name__=="__main__":
     # test_nested_quotation()
     # test_executing_bash_command()
 
-    test_try_except_else_finally()
+    # test_try_except_else_finally()
+    test_logging()
