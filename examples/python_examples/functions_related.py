@@ -186,7 +186,7 @@ def test_type_hints():
     class bar: 
         def __call__(self, i: int): 
             print(i)
-    def func8(f: Callable): 
+    def func8(f: Callable[[], None]): 
         # pass the arg here, not when you construct it.
         f(9)
     func8(bar())
@@ -212,6 +212,14 @@ def test_type_hints():
 
     func10(1)
     func10("lol")
+
+def test_typing_callable():
+    def func(bool)->int:
+        return 1
+    from typing import Callable
+    def test_func(func: Callable[[bool], int]):
+        pass
+    test_func(func)
 
 def test_type_hints_quirks():
     """
@@ -439,4 +447,5 @@ if __name__ == "__main__":
     # test_function_frame()
 
     # test_bound_class_method()
-    test_factory_func_type_hints()
+    # test_factory_func_type_hints()
+     test_typing_callable()

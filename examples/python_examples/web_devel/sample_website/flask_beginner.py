@@ -1,10 +1,18 @@
+"""
+1. To use flask: 
+    export FLASK_APP=flask_beginner.py
+    export FLASK_DEBUG=1
+    flask run
+"""
 from flask import Flask, render_template, url_for
+# __name__ will be __main__ or name of the module (if being run as submodule)
 app = Flask(__name__)
 
 @app.route('/')
 def hello():
     return "hello world! Server name: " + __name__
 
+# This is another end point
 @app.route('/pens')
 def hello_piyixia():
     return '<h1>SLABBY</h1>\

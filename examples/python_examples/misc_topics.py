@@ -175,17 +175,6 @@ def test_enum():
     ls = [1,2,3]
     print(ls[Animal.DOG]) 
 
-def test_logging():
-    import logging
-    try:
-        logger = logging.getLogger("mylogger")
-    # logger with the samename is "global": so each time you get a handler attached 
-    # to the logger. If too many instances are in logger, will get OSError
-    except OSError:
-        logger = logging
-    logger.warning("Hello")
-
-
 def test_lru_cache_optimization():
     """
     1. LRU (Least-recently-used cache) caches the input and output of function calls (memoization)
@@ -244,24 +233,8 @@ def test_walrus_operator():
     Assign param to a value. Do not work with (), [] in list(), dict[]
     """
     walrut = 3
-    # shows 4, python 3.8+
+    # shows 4
     print(walrut := 4)
-
-def test_templated_str():
-    msg = "abc %d"
-    # note we have a tuple here
-    args = (1,)
-    print(msg % args)
-
-def test_color_printing():
-    """
-    Ref: https://gist.github.com/rene-d/9e584a7dd2935d0f461904b9f2950007
-    """
-    RED = "\033[0;31m"
-    GREEN = "\033[0;32m"
-    GOLD = "\033[0;33m"
-    BOLD = "\033[1m"
-    print(f"{RED} This is red, {GREEN} this is green, {GOLD}{BOLD} this is bold GOLD")
 
 def test_strip():
     """
@@ -286,194 +259,13 @@ def test_uuid():
     import uuid 
     print(uuid.uuid4())
 
-def empty_func():
-    """
-    Doc string, saved in __doc__, is a function level constant
-    """
+def test_bytecode():
+    import dis
+    def func():
+        di = {1:1, 2:2}
+        di_c = di.copy()
+    dis.dis(func)
 
-def small_tricks():
-    """
-    1. [1,4,2] ->[(0, 1), (1, 4), (2, 2)]
-    2. "hEllo_woRLD" -> "Hello_World"
-    """
-    ls = [1,4,2]
-    print(list(enumerate(ls)))
-
-    st = "hEllo_woRLD"
-    print(str.title(st))
-
-def tab_complete():
-    import readline
-    import logging
-    LOG_FILENAME = '/tmp/completer.log'
-    logging.basicConfig(filename=LOG_FILENAME,
-                        level=logging.DEBUG,
-                        )
-    class SimpleCompleter(object):
-        def __init__(self, options):
-            self.options = sorted(options)
-            return
-        def complete(self, text, state):
-            # state: number of times this function has been calledwith the same text, i.e., you just hit tab key
-            response = None
-            if state == 0:
-                # This is the first time for this text, so build a match list of the current keyword
-                if text:
-                    self.matches = [s
-                                    for s in self.options
-                                    if s and s.startswith(text)]
-                    logging.debug('%s matches: %s', repr(text), self.matches)
-                else:
-                    self.matches = self.options[:]
-                    logging.debug('(empty input) matches: %s', self.matches)
-
-            # Return the state'th item from the match list,
-            # if we have that many.
-            # helpful debug messages:
-            # print("=============")
-            # print(f"text: {text}, state: {state}")
-            # print(f"matches: {self.matches}")
-            # if you return a non-None object, the system will keep calling this function until it returns None
-            try:
-                response = self.matches[state]
-                # print("reponse: ", response)
-            except IndexError:
-                response = None
-
-            return response
-
-    def input_loop():
-        line = ''
-        while line != 'stop':
-            line = input('Prompt ("stop" to quit): ')
-            print ('Dispatch %s' % line)
-
-    # Register our completer function
-    readline.set_completer(SimpleCompleter(['start', 'stop', 'list', 'print']).complete)
-
-    # Use the tab key for completion
-    readline.parse_and_bind('tab: complete')
-
-    # Prompt the user for text
-    input_loop()
-
-def line_buffer_tab_complete():
-    import readline
-    import logging
-
-    LOG_FILENAME = '/tmp/completer.log'
-    logging.basicConfig(filename=LOG_FILENAME,
-                        level=logging.DEBUG,
-                        )
-
-    class BufferAwareCompleter(object):
-        
-        def __init__(self, options):
-            self.options = options
-            self.current_candidates = []
-            return
-
-        def complete(self, text, state):
-            response = None
-            if state == 0:
-                # This is the first time for this text, so build a match list.
-                
-                origline = readline.get_line_buffer()
-                begin = readline.get_begidx()
-                end = readline.get_endidx()
-                being_completed = origline[begin:end]
-                words = origline.split()
-
-                print('origline', repr(origline))
-                print('begin', begin)
-                print('end', end)
-                print('being_completed', being_completed)
-                print('words', words)
-                
-                if not words:
-                    self.current_candidates = sorted(self.options.keys())
-                else:
-                    try:
-                        if begin == 0:
-                            # first word
-                            candidates = self.options.keys()
-                        else:
-                            # later word
-                            first = words[0]
-                            candidates = self.options[first]
-                        
-                        if being_completed:
-                            # match options with portion of input
-                            # being completed
-                            self.current_candidates = [ w for w in candidates
-                                                        if w.startswith(being_completed) ]
-                        else:
-                            # matching empty string so use all candidates
-                            self.current_candidates = candidates
-
-                        logging.debug('candidates=%s', self.current_candidates)
-                        
-                    except (KeyError, IndexError) as err:
-                        logging.error('completion error: %s', err)
-                        self.current_candidates = []
-            
-            try:
-                response = self.current_candidates[state]
-            except IndexError:
-                response = None
-            logging.debug('complete(%s, %s) => %s', repr(text), state, response)
-            return response
-                
-
-    def input_loop():
-        line = ''
-        while line != 'stop':
-            line = input('Prompt ("stop" to quit): ')
-            print ('Dispatch %s' % line)
-
-    # Register our completer function
-    readline.set_completer(BufferAwareCompleter(
-        {'list':['files', 'directories'],
-         'print':['byname', 'bysize'],
-         'stop':[],
-        }).complete)
-
-    # Use the tab key for completion
-    readline.parse_and_bind('tab: complete')
-
-    # Prompt the user for text
-    input_loop()
-
-def test_nested_quotation():
-    msg = """ this is a "fake" message, nested 'quotation' marks"""
-    print(msg)
-
-def test_executing_bash_command():
-    import subprocess
-    command = "ls -l"
-    output = subprocess.check_output(command.split(" ")).decode('utf-8')
-    print(f"here is the output: {output}")
-
-def test_try_except_else_finally():
-    class CustomError(Exception):
-        pass
-    try:
-        # Please do not have except Exception first. It will catch all exceptions, even the value error
-        # raise ValueError("lol")
-        raise CustomError("custom errrrrorr")
-        # print("trying")
-    except CustomError as c:
-        print(f"Custom error: ", c)
-    except Exception as e:
-        #TODO
-        print(f'Exception: {e}')
-    except ValueError as v:
-        print(f"value error, ", v)
-    else:
-        print("no exception!")
-    finally:
-        #TODO
-        print(f'This will be executed anyway!')
 
 if __name__=="__main__":
     # test_warning()
@@ -489,16 +281,4 @@ if __name__=="__main__":
     # test_memory_leak()
     # test_walrus_operator()
     # test_uuid()
-    # test_color_printing()
-
-    # small_tricks()
-    # tab_complete()
-    # line_buffer_tab_complete()
-
-    # test_try_except()
-    # test_templated_str()
-    # test_nested_quotation()
-    # test_executing_bash_command()
-
-    # test_try_except_else_finally()
-    test_logging()
+    test_bytecode()
