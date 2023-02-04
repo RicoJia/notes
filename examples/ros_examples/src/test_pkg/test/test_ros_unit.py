@@ -19,9 +19,10 @@ class MyTestCase(unittest.TestCase):
     def test_param_loaded(self):
         # since we load this parameter in .test, we can't pass args from command line
         value = rospy.get_param('value1', None)
+        private_value = rospy.get_param('~private_value', None)
         rospy.logwarn("==============rospy loginfo")
         getLogger("python logger").warn("********rospy logger")
-        print("value: ", value)
+        print("value: ", value, ", private_value: ", private_value)
         self.assertIsNotNone(value)
 
 class TestPubSub(unittest.TestCase):

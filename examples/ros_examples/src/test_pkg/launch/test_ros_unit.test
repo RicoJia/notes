@@ -2,7 +2,8 @@
     <!-- 1. Launch this file with - -text -->
     <!-- rosparam needs to be loaded again, even though params are already loaded  -->
     <!-- Remember, rostest will assign random port number to ROS_MASTER_URI so it can run multiple tests in parallel -->
-    <param name="/value" value="2"/>
+    <param name="value1" value="2"/>
     <test test-name="test_params" pkg="test_pkg" type="test_ros_unit.py" >
+        <param name="private_value" value="3"/>
     </test>
 </launch>
