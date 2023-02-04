@@ -595,6 +595,19 @@ def test_custom_containers():
     nmc[1] = "sdf"
     print(list(nmc))
 
+def test_reduce():
+    """reduce is like std::accumulate. in C++17, there's std::reduce as well
+    """
+    ls = [1,2,3,3,2,1]
+    import functools
+    print("I get a set of unique elements in ls: ", 
+          functools.reduce(
+              lambda uniq_set, ls_element: uniq_set | set([ls_element]),
+              ls,
+              # this is the initial value
+              set()
+          ))
+
 if __name__ == "__main__": 
     test_dict_less_known_features()
     # test_chain_map()
@@ -604,3 +617,4 @@ if __name__ == "__main__":
     # test_tuples()
     # test_custom_containers()
     # test_comprehensions()
+    test_reduce()

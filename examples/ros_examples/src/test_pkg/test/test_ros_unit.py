@@ -27,7 +27,10 @@ class MyTestCase(unittest.TestCase):
 
 class TestPubSub(unittest.TestCase):
     def setUp(self):
-        # This is run at the beginning of every test
+        """
+        Quirks:
+            - Setup is only run when there's a test, and at the beginning of every test
+        """
         self.sub = rospy.Subscriber("rico_topic", StringList, self.sub_cb)
     def tearDown(self):
         # Have to unregister because subscriber won't be destroyed in tearDown
