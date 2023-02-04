@@ -4,6 +4,8 @@ import unittest
 import rospy
 import rostest
 from logging import getLogger
+from test_pkg.msg import StringList
+
 
 # Do not directly run this test. Run the one in launch instead
 # 1. rostest args: http://wiki.ros.org/roslaunch/XML/test No output.
@@ -22,7 +24,17 @@ class MyTestCase(unittest.TestCase):
         print("value: ", value)
         self.assertIsNotNone(value)
 
+class TestPubSub(unittest.TestCase):
+    def setUp(self):
+        # This is run at the beginning of every test
+        self.sub = rospy.Subscriber("rico_topic", StringList, self.sub_cb)
+    def tearDown(self):
+        # Have to unregister because subscriber won't be destroyed in tearDown
+        self.sub.unregister()
+    def sub_cb(self, msg):
+        print(msg)
 
 if __name__ == '__main__':
-    
+    rospy.init_node('test_params')
     rostest.rosrun('tutorial', 'test_params', MyTestCase)
+    rostest.rosrun('tutorial', 'test_params', TestPubSub)
