@@ -10,9 +10,14 @@ find_package(catkin REQUIRED COMPONENTS
     tf2
     tf2_ros
     message_generation
+    std_msgs
     )
 find_package(Eigen3 REQUIRED)
 
+add_message_files(
+    FILES
+    StringList.msg
+)
 
 add_service_files(
     FILES
@@ -20,16 +25,16 @@ add_service_files(
 )
 # still need this for srv
 generate_messages(
-    # DEPENDENCIES
-    # std_msgs
+    DEPENDENCIES
+    std_msgs
 )
 
 
-# catkin_package is what your packages in find_package() depends on (e.g., boost)
+# catkin_package is what your packages in find_package() depends on (e.g., boost). Everything in catkin_package should go into package.xml
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES test_pkg
-#  CATKIN_DEPENDS other_catkin_pkg
+#  CATKIN_DEPENDS std_msgs
 #  DEPENDS system_lib
 )
 # Specify locations for headers!

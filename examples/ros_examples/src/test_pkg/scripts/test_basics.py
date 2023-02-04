@@ -5,6 +5,37 @@
 """
 
 import rospy
+from test_pkg.msg import StringList
+
+def test_pub_sub_connection():
+    pub = rospy.Publisher( 
+                          "rico_topic",
+                          StringList,
+                          # need queue_size to suppress warning
+                          queue_size = 3
+    )
+    # here we must have a delay so the publisher is built completely
+    rospy.sleep(1)
+
+    # Alternatively, we can use get_num_connections() to wait for a subscriber
+    
+    print_interval = 1
+    def check_connections():
+        try:
+            t0 = rospy.core.time.time()
+            t1 = t0 + print_interval
+            while not rospy.is_shutdown() and rospy.core.time.time() < t1:
+                if pub.get_num_connections() > 0:
+                    print("publisher-subscriber are fine")
+                    return True
+                # TODO: exit sleep early if connection is established
+                rospy.core.time.sleep(0.1)
+        except rospy.ROSException as e:
+            return False
+
+    check_connections()
+    pub.publish(StringList(["sdf", "dfsa"]))
+
 
 def test_timer_cb(timer_event: rospy.timer.TimerEvent):
     print("timer cb", timer_event.__dict__)
@@ -19,6 +50,8 @@ def test_rosrun_args():
 if __name__ == "__main__":
     rospy.init_node("test_basics") 
     rospy.loginfo("hello")
-    timer = rospy.Timer(period=rospy.Duration.from_sec(1), callback=test_timer_cb)
+    # timer = rospy.Timer(period=rospy.Duration.from_sec(1), callback=test_timer_cb)
+    test_pub_sub_connection()
+
     rospy.spin()
 
