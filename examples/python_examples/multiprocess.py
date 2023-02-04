@@ -203,7 +203,6 @@ if __name__ == "__main__":
     # test_multiprocess_queue()
     # test_process_scanning()
     test_multiple_threads_queue()
-    # test_semaphore()
     # test_daemon_thread()
 
     # test_threading_timer()
