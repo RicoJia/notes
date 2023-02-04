@@ -43,9 +43,8 @@ def ros_t():
     """
     import pytest
     import py_trees
-    from moxi_rr import RESOURCE_REGISTRY as RR, pretty_return_subscriber
     import rospy
-    from moxi_msgs.msg import MultiString
+    from std_msgs.msg import String
 
     def get_a_two_layer_subtree():
         root = py_trees.composites.Selector()
@@ -54,18 +53,19 @@ def ros_t():
     class TestMapIdInitialization:
         @classmethod
         def setup_class(cls):
+            """Call this function to set up a test before every test suite
+            """
             print ("Creating subscriber")
             if not hasattr(cls, 'subscriber'):
                 print ("Creating subscriber")
                 cls.node = rospy.init_node("test_bt_datalogger")
-                cls.subscriber = rospy.Subscriber(RR.TOPIC.BT_DATA_LOGGING,
-                                                          MultiString,
-                                                          cls.subscriber_cb
+                cls.subscriber = rospy.Subscriber("LOGGING",
+                                                  String,
+                                                  cls.subscriber_cb
                                                           )
 
         @classmethod
         def subscriber_cb(cls, msg):
-            # cls.returned_msg = msg
             print(msg)
 
         @pytest.mark.parametrize("tree", list([get_a_two_layer_subtree()]))
