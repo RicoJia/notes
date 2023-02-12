@@ -64,10 +64,9 @@ class Grasp(py_trees.behaviour.Behaviour):
 
 
 def get_tree(ret ="SEQUENCE_ROOT", test_blackboard = False):
-    sequence_root = py_trees.composites.Sequence()
+    sequence_root = py_trees.composites.Sequence(name = "Test root", memory=True)
     sequence_root.add_children((MoveToStandoffPos(name="move to stand off", test_blackboard=test_blackboard), Grasp(name="Grasp"))) 
-    if ret == "SEQUENCE_ROOT":
-        return sequence_root
+    return sequence_root
     
 #####################################################
 ## Test Functions
@@ -192,6 +191,22 @@ def test_parallel():
     while parallel_root.status != py_trees.common.Status.FAILURE:
         parallel_root.tick_once()
         parallel_root.logger.warning("status: "+str(parallel_root.status))
+
+def test_blackboard_read_write():
+    root = get_tree("SEQUENCE_ROOT", test_blackboard = True)
+    behavior_tree = py_trees.trees.BehaviourTree(root=root)
+    behavior_tree.setup(timeout = 15)
+    # Running this should generate a "KeyError" that the key doesn't exist
+    try:
+        behavior_tree.tick_tock(
+            period_ms=500,
+            number_of_iterations=py_trees.trees.CONTINUOUS_TICK_TOCK,
+            pre_tick_handler=None,
+            post_tick_handler=None
+        )
+    except KeyboardInterrupt:
+        behavior_tree.interrupt()
+    
     
 def test_retry_finite_num_with_blackboard():
     sequence_root = py = get_tree("SEQUENCE_ROOT", test_blackboard = True)
@@ -202,6 +217,7 @@ def test_retry_finite_num_with_blackboard():
     
     root = py_trees.composites.Sequence()
     root.add_children((GeneratePickUpLocations(), sequence_retry_root))  
+    # root.add_children((GeneratePickUpLocations(), sequence_retry_root))  
     # root.setup_with_descendants()
     # while root.status != py_trees.common.Status.FAILURE:
     #     root.tick_once()
@@ -323,6 +339,7 @@ if __name__ == "__main__":
     # test_parallel()
     # test_retry_until_succeed()
     # test_retry_finite_number_of_times()
+    test_blackboard_read_write()
     # test_retry_finite_num_with_blackboard()
-    test_tree()
+    # test_tree()
     # test_tree_printing()
