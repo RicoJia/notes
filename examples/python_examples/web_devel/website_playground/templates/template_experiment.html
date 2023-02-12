@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <!-- put an expression in { { } }, which is for flask templates-->
+    <!-- An expression is to be evaluated to a single value -->
+    <!-- a template is a string with placeholders, which can be later substituted. It will be returned as a string -->
+    <h1>{{ username }}的公众号 - {{username}}杂谈</h1>
+    <!-- filepath for function "template_experiment". relative to templates -->
+    <img alt="slime" src="{{ url_for('template_experiment', filename='/templates/imgs/atongmu.png') }}">
+    <!-- comment -->
+
+    <p>This is a jinja2 experiment paragraph. 
+        My favorite food is {{ food_prefix +"_"+food_suffix }}, my favorite number is {{ num_a + num_b }}
+    </p>
+</body>
+</html>

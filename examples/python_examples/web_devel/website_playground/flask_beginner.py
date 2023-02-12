@@ -23,7 +23,8 @@ def hello_piyixia():
 # render_template() will find in './templates' folder using url_for()
 template_experiment_count = 0
 NAMES = ("Rico", "Justine")
-@app.route('/temp')
+# Side note: leave a trailing slash as a convention. 
+@app.route('/temp_vanilla/')
 def template_experiment():
     global NAMES, template_experiment_count
     name = NAMES[template_experiment_count]
@@ -31,6 +32,26 @@ def template_experiment():
     template_experiment_count = template_experiment_count % len(NAMES)
     return render_template('template_experiment.html', username=name)
 
+
+@app.route("/temp/")
+def template_parsing():
+    kwargs_for_template = {
+        "food_prefix": "pork", 
+        "food_suffix": "dumplings",
+        "num_a": 6,
+        "num_b": 9,
+    }
+    # This is just to test jinja2. Jinja2 was written by Armin Ronacher
+    from jinja2 import Template
+    t = Template("Herrrooo, {{name}}")
+    str1 = t.render(name="rico")
+    str2 = t.render(name="JE")
+    print("Jinja 2 template can be used for string substitution easily")
+    print(f"{str1}")
+    print(f"{str2}")
+    # after template substitution, another string is returned
+    return render_template("template_experiment.html", **kwargs_for_template)
+    
 
 # Test URL with variables
 @app.route('/user/<username>')
