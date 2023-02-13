@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Note: endpoints with trailing slashes are treated as directories. If we do not use url_for, the styles.css file is not found properly -->
+    <!-- <link rel="stylesheet" href="static/css/styles.css"/> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+</head>
+<body>
+    <header class="navbar">
+        <!-- for divisions like nav bar, footer,images, etc, for CSS -->
+        <div class="navbar__brand">
+            <!-- text after img will be placed on the webpage as well, but page spacing will be specified in CSS -->
+            <img src="static/imgs/pen_logo.png" alt="pen_logo" class="navbar__logo" height="70"/> RJ&JE Recipes
+        </div>
+        <ul class="navbar__navigation">
+            <li class="navbar__navigation__item"><a href="#" class="navbar__link">Recipes</a></li>
+            <li class="navbar__navigation__item"><a href="#" class="navbar__link">Recommendations</a></li>
+            <li class="navbar__navigation__item"><a href="#" class="navbar__link">Home</a></li>
+        </ul>
+    </header>
+
+    <main class="main">
+        <h1> Recommendations For Penguin </h1>
+
+        {% if page=="index" or page=="recipes" %}
+            <div class="grid__container">
+            {% for item in items %}
+                <div class="img__item">
+                    
+                    <img src={{url_for('static', filename='imgs/'+item.img_name)}} alt={{item.alt}}/>
+                    <div class="text__on__img">{{item.name | truncate(20, true)}}</div>
+                </div>
+            {% endfor %}
+            </div> 
+        {% endif %}
+
+        {% if page=="index" %}
+            <!-- By default, the submit button sends "GET", Send the response of the form to recipes?recipe_name=asdf -->
+            <!-- Now with post, it sends to POST, which is good for hiding. -->
+            <!-- Also, url has a length limit -->
+            <form action="/recipes/" method="POST">
+                <p class="form__input">
+                    <!-- for should match id -->
+                    <label for="recipe_name" class="form__label">What's the name of the recipe?</label>
+                    <input type="text" name="recipe_name" id="recipe_name" class="form__text"/>
+                </p>
+                
+                <p class="form__input">
+                    <label for="recipe" class="form__label">What are the ingredients and steps of the recipe?</label>
+                    <textarea name="content" id="recipe" class="form__textarea"></textarea>
+                </p>
+                <button type="submit" class="form__button">Add Entry</button>
+            </form>
+        {% endif %}
+    </main>
+
+    <footer class="footer">
+        <!-- dunder method for each column-->
+        <section class="left">
+                <a class="footer__item">Copyright @ 2023 Rico Jia, all rights reserved.</a>
+            </div>
+        </section>
+        <section class="right">
+                <a class="footer__item">About</a>
+                <a class="footer__item">FAQ</a>
+                <a class="footer__item">New Here?</a>
+                <a class="footer__item">Privacy</a>
+        </section>
+    </footer>
+</body>
+</html>
