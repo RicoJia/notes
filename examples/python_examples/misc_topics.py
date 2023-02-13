@@ -127,6 +127,13 @@ def test_datetime():
     yr, mon, day = text.split("-")
     print("yr, mon, day: ", int(yr), int(mon), int(day))
 
+    # 4 If you want to reformat time, datetime.datetime.strptime() is the way to go.
+    import datetime
+    date_string = "21 June, 2018"
+    # in datetime, lower case means number, upper case means alphabetitcal
+    date_obj = datetime.datetime.strptime(date_string, "%d %B, %Y")
+    print(date_obj)
+
 def test_fractions(): 
     """
     1. fractions.Fraction() can allow: fraction, and closest approximate 
