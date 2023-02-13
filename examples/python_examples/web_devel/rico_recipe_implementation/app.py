@@ -1,10 +1,12 @@
-from flask import render_template, Flask, url_for
+from flask import render_template, Flask, url_for, request
+import datetime
 from dataclasses import dataclass
 app = Flask(__name__)
 
 @dataclass
 class Item:
     img_name: str = "",
+    # name of the image file in imgs/. We cannot call url_for outside of an app function
     name: str = "",
     @property
     def alt(self):
@@ -33,6 +35,12 @@ def recipes():
         "items": items,
         "page": "recipes"
     }
+    # Tricky: for text area, it's name under textarea name="recipe"
+    name = request.form.get("recipe_name")
+    recipe = request.form.get("content")
+    timestamp = datetime.datetime.today().strftime("%Y-%m-%d")
+    items.append(Item(test_img_name, name))
+    # The new item is appended.
     return render_template('index.html', **kwargs)
 
 if __name__ == '__main__':
