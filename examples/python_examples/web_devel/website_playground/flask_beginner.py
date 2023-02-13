@@ -66,6 +66,21 @@ def test_url_for():
     # url_for(<endpoint-name>, <param-name>)
     return f'url_for rjia: {url_for("user_name", username="rjia")}'
 
+@app.route('/test_if_and_iterables/')
+def test_if_and_iterables():
+    # \{ %  \} is for conditionals, for loops. \{{ }} is for expressions
+    class MyMsg:
+        message = ""
+    my_obj = MyMsg()
+    my_obj.message = "hello, this is a dummy msg"
+    kwargs = {
+        "my_shopping_list": ["apples", "bananas", "pears"],
+        "my_shopping_dict": {"frozen_fruit": 3, "dumplings": 2},
+        "my_obj": my_obj, 
+        "print_toggle": "no_apple"
+    }
+    return render_template('list_test.html', **kwargs)
+
 if __name__ == '__main__':
     # 1. This runs on your computer's network
     # app.run(host='127.0.0.1', port=8080)

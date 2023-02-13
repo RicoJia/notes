@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <p>
+        <div>
+            Now let's test reading iterables
+            Here is my list:
+            <li>
+                {% for l in my_shopping_list %}
+                <ul>{{l}}</ul>
+                {% endfor %}
+            </li>
+            Or we can print individual items. The first item in the list: 
+            {{my_shopping_list[0]}}
+        </div>
+
+        <div>
+            My dictionary: 
+            {% for key, val in my_shopping_dict.items() %}
+                {{key}}: {{val}};
+            {% endfor %}
+        </div>
+
+        <div>
+            My obj message: {{my_obj.message}}
+        </div>
+
+        <div>
+            Testing nested if: 
+            {% for l in my_shopping_list %}
+                <!-- Note you can nest if, and you can use operator and  -->
+                {% if print_toggle=="no_apple" and l=="apples"%}
+                    <!-- So here you print nothing -->
+                {% else %}
+                    {{l}}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </p>
+</body>
+</html>
