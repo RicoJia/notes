@@ -26,10 +26,19 @@ class MyTestCase(unittest.TestCase):
         self.assertIsNotNone(value)
 
 class TestPubSub(unittest.TestCase):
+    """
+    General Test Cases:
+        - test cases are run sequentially, but its sequence is random
+        - -t / --text
+        - rostest PKG test_file --time_limit, by default it's 60s
+        6. When the test is done, rostest will call all deleters. 
+        7. When it's difficult to debug, make the test a "non test object"
+    """
     def setUp(self):
         """
         Quirks:
-            - Setup is only run when there's a test, and at the beginning of every test
+            -  setUp and tearDown are run per test case
+            - if in setUp we set a rostopic sub, we must have teardown to close it out
         """
         self.sub = rospy.Subscriber("rico_topic", StringList, self.sub_cb)
     def tearDown(self):
@@ -37,8 +46,10 @@ class TestPubSub(unittest.TestCase):
         self.sub.unregister()
     def sub_cb(self, msg):
         print(msg)
+    def test_dummy(self):
+        print("dummy test")
 
 if __name__ == '__main__':
     rospy.init_node('test_params')
-    rostest.rosrun('tutorial', 'test_params', MyTestCase)
-    rostest.rosrun('tutorial', 'test_params', TestPubSub)
+    rostest.unitrun('tutorial', 'test_params', MyTestCase)
+    rostest.unitrun('tutorial', 'test_params', TestPubSub)
