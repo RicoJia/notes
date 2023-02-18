@@ -273,6 +273,26 @@ def test_bytecode():
         di_c = di.copy()
     dis.dis(func)
 
+def test_argparse():
+    # 1 reading raw args
+    import sys
+    # print("The first arg is the file itself", sys.argv[0], "second arg: ", sys.argv[1])
+
+    # 2. But argparse will disable sys
+    import argparse
+    parser = argparse.ArgumentParser()
+    # required is default false. -- is optional, without -- is positional
+    parser.add_argument("--bool", action="store_false")
+    parser.add_argument("nums", nargs=2)
+    parser.add_argument("variable_nums", nargs='*')
+    # by specifying type, this could fail
+    parser.add_argument("--some_int", type=int)
+    # + means one or more
+    args = parser.parse_args()
+    print("bool should have a default value", args.bool)
+    print("nums should be the first 2 args", args.nums)
+    print("variable_nums are the rest of the args", args.variable_nums)
+
 
 if __name__=="__main__":
     # test_warning()
@@ -288,4 +308,6 @@ if __name__=="__main__":
     # test_memory_leak()
     # test_walrus_operator()
     # test_uuid()
-    test_bytecode()
+    # test_bytecode()
+
+    test_argparse()

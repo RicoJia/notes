@@ -3,6 +3,9 @@
     export FLASK_APP=flask_beginner.py
     export FLASK_DEBUG=1
     flask run
+2. Flask:
+    - Follow this guy: https://www.zhihu.com/people/he-he-da-92-32-97/posts?page=4
+    - Nice class: https://www.bilibili.com/video/BV1SM4y1P7xi?p=87&spm_id_from=pageDriver
 """
 from flask import Flask, render_template, url_for
 # __name__ will be __main__ or name of the module (if being run as submodule)
@@ -94,3 +97,6 @@ if __name__ == '__main__':
     # E.g, CSS is the layout, JS is how you interact with the page. fonts is fonts
 
     # Use SVG images, which uses the same HTML languages. They can also be rendered in browsers
+
+    # 5. Add documents on mongodb
+    # Add a collection, in one collection, you can add several documents: [{"document1_field1": "1"}, {"document2_field1": "2"}]

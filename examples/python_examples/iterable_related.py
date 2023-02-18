@@ -198,6 +198,8 @@ def dictionary_basics():
     person.get("key", "hehe")   #get hehe, default value
     # get KeyError
     # person["key"]
+    # if the key doesn't have a value yet
+    person.setdefault("key", "some_value")
 
     # 2
     my_dict = {"lol": 1, "aaa": 2}
