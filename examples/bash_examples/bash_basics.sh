@@ -110,3 +110,10 @@ test_trap(){
     trap 'echo "You tried to kill me"' TERM
     sleep 10
 }
+
+test_and_or(){
+    [ -z "$PS1" ] && echo "Skipping foyer because this terminal is non-interactive" || foyer
+    # - $PS1 is an 'prompt variable', which is needed for prompting the user for an input. So it's set in an interactive shell session (not set in non-interactive shell). It looks like: ```\u@\h:\w$```, where u is username. h is homedirectory
+    # - && and || will stop executing if the return value can be determined
+
+}
