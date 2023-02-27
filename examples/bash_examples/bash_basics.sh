@@ -76,7 +76,7 @@ test_variable_export(){
     export test_shell_var
 
     # set a shell variable if that var doesn't exist
-    # ${RICO_VAR:-lol} will return lol if RICO_VAR doesn't exist. 
+    # ${RICO_VAR:-lol} will return lol if RICO_VAR doesn't exist.  Note, lol is already a string
     RICO_VAR=${RICO_VAR:-lol}
 }
 
@@ -115,5 +115,11 @@ test_and_or(){
     [ -z "$PS1" ] && echo "Skipping foyer because this terminal is non-interactive" || foyer
     # - $PS1 is an 'prompt variable', which is needed for prompting the user for an input. So it's set in an interactive shell session (not set in non-interactive shell). It looks like: ```\u@\h:\w$```, where u is username. h is homedirectory
     # - && and || will stop executing if the return value can be determined
+}
 
+test_stderr(){
+    # This will directly redirect the output to stderr
+    >&2 echo "Failed to load flags!"
+    # This directs output to stdout, then stderr
+    echo "Failed to load flags!" >&2 
 }
