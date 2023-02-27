@@ -7,3 +7,4 @@ devel
 *.pyc
 .catkin_tools/
 *logs/
+**/movielens_20/
