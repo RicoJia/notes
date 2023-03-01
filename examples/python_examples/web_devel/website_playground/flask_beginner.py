@@ -27,15 +27,6 @@ def hello_piyixia():
 template_experiment_count = 0
 NAMES = ("Rico", "Justine")
 # Side note: leave a trailing slash as a convention. 
-@app.route('/temp_vanilla/')
-def template_experiment():
-    global NAMES, template_experiment_count
-    name = NAMES[template_experiment_count]
-    template_experiment_count += 1
-    template_experiment_count = template_experiment_count % len(NAMES)
-    return render_template('template_experiment.html', username=name)
-
-
 @app.route("/temp/")
 def template_parsing():
     kwargs_for_template = {
@@ -43,6 +34,7 @@ def template_parsing():
         "food_suffix": "dumplings",
         "num_a": 6,
         "num_b": 9,
+        "len_todo": 3
     }
     # This is just to test jinja2. Jinja2 was written by Armin Ronacher
     from jinja2 import Template
@@ -53,7 +45,7 @@ def template_parsing():
     print(f"{str1}")
     print(f"{str2}")
     # after template substitution, another string is returned
-    return render_template("template_experiment.html", **kwargs_for_template)
+    return render_template("template_experiment.html",  **kwargs_for_template)
     
 
 # Test URL with variables
