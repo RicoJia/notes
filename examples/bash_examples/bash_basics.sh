@@ -36,8 +36,11 @@ function test_if(){
     # 7 -eq for equal, = for comparing strings, == is for bash only. -ne is not equal. != for strings. -le is less than or equal to
     # 8 You also need space for -eq, so it is a separate word.
     if [[ ${UID} -eq 0 ]]; then echo "UID is 0"; fi
+
+    #9 test -f will see if a file exists
+    test -f $TEST_FILE || echo "hello, file $TEST_FILE exits"
 }
-# test_if
+test_if
 
 # 8
 function test_increase_variable(){
@@ -96,12 +99,12 @@ test_brace_expansion(){
     echo {b..t}
 }
 
-test_auto_complete(){
-    # You need to add a file to "source"
-    # but for simple string autocompletion (not args complete)
-    # see complete_script_to_source.bash
-
-}
+# test_auto_complete(){
+#     # You need to add a file to "source"
+#     # but for simple string autocompletion (not args complete)
+#     # see complete_script_to_source.bash
+#
+# }
 
 test_trap(){
     # set a signal to trap for: when INT or TERM comes up, do echo
@@ -122,4 +125,21 @@ test_stderr(){
     >&2 echo "Failed to load flags!"
     # This directs output to stdout, then stderr
     echo "Failed to load flags!" >&2 
+}
+
+test_loop(){
+    # If a code is successful, sleep X always has exit value 0. In bash, any non-zero exit value is considered false, whereas 0 is considered true.  So while will take sleep 1; 
+    # $? is the exit value of the last executed command
+    # Then, break from the script
+    while sleep 1; do echo "haha"; echo $? && break; done 
+
+}
+# test_loop
+
+
+test_and(){
+    # && will execute the latter command if the first statement is true.
+    # { ...; ...; } executes a series of commands in a subshell; ( ...; ...; ) executes a series of commands in the current shell
+    # CAVEAT: test -f <SPACE> still gives 0! so make sure $FILE is set!
+    test -f $FILE && { echo "$FILE exists."; echo "hello!"; } && ( echo $FILE; echo "hellp again"; )
 }
