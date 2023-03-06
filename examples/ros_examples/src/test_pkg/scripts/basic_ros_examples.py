@@ -47,11 +47,19 @@ def test_rosrun_args():
     t = rospy.get_param("~test")
     print("t: ", t)
 
+def test_env_var():
+    import os
+    print(f"Testing OS env var: {os.getenv('test_env_var')}")
+    print(f"Testing private OS env var: {os.getenv('private_test_env_var')}")
+    print(f"rosparam, optenv private_opt_env: {rospy.get_param('~private_opt_env')}")
+    print(f"rosparam, optenv opt_env: {rospy.get_param('opt_env')}")
+
 if __name__ == "__main__":
     rospy.init_node("test_basics") 
     rospy.loginfo("hello")
     # timer = rospy.Timer(period=rospy.Duration.from_sec(1), callback=test_timer_cb)
     test_pub_sub_connection()
+    test_env_var()
 
     rospy.spin()
 

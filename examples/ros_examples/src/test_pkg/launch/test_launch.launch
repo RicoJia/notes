@@ -3,7 +3,18 @@
     <!-- DO NOT FORGET ABOUT output="screen" here! -->
     <!-- load is basically set, dump is get for params -->
 
-<node name="test_pkg_pub_sub_node" type="test_pkg_pub_sub_node" pkg="test_pkg" output="screen" />
+<!-- <node name="test_pkg_pub_sub_node" type="test_pkg_pub_sub_node" pkg="test_pkg" output="screen" /> -->
+
+<!-- Note that when used in launch, node AFTER the env variable can get the value -->
+<env name="test_env_var" value="hello_env"/>
+<!-- Here we're not supplying anything, default value is "" -->
+<param name="opt_env" value="$(optenv opt_env)"/>
+<node name="basic_ros_examples" type="basic_ros_examples.py" pkg="test_pkg" output="screen">
+    <!-- private env var -->
+    <env name="private_test_env_var" value="private_hello_env"/>
+    <!-- default value is private_hello_opt_env -->
+    <param name="private_opt_env" value="$(optenv private_opt_env private_hello_opt_env)"/>
+</node>
 
 <!-- <node name="logger" type="logger.py" pkg="test_pkg" output="screen" /> -->
 </launch>
