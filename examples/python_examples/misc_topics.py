@@ -293,6 +293,38 @@ def test_argparse():
     print("nums should be the first 2 args", args.nums)
     print("variable_nums are the rest of the args", args.variable_nums)
 
+def test_enum():
+    # 1: unique 
+    from enum import Enum, unique, IntEnum
+    class Animal(Enum):
+        dog=1
+        cat=1
+        horse=3
+
+    print(f'dog: name: {Animal.dog.name}, value: {Animal.dog.value}, cat: {Animal.cat}, if they are equal: {Animal.dog == Animal.cat}')
+
+
+    try: 
+        @unique
+        class AnimalUnque(Enum):
+            dog=1
+            cat=1
+            horse=3
+    except ValueError:
+        print(f'So two enums can be the same, so one is another ones alias. Using Enum.unique can avoid that')
+
+    # 2: IntEnum
+    try: 
+        class AnimalInt(IntEnum):
+            dog = 'a'
+    except ValueError:
+        print("Int Enum advantage 1: prevents strings in enum values")
+    
+    class AnimalInt(IntEnum):
+        dog = 1
+        cat = 2 
+    print(f"IntEnum advantage 2: AnimalInt.dog == 1: {AnimalInt.dog == 1}, because IntEnum is a subclass of int {isinstance(AnimalInt.dog, int)}"
+          "whereas Animal.dog == 1: {Animal.dog == 1}.")
 
 if __name__=="__main__":
     # test_warning()
@@ -310,4 +342,5 @@ if __name__=="__main__":
     # test_uuid()
     # test_bytecode()
 
-    test_argparse()
+    # test_argparse()
+    test_enum()
