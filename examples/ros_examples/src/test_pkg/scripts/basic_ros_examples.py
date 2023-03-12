@@ -36,6 +36,16 @@ def test_pub_sub_connection():
     check_connections()
     pub.publish(StringList(["sdf", "dfsa"]))
 
+def test_subscriber():
+    """
+    dummy example that shows: initialize subscribers last SO VARIABLES CAN FINISH INITIALIZING!
+    """
+    class SomeClass:
+        def __init__(self):
+            self.var = 1
+            self.sub = rospy.Subscriber("/test_topic", StringList, self.sub)
+        def sub_cb(self, msg):
+            pass
 
 def test_timer_cb(timer_event: rospy.timer.TimerEvent):
     print("timer cb", timer_event.__dict__)

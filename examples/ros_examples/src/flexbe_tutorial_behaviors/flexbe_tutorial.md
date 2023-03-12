@@ -69,3 +69,24 @@
 ## Quirks:
 1. configure your editor to use tabs only, Python will get angry at spaces 
 2. When you load behavior, changes in behavior will update, but states are not
+
+========================================================================
+## How to launch 
+========================================================================
+1. Link: http://wiki.ros.org/flexbe/Tutorials/Running%20Behaviors%20Without%20Operator
+    - Launch behavior_onboard: 
+        1. 1st way ```roslaunch flexbe_onboard behavior_onboard.launch```
+        2. 2nd way: 
+            ```python
+            from flexbe_core.proxy import ProxySubscriberCached
+            from flexbe_onboard.flexbe_onboard import FlexbeOnboard 
+            if __name__ == '__main__':
+                rospy.init_node('flexbe_onboard')
+                FlexbeOnboard()
+                # Wait for ctrl-c to stop the application
+                rospy.spin()
+                ProxySubscriberCached().shutdown()
+            ```
+    - Launch behavior
+        1. 1st way ```rosrun flexbe_widget be_launcher -b 'Example Behavior'``` on one panel
+        2. 2nd way: ```rosrun flexbe_widget be_action_server```, then publish behavior name onto ```rostopic pub /flexbe/execute_behavior/goal flexbe_msgs/BehaviorExecutionActionGoal '{goal: {behavior_name: "Example Behavior"}}'```
