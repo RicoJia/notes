@@ -6,6 +6,8 @@
 
 import rospy
 from test_pkg.msg import StringList
+import json
+import numpy as np
 
 def test_pub_sub_connection():
     pub = rospy.Publisher( 
