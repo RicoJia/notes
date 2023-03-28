@@ -21,6 +21,11 @@
 			<max value="3" />
 		</param>
 
+		<param type="numeric" name="print_persistent_member" default="0" label="print_persistent_member" hint="Sets the print_persistent_member">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
 	</params>
 
 

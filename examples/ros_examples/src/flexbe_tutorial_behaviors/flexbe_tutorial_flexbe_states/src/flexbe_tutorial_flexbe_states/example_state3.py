@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import rospy
-
+import numpy as np
+import json 
 from flexbe_core import EventState, Logger
 
 
@@ -36,6 +37,7 @@ class ExampleState3(EventState):
 		# print("haha", userdata["hello_world_msg3"])
 		userdata["test_output"] = 12345
 		self.persistent_member
+		json.dumps({1: np.ndarray((2,), buffer=np.array([1,2,3]),dtype=int)})
 		print("HAHAHAH")
 		if rospy.Time.now() - self._start_time > self._target_time:
 			return 'continue' # One of the outcomes declared above.
