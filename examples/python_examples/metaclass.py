@@ -44,6 +44,12 @@ def test_metaclass():
     2. Mix-in class: in MyList, list is a mix-in 
         - Mix-in technically cannot be instantiated. Its functions will be inherited. 
         - Multiple Mix-ins can be used so this relies on Python's multi-inherited 
+    3. __new__ vs __init__:
+        1. __new__: construct cls as a class object. 
+        2. __init__ is called after __new__. So you can set attributes directly on cls
+            - But updating attrs in __init__ is not effective. Per official document: 
+            "the object provided as the namespace parameter is copied to a new ordered mapping and the original object is discarded. 
+            The new copy is wrapped in a read-only proxy"
     """
     # have Metaclass at the end of the name by convention
     from collections import OrderedDict
@@ -55,6 +61,10 @@ def test_metaclass():
             return OrderedDict()
             
         def __new__(cls, class_name, bases, attrs):
+            # 1. bases is empty if there's the class does not have a parent class
+            # 2. it allocates memory, creates attributes, then 
+            # 3. cls being passed in is the meta class itself
+            # 4. the official doc refers attrs as namespace
             attrs['add'] = lambda self, x: self.append(x)
             #TODO 
             # print(f"new: attrs:", attrs)
@@ -86,6 +96,63 @@ def test_metaclass():
     l.foo()
     # l.add(3)
     # print(l)
+
+def test_metaclass_inheritance_and_init():
+    class Baz:
+        def __init__(self, string, fo):
+            #TODO Remember to remove
+            # print(f'Rico: baz')
+            pass
+
+    class CatchOnEnterFailuresMeta(type):
+        def __new__(meta_cls_itself, class_name, bases, attrs):
+            if "on_enter" in attrs:
+                old_on_enter = attrs["on_enter"]
+                def failure_catchable_on_enter(self, userdata):
+                    #TODO Remember to remove
+                    print(f'Rico: ****************==============hello!')
+                    old_on_enter(self, userdata)
+                attrs['on_enter'] = failure_catchable_on_enter
+            return type.__new__(meta_cls_itself, class_name, bases, attrs) 
+
+        def __init__(cls, name, bases, attrs, **kwargs):
+            # This doesn't do anything
+            if "on_enter" in attrs:
+                old_on_enter = attrs["on_enter"]
+                def init_on_enter(self, userdata):
+                    print(f'Rico: ****************==============hello2!')
+                    old_on_enter(self, userdata)
+                attrs['on_enter'] = init_on_enter
+                # cls.on_enter = failure_catchable_on_enter
+            print(f'Rico: {attrs}')
+            super().__init__(name, bases, attrs)
+        
+    class Foo(metaclass=CatchOnEnterFailuresMeta):
+        def __init__(self):
+            super().__init__()
+        def on_enter(self, userdata):
+            print(f"on enter")
+
+    # class Child(Foo):
+    #     pass
+    # Foo().on_enter(123)
+    Foo.on_enter
+    Foo.__dict__
+
+def test_metaclass_equivalent():
+    # Equivalent way to create a metaclass
+    class MetaCls(type):
+        """A sample metaclass without any functionality"""
+        def __new__(cls, clsname, superclasses, attributedict):
+            print("clsname:", clsname)
+            print("superclasses:", superclasses)
+            print("attrdict:", attributedict)
+            return super(MetaCls, cls).__new__(cls, \
+                        clsname, superclasses, attributedict)
+    
+    C = MetaCls('C', (object, ), {})
+    class D(C):
+        pass
 
 ##############################################################
 ### Metaclass Applications

@@ -326,6 +326,48 @@ def test_enum():
     print(f"IntEnum advantage 2: AnimalInt.dog == 1: {AnimalInt.dog == 1}, because IntEnum is a subclass of int {isinstance(AnimalInt.dog, int)}"
           "whereas Animal.dog == 1: {Animal.dog == 1}.")
 
+def test_cpu_limit():
+    """
+    1. Soft constraint is from the user configurtaion, hard is from the operating system
+        i.e., if violating the hard constraint, system will shutdown
+
+    """
+    import resource
+
+    # 1. Check resource limits, and change them
+    print("desc, name, soft, hard")
+    for name, desc in [
+        ('RLIMIT_CORE', 'core file size'),
+        ('RLIMIT_CPU',  'CPU time'),
+        ('RLIMIT_FSIZE', 'file size'),
+        ('RLIMIT_DATA', 'heap size'),
+        ('RLIMIT_STACK', 'stack size'),
+        ('RLIMIT_RSS', 'resident set size'),
+        ('RLIMIT_NPROC', 'number of processes'),
+        ('RLIMIT_NOFILE', 'number of open files'),
+        ('RLIMIT_MEMLOCK', 'lockable memory address'),
+        ]:
+        limit_num = getattr(resource, name)
+        soft, hard = resource.getrlimit(limit_num)
+        print ('Maximum %-25s (%-15s) : %20s %20s' % (desc, name, soft, hard))
+
+    # 2. check the current process's usage
+    import time
+    usage = resource.getrusage(resource.RUSAGE_SELF)
+    for name, desc in [
+        ('ru_utime', 'User time'),
+        ('ru_stime', 'System time'),
+        ('ru_maxrss', 'Max. Resident Set Size'),
+        ('ru_ixrss', 'Shared Memory Size'),
+        ('ru_idrss', 'Unshared Memory Size'),
+        ('ru_isrss', 'Stack Size'),
+        ('ru_inblock', 'Block inputs'),
+        ('ru_oublock', 'Block outputs'),
+        ]:
+        print ('%-25s (%-10s) = %s' % (desc, name, getattr(usage, name)))
+
+    # 3. set resource limit:
+
 if __name__=="__main__":
     # test_warning()
     # test_math()
@@ -343,4 +385,5 @@ if __name__=="__main__":
     # test_bytecode()
 
     # test_argparse()
-    test_enum()
+    # test_enum()
+    test_cpu_limit()
