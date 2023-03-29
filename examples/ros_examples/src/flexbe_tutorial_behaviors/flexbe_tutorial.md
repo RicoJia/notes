@@ -68,6 +68,9 @@
 
 ## Quirks:
 1. configure your editor to use tabs only, Python will get angry at spaces 
+    - autop will make state machine complain: "can't find state ..."
+    - inconsistent-use-of-tabs-and-spaces-in-indentation: c-s-p + Convert Indentation to Spaces
+
 2. When you load behavior, changes in behavior will update, but states are not
 
 ========================================================================
