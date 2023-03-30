@@ -368,6 +368,12 @@ def test_cpu_limit():
 
     # 3. set resource limit:
 
+def test_exception():
+    # Can see Method Resolution Order of an Exception
+    print(f'Rico: an error\'s mro (pass in a class, not the exception itself): {FileExistsError.__mro__}')
+    exception = FileExistsError("hehe")
+    print(f'Rico: {type(exception).__mro__}')
+
 if __name__=="__main__":
     # test_warning()
     # test_math()
@@ -386,4 +392,5 @@ if __name__=="__main__":
 
     # test_argparse()
     # test_enum()
-    test_cpu_limit()
+    # test_cpu_limit()
+    test_exception()
