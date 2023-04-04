@@ -44,15 +44,14 @@ class TreeVisualizer:
 if __name__ == "__main__":
     # Construct the tree
     from vanila_rjje_arm_pytree import GeneratePickUpLocations
-    root = py_trees.composites.Sequence("Sequence")
+    root = py_trees.composites.Sequence("Sequence", memory=True)
+
     for action in ["Action 1", "Action 2", "Action 3"]:
-        b = py_trees.behaviours.Count(
+        b = py_trees.behaviours.SuccessEveryN(
                 name=action,
-                fail_until=0,
-                running_until=1,
-                success_until=10)
+                n=3)
         root.add_child(b)
-    root.add_child(GeneratePickUpLocations())
+    root.add_child(GeneratePickUpLocations(name="dummy_pickup_location_generation"))
     behaviour_tree = py_trees.trees.BehaviourTree(root)
 
     # User code

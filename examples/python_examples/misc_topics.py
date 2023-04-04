@@ -369,10 +369,68 @@ def test_cpu_limit():
     # 3. set resource limit:
 
 def test_exception():
-    # Can see Method Resolution Order of an Exception
+    """
+    An exception has __cause__, __context__, and __traceback__
+        - __cause__ is the direct causes of the exception. Works with 
+            raise <exception> from <another_exception>
+        - __context__ contains __cause__, and "irrelevant" exceptions raised from there
+        - __traceback__ gives all the exceptions
+
+    """
+    # 1. Can see Method Resolution Order of an Exception
     print(f'Rico: an error\'s mro (pass in a class, not the exception itself): {FileExistsError.__mro__}')
     exception = FileExistsError("hehe")
-    print(f'Rico: {type(exception).__mro__}')
+    print(f'An exceptions mro: {type(exception).__mro__}')
+    
+    # 2. Exceptions take in any number of args; and store them in a tuple
+    exception = FileExistsError("ERROR_NUM", "Part Before :", "Part after :")
+    #TODO Remember to remove
+    print(f'args an exception takes: {exception}')
+
+
+    # 3. This wil show The above exception was the direct cause of the following exception:
+    def throw_chained_exceptions():
+        try:
+            raise RuntimeError("First error")
+        except RuntimeError as e:
+            raise ValueError("Second Error") from e
+
+    # 4. The use of __cause__  vs __context__
+    try:
+        throw_chained_exceptions()
+    except ValueError as e:
+        print(f'Chained errors caught')
+        if e.__cause__:
+            print(f'Cause: {e.__cause__}')
+        if e.__context__:
+            print(f'Context: {e.__context__}')
+    
+    def throw_corrupted_exception():
+        try:
+            raise RuntimeError("First Error")
+        except RuntimeError:
+            #TODO Remember to remove
+            print(f'Rico: this call is failing: {err}')
+    
+    try: 
+        throw_corrupted_exception()
+    except Exception as e:
+        #TODO Remember to remove
+        print(f'exception: {e}')
+        if e.__cause__:
+            print(f'Cause: {e.__cause__}')
+        if e.__context__:
+            print(f'Context: {e.__context__}')
+
+    # 5. stop chained exceptions, and raise the last error; 
+    # 6. You can also relay it, by using raise
+    try:
+        throw_chained_exceptions()
+    except Exception as e:
+        # Here you can see "second error"
+        # raise e from None 
+        raise 
+
 
 if __name__=="__main__":
     # test_warning()

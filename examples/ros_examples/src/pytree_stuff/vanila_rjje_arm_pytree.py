@@ -165,8 +165,8 @@ class GeneratePickUpLocations(py_trees.behaviour.Behaviour):
     '''
     For black board examples, see: behaviours.py
     '''
-    def __init__(self):
-        super().__init__()
+    def __init__(self, name=""):
+        super().__init__(name)
         self.blackboard = self.attach_blackboard_client()
         self.blackboard.register_key(key = PICKUP_LOCATION, access=py_trees.common.Access.WRITE)
         self.location_list = deque([(1,2), (3,4), (5,6)])
