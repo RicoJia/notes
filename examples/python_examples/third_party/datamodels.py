@@ -30,10 +30,13 @@ def test_basic_pydantic():
 
 def test_dataclass():
     """
-    1. 
+    1. basic example
+    2. Can use fields for default values creation
+    3. Must specify type
+    4. asdict(instance) can be handy
     """
     import datetime as dt
-    from dataclasses import dataclass
+    from dataclasses import dataclass, asdict
     from marshmallow import Schema, fields
 
     @dataclass      #class deco: you can basically set the attributes right? What does this do?
@@ -50,5 +53,20 @@ def test_dataclass():
     data = schema.dump(album)
     data  # {'release_date': '1968-12-06', 'title': 'Beggars Banquet'}
 
+    # must have type
+    @dataclass
+    class Foo:
+        name = ""
+        age = 12
+    try:
+        Foo(name="f", age=12) # .asdict()
+    except TypeError as e:
+        #TODO Remember to remove
+        print(f'Must specify type in dataclass variables. otherwise see: {e}')
+
+    print(f'asdict: {asdict(album)}') 
+
+
 if __name__ == "__main__":
-    test_basic_pydantic()
+    # test_basic_pydantic()
+    test_dataclass()
