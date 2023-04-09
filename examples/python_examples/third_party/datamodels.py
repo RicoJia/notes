@@ -34,6 +34,7 @@ def test_dataclass():
     2. Can use fields for default values creation
     3. Must specify type
     4. asdict(instance) can be handy
+    5. create dataclass from dict
     """
     import datetime as dt
     from dataclasses import dataclass, asdict
@@ -65,6 +66,10 @@ def test_dataclass():
         print(f'Must specify type in dataclass variables. otherwise see: {e}')
 
     print(f'asdict: {asdict(album)}') 
+
+    album_dict = {"title": "hello", "release_date":dt.datetime.now().date()}
+    a = Album(**album_dict)
+    print(f'can create dataclass from dictionary using **: {a}')
 
 
 if __name__ == "__main__":
