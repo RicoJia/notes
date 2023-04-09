@@ -609,7 +609,10 @@ def test_reduce():
               # this is the initial value
               set()
           ))
-
+def test_any_all():
+    di = {1:2, 3: False}
+    print("any, all can be used on iterables: ", all(di.values()))
+    
 if __name__ == "__main__": 
     test_dict_less_known_features()
     # test_chain_map()
@@ -619,4 +622,5 @@ if __name__ == "__main__":
     # test_tuples()
     # test_custom_containers()
     # test_comprehensions()
-    test_reduce()
+    # test_reduce()
+    test_any_all()
