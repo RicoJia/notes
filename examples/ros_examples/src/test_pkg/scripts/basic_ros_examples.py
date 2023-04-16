@@ -59,6 +59,11 @@ def test_rosrun_args():
     t = rospy.get_param("~test")
     print("t: ", t)
 
+    # another example: rosparam.get_param("Field1/Field2")
+    # In Yaml, it can be: 
+    # - Field 1
+    #   - Field 2
+
 def test_env_var():
     import os
     print(f"Testing OS env var: {os.getenv('test_env_var')}")
