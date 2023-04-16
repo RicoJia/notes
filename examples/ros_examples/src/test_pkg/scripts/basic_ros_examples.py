@@ -64,6 +64,10 @@ def test_rosrun_args():
     # - Field 1
     #   - Field 2
 
+
+    # Another thing to note, is after running launch file 
+    # that loads params, The params can still exist
+
 def test_env_var():
     import os
     print(f"Testing OS env var: {os.getenv('test_env_var')}")
