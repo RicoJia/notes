@@ -224,6 +224,7 @@ def test_typing_callable():
 def test_type_hints_quirks():
     """
     1. If you have a function taking in itself as an argument, you need '' for type hint.
+    2. If you pass a nested type, it's being passed in as typing.Generic. you need typing.get_args 
     """
     class Foo:
         def __eq__(self, other: 'Foo'):
@@ -232,6 +233,16 @@ def test_type_hints_quirks():
     f =Foo()
     g = Foo()
     print(f==g)
+
+    # 2 typing.get_args
+    from typing import List, Tuple, get_args
+    list_type = List[str]
+    # see str
+    print(f"list type: {list_type}, get_args(list_type): {get_args(list_type)}")
+    tuple_type = Tuple[str, int]
+    # see str, int
+    print(f"tuple type: {tuple_type}, get_args(tuple_type): {get_args(tuple_type)}")
+
 
 def test_factory_func_type_hints():
     """See above for the quirk. 
@@ -434,7 +445,7 @@ if __name__ == "__main__":
     # test_scope()
     # test_optional_arg()
     # test_type_hints()
-    # test_type_hints_quirks()
+    test_type_hints_quirks()
     # test_signature()
     # test_3_level_function_signature()
     # kwargs_test()
@@ -448,4 +459,4 @@ if __name__ == "__main__":
 
     # test_bound_class_method()
     # test_factory_func_type_hints()
-     test_typing_callable()
+     # test_typing_callable()
