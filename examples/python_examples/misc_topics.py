@@ -442,7 +442,6 @@ def test_exception():
         try:
             raise RuntimeError("First Error")
         except RuntimeError:
-            # TODO Remember to remove
             print(f'Rico: this call is failing: {err}')
 
     try:
