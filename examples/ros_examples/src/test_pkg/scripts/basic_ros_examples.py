@@ -38,6 +38,9 @@ def test_pub_sub_connection():
     check_connections()
     pub.publish(StringList(["sdf", "dfsa"]))
 
+    # 2 rostopic echo TOPIC --filter="print(m.data) 
+    # Can apply python built in function to visualize data with funny chars
+
 def test_subscriber():
     """
     dummy example that shows: initialize subscribers last SO VARIABLES CAN FINISH INITIALIZING!
