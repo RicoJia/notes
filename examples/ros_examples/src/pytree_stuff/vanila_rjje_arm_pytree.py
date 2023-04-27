@@ -332,6 +332,12 @@ def test_tree_printing():
         pre_tick_handler=None,
     )
 
+
+def notes():
+    # 1. _generate_text_tree forces to show feedback message if show_status is true, but its status message may NOT be cleared in the most recent tick. So there could be stale feedback messages there. 
+    # 2. Py_tree caveat:  `now` is the feedback message of behavior SuccessEveryN
+
+    pass
         
 if __name__ == "__main__":
     # test_sequence()

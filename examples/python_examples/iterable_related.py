@@ -190,6 +190,8 @@ def dictionary_basics():
     5. Sort dictionary by value (ascending order) and return items in a list
         - items() seems like a tuple object, that's why you can use x[1] for accessing them
     6. create dict using zip
+    7. python's dict_keys() class is not exposed to us. So do stuff with dictionary
+        - dict_keys1 == dict_keys2should be robust
     """
 
     # 1

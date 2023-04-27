@@ -463,6 +463,23 @@ def test_exception():
         # raise e from None
         raise
 
+def multiple_lines():
+    """
+    prefer () over multiple lines for wrapping multiple lines
+    (
+        "up"
+        if float(desired_floor.floor_number) - float(current_floor.floor_number) > 0
+        else "down"
+    )
+    """
+    pass
+
+def escape_ansi(text: str):
+    """remove ansi escape characters from a string, including color codes"""
+    ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
+    return ansi_escape.sub('', text)
+
+
 
 if __name__ == "__main__":
     # test_warning()

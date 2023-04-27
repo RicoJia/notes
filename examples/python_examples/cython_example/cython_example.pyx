@@ -75,6 +75,7 @@ cpdef Matrix matrix_mult(Matrix A, Matrix B):
 
     # prange can only be used without GIL
     # Another quirk is You can have only 1 prange
+    # We have not seen improvements compared to regular range in This implementation
     for i in prange(n, nogil=True, schedule='guided'):
     # for i in range(n):
         multiply_matrices(A, B, C, i)
