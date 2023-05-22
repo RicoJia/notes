@@ -480,6 +480,11 @@ def escape_ansi(text: str):
     return ansi_escape.sub('', text)
 
 
+def test_sequence():
+    # and is higher than or: False and True or True: 
+    # first, False and True = False. Then False or True = True
+    print(False and True or True)
+
 
 if __name__ == "__main__":
     # test_warning()

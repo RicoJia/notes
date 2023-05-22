@@ -8,6 +8,7 @@ import rospy
 from test_pkg.msg import StringList
 import json
 import numpy as np
+from memory_profiler import profile
 
 def test_pub_sub_connection():
     pub = rospy.Publisher( 
@@ -71,18 +72,22 @@ def test_rosrun_args():
     # Another thing to note, is after running launch file 
     # that loads params, The params can still exist
 
+@profile
 def test_env_var():
     import os
     print(f"Testing OS env var: {os.getenv('test_env_var')}")
     print(f"Testing private OS env var: {os.getenv('private_test_env_var')}")
-    print(f"rosparam, optenv private_opt_env: {rospy.get_param('~private_opt_env')}")
-    print(f"rosparam, optenv opt_env: {rospy.get_param('opt_env')}")
+    [_ for _ in range(100000)]
+    # print(f"rosparam, optenv private_opt_env: {rospy.get_param('~private_opt_env')}")
+    # print(f"rosparam, optenv opt_env: {rospy.get_param('opt_env')}")
 
 if __name__ == "__main__":
     rospy.init_node("test_basics") 
     rospy.loginfo("hello")
     # timer = rospy.Timer(period=rospy.Duration.from_sec(1), callback=test_timer_cb)
     test_pub_sub_connection()
+    test_env_var()
+    rospy.sleep(0.5)
     test_env_var()
 
     rospy.spin()

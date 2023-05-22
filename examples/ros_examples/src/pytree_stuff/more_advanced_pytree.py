@@ -75,6 +75,7 @@ def test_blackboard_ns():
             print(f'blackboard storage: {py_trees.blackboard.Blackboard.storage}')
             return py_trees.common.Status.SUCCESS
 
+    # When ticking, all nodes leading to the leaf node can annotate tree root
     root = py_trees.composites.Sequence(name="Tasks", memory=False)
     root.add_children([Behavior1(), Behavior2()])
     behaviour_tree = py_trees.trees.BehaviourTree(
