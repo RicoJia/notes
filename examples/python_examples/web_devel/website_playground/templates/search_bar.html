@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+</head>
+<body>
+    <style>
+        .navbar__navigation {
+            display: flex;
+            /* Get rid of bullet points */
+            list-style: none;
+            color: rgb(26, 162, 117);
+        }
+        .navbar__navigation__item, .navbar__user__name{
+            margin-left: 20px;
+        }
+    </style>
+    <ul class="navbar__navigation">
+        <li class="navbar__navigation__item">
+            <!-- Need this for binding datalist to this input field -->
+            <!-- There's also placeholder in this field -->
+            <!-- Watch out for () in onclick -->
+            <button id="search_button" onclick="showSearchBar()">Search</button>
+            <div id="search_bar_div" style="display: none;">
+                <input list="search_bar_binding" name="search_bar" id="search_bar" placeholder="Search for Recipes..."/>
+                <datalist id="search_bar_binding">
+                    <option value="a">
+                    <option value="b">
+                </datalist>
+                <button id="search_cancel_button" onclick="hideSearchBar()">Hide Search</button>
+            </div>
+        </li>
+        <li id="logout" class="navbar__navigation__item"><a href="/logout/" class="navbar__link">Log Out</a></li>
+        <li id="user_name" class="navbar__user__name"><class="navbar__link">user_name</li>
+    </ul>
+
+    <!-- Script doesn't have to be before the call function -->
+    <script>
+        function showSearchBar() {
+            document.getElementById("search_button").style.display = 'none';
+            document.getElementById("search_bar_div").style.display = 'block';
+            document.getElementById("logout").style.display = 'none';
+            document.getElementById("user_name").style.display = 'none';
+        }
+
+        function hideSearchBar() {
+            document.getElementById("search_button").style.display = 'block';
+            document.getElementById("search_bar_div").style.display = 'none';
+            document.getElementById("logout").style.display = 'block';
+            document.getElementById("user_name").style.display = 'block';
+        }
+    </script>
+</body>
+</html>
+
