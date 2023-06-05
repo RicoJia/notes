@@ -6,6 +6,7 @@
     <title>Title</title>
 </head>
 <body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         .navbar__navigation {
             display: flex;
@@ -19,15 +20,17 @@
     </style>
     <ul class="navbar__navigation">
         <li class="navbar__navigation__item">
+            <!-- Example 1: AutoSuggestion Through AJAX to Server; -->
+            <!-- Example 2: buttons that show/hide search bar -->
             <!-- Need this for binding datalist to this input field -->
             <!-- There's also placeholder in this field -->
             <!-- Watch out for () in onclick -->
             <button id="search_button" onclick="showSearchBar()">Search</button>
             <div id="search_bar_div" style="display: none;">
-                <input list="search_bar_binding" name="search_bar" id="search_bar" placeholder="Search for Recipes..."/>
-                <datalist id="search_bar_binding">
-                    <option value="a">
-                    <option value="b">
+                <input list="search_bar_datalist" name="search_bar" id="search_bar" onkeyup="search()" placeholder="Search for Recipes..."/>
+                <datalist id="search_bar_datalist">
+                    <!-- An example of search bar suggestion -->
+                    <option value="test suggestion">
                 </datalist>
                 <button id="search_cancel_button" onclick="hideSearchBar()">Hide Search</button>
             </div>
@@ -36,7 +39,8 @@
         <li id="user_name" class="navbar__user__name"><class="navbar__link">user_name</li>
     </ul>
 
-    <!-- Script doesn't have to be before the call function -->
+    <!-- Script doesn't have to be before the call function, because it doesn't have the function definition -->
+    <!-- So the browser will wait until it hits the js. This way, we can ensure all necessary bits are loaded -->
     <script>
         function showSearchBar() {
             document.getElementById("search_button").style.display = 'none';
@@ -50,6 +54,26 @@
             document.getElementById("search_bar_div").style.display = 'none';
             document.getElementById("logout").style.display = 'block';
             document.getElementById("user_name").style.display = 'block';
+        }
+
+        function search(){
+            // This is Jquery, which is more concise than document.getElementById
+            var query = $("#search_bar").val();
+            // $.ajax() is a jQuery function that creates an asynchronous HTTP request. 
+            // Asynchronous means it doesn't need to wait for the server to respond
+            $.ajax({
+                url: '/search',
+                type: 'GET',
+                data: {query: query},
+                success: function(response){
+                    var datalist = $("#search_bar_datalist");
+                    datalist.empty();
+                    response.forEach(function(item){
+                        // There's no difference between '' and "" in js
+                        datalist.append("<option value='"+item+"'>");
+                    });
+                }
+            });
         }
     </script>
 </body>

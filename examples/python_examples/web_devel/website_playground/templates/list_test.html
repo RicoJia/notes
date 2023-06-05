@@ -54,40 +54,23 @@
     </p>
 
     <p>
-        <div>
-            Now let's test reading iterables
-            Here is my list:
-            <li>
-                {% for l in my_shopping_list %}
-                <ul>{{l}}</ul>
-                {% endfor %}
-            </li>
-            Or we can print individual items. The first item in the list: 
-            {{my_shopping_list[0]}}
+        <h1>Test grid container</h1>
+        <p>
+            We want to show a grid with one gray line in the middle, and the starts from the right of the 
+            page
+        </p>
+        <style>
+        </style>
+        <div class="head__container">
+            <div class="head__msg">HELLO</div>
+            <div class="navbar__grid__container">
+                <div class="navbar__grid__item"> item1 </div>
+                <div class="navbar__grid__item"> item2 </div>
+                <div class="navbar__grid__item"> item3 </div>
+            </div>
         </div>
 
-        <div>
-            My dictionary: 
-            {% for key, val in my_shopping_dict.items() %}
-                {{key}}: {{val}};
-            {% endfor %}
-        </div>
-
-        <div>
-            My obj message: {{my_obj.message}}
-        </div>
-
-        <div>
-            Testing nested if: 
-            {% for l in my_shopping_list %}
-                <!-- Note you can nest if, and you can use operator and  -->
-                {% if print_toggle=="no_apple" and l=="apples"%}
-                    <!-- So here you print nothing -->
-                {% else %}
-                    {{l}}
-                {% endif %}
-            {% endfor %}
-        </div>
     </p>
+
 </body>
 </html>
