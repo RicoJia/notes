@@ -5,16 +5,14 @@ from cython.parallel import prange
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 """
-cdef,etc: 
+- cdef,etc: 
     - cdef are functions can be called in c/c++, but not python
     def is something that can be called in python
     cpdef can be called in C, C++, Python
     - for def and cpdef, objects are passed by reference
-"""
-
-"""
+- int in python is a PyObject
 - Using python Memoryview obj, which is a flexible way to access buffers, such as c array, numpy array
-- Can even work with numpy array, since it follows memoryview protocol
+    - Can even work with numpy array, since it follows memoryview protocol
     - In your function, you should have an "out" function as a convention: so it relies on 
     the caller to create that for you
     - np.zeros() can do the trick
@@ -22,6 +20,8 @@ cdef,etc:
 - optimizations: (2.5x faster)
     - boundscheck: whether array goes out of bounds
     - wraparound: no negative indices 
+    - If a function has python dict objects, then cython does not provide too big of a speed up. However, it still has certain function calls that are faster
+    - Cython can be converted into C callables.
 - A handcrafted C program can be slower than the cython program (because of optimization, etc.)
 """
 @cython.boundscheck(False)
