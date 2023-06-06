@@ -193,17 +193,6 @@ def test_or():
     name2 = "sdf"
     print(name or name2)
 
-
-def test_enum():
-    from enum import Enum
-
-    class Animal:
-        DOG = 1
-        CAT = 2
-    ls = [1, 2, 3]
-    print(ls[Animal.DOG])
-
-
 def test_lru_cache_optimization():
     """
     1. LRU (Least-recently-used cache) caches the input and output of function calls (memoization)
@@ -323,18 +312,23 @@ def test_argparse():
     print("nums should be the first 2 args", args.nums)
     print("variable_nums are the rest of the args", args.variable_nums)
 
-
 def test_enum():
-    # 1: unique
-    from enum import Enum, unique, IntEnum
-
+    from enum import Enum, unique, IntEnum, auto
+    # Regular Enum
     class Animal(Enum):
         dog = 1
         cat = 1
         horse = 3
-
     print(f'dog: name: {Animal.dog.name}, value: {Animal.dog.value}, cat: {Animal.cat}, if they are equal: {Animal.dog == Animal.cat}')
 
+    # auto
+    class Foo(Enum):
+        Mon = auto()
+        Tue = auto()
+    print(f"auto's values: {Foo.Mon.value}, {Foo.Tue.value}")
+    print(f"members of Foo: {Foo.__members__}")
+
+    # Unique Enum
     try:
         @unique
         class AnimalUnque(Enum):
@@ -344,7 +338,7 @@ def test_enum():
     except ValueError:
         print(f'So two enums can be the same, so one is another ones alias. Using Enum.unique can avoid that')
 
-    # 2: IntEnum
+    # 3: IntEnum
     try:
         class AnimalInt(IntEnum):
             dog = 'a'
@@ -486,6 +480,12 @@ def test_sequence():
     print(False and True or True)
 
 
+def test_files_under_same_name():
+    import glob
+    prefix = "python"
+    matching_files = glob.glob(f"{prefix}*")
+    print("matching files: ", matching_files)
+
 if __name__ == "__main__":
     # test_warning()
     # test_math()
@@ -503,6 +503,6 @@ if __name__ == "__main__":
     # test_bytecode()
 
     # test_argparse()
-    # test_enum()
     # test_cpu_limit()
-    test_exception()
+    # test_exception()
+    test_files_under_same_name()
