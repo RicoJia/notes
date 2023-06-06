@@ -17,4 +17,7 @@
 </node>
 
 <!-- <node name="logger" type="logger.py" pkg="test_pkg" output="screen" /> -->
+
+<!-- Note it's interesting that you can still use consecutive '' here -->
+<node name="rostopic_test" type="rostopic" pkg="rostopic" args="pub -l /test_rico_topic std_msgs/String 'data: 'hehe''"/>
 </launch>
