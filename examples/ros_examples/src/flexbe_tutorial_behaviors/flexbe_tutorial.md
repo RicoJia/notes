@@ -1,9 +1,7 @@
 # flexbe_tutorial_behaviors - So far one of the best documented ros packages I've ever seen
 0. Basic Functions
-    - How does it know which flexbe repos are there?
     - There's a state file, defining a type of state; also a statemachine file, that **put the states together, and create inputs for them**
-    - Define states, behaviors, then run them: ```roslaunch flexbe_app flexbe_full.launc```
-        - just the user interface only `roslaunch flexbe_app flexbe_ocs.launch`
+    - Define states, behaviors, then run them: ```roslaunch flexbe_app flexbe_full.launch```. If just the user interface only `roslaunch flexbe_app flexbe_ocs.launch`
 1. Flexbe key functions
     - change autonomy level. Autonomy level is no, low, high, full? 
     - Create private variables
@@ -90,6 +88,7 @@
                 rospy.spin()
                 ProxySubscriberCached().shutdown()
             ```
-    - Launch behavior
+    - Launch behavior thru action server
         1. 1st way ```rosrun flexbe_widget be_launcher -b 'Example Behavior'``` on one panel
         2. 2nd way: ```rosrun flexbe_widget be_action_server```, then publish behavior name onto ```rostopic pub /flexbe/execute_behavior/goal flexbe_msgs/BehaviorExecutionActionGoal '{goal: {behavior_name: "Example Behavior"}}'```
+        this behavior is `self.name` in `TestBTInFlexbeBehavorSM`.
