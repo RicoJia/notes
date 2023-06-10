@@ -92,3 +92,83 @@ cpdef Matrix matrix_mult(Matrix A, Matrix B):
         multiply_matrices(A, B, C, i)
 
     return C
+
+
+# Test functions 
+# Profiling Results: Cython is not necessarily faster than Python 3.8
+# A python list with some type casting could be the way to go.
+
+cdef class A:
+    cdef public int x
+
+cdef class Alist:
+    def __init__(self):
+        self.inner = []
+    cdef list inner
+    cdef void append(self, A a):
+        self.inner.append(a)
+    cdef A get(self, int i):
+        # ?
+        return <A> self.inner[i]
+    def __len__(self):
+        return len(self.inner)
+
+cpdef Alist make_typed_list(int N):
+    cdef A a
+    cdef int i
+    cdef Alist L = Alist()
+    for i in range(N):
+        a = A()
+        a.x = 1
+        L.append(a)
+    return L
+
+cpdef list make_python_list(int N):
+    cdef A a
+    cdef int i
+    cdef list L = []
+    for i in range(N):
+        a = A()
+        a.x = 1
+        L.append(a)
+    return L
+
+cpdef long test_python_list(list L) except -1:
+    cdef int i
+    cdef long sum = 0
+    for a in L:
+        # explicit casting makes cython slightly faster
+        sum += (<A>a).x
+        # sum += a.x
+        return sum
+
+cpdef long test_typed_list(Alist L) except -1:
+    cdef int i
+    cdef long sum = 0
+    for i in range(len(L)):
+        sum += L.get(i).x
+        return sum
+
+# cdef class BKTreeNode:
+#     cdef string word
+#     # python object as a cpp template class is not supported yet.
+#     # But using unque pointer is allowed
+#     cdef vector[string] recipe_names
+#     cdef object sub_tree
+#     def __cinit__(self, string word=''.encode('utf-8'), vector[string] recipe_names = []):
+#         word = word
+#         recipe_names = recipe_names
+#         sub_tree = []
+#         print(f"node: {word}, recipe_names: {recipe_names}")
+# cdef class BKTree:
+#     """
+#     We are assuming:
+#         - tree node word is clean, i.e., no non-alphanumeric symbols, words are tokenized
+#     """
+#     cdef object root
+
+#     def __cinit__(self):
+#         root = BKTreeNode()
+#     def add(self, string word, vector[string] recipe_names):
+#         new_node = BKTreeNode(word = word, recipe_names = recipe_names)
+#         # TODO
