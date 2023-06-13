@@ -327,6 +327,7 @@ def test_enum():
         Tue = auto()
     print(f"auto's values: {Foo.Mon.value}, {Foo.Tue.value}")
     print(f"members of Foo: {Foo.__members__}")
+    print(f"{Foo.Mon, isinstance(Foo.Mon, Foo)}")
 
     # Unique Enum
     try:
@@ -494,7 +495,7 @@ if __name__ == "__main__":
     # test_random()
     # test_datetime()
     # test_or()
-    # test_enum()
+    test_enum()
     # test_div()
     # test_lru_cache_optimization()
     # test_memory_leak()
@@ -505,4 +506,6 @@ if __name__ == "__main__":
     # test_argparse()
     # test_cpu_limit()
     # test_exception()
-    test_files_under_same_name()
+    # test_files_under_same_name()
+
+

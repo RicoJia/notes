@@ -1,4 +1,10 @@
 ========================================================================
+## Priliminary Research
+========================================================================
+1. Speed ups come from: 
+    - typing `cdef int a`
+    - compiling python code itself
+========================================================================
 ## Basic Example
 ========================================================================
 1. Create a file named clip_cython.pyx with the following code:
@@ -58,3 +64,8 @@
     This creates a softlink to this directory, then build the cython right here.
     Then, you can import this module like python :)
     ```
+
+========================================================================
+## Cython Tricks
+========================================================================
+1. Manage memory yourself

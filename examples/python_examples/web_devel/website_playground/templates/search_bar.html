@@ -76,6 +76,198 @@
             });
         }
     </script>
+
+
+    <p>
+    <!-- Another example -->
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+            *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            }
+
+            body{
+            background: #f4f5;
+            padding: 0 20px;
+            }
+
+            ::selection{
+            color: #fff;
+            background: #664AFF;
+            }
+
+            .container{
+            max-width: 450px;
+            margin: 150px auto;
+            }
+
+            .container .searchInput{
+            background: #fff;
+            width: 100%;
+            border-radius: 5px;
+            position: relative;
+            box-shadow: 0px 1px 5px 3px rgba(0,0,0,0.12);
+            }
+
+            .searchInput input{
+            height: 55px;
+            width: 100%;
+            outline: none;
+            border: none;
+            border-radius: 5px;
+            padding: 0 60px 0 20px;
+            font-size: 18px;
+            box-shadow: 0px 1px 5px rgba(0,0,0,0.1);
+            }
+
+            .searchInput.active input{
+            border-radius: 5px 5px 0 0;
+            }
+
+            .searchInput .resultBox{
+            padding: 0;
+            opacity: 0;
+            pointer-events: none;
+            max-height: 280px;
+            overflow-y: auto;
+            }
+
+            .searchInput.active .resultBox{
+            padding: 10px 8px;
+            opacity: 1;
+            pointer-events: auto;
+            }
+
+            .resultBox li{
+            list-style: none;
+            padding: 8px 12px;
+            display: none;
+            width: 100%;
+            cursor: default;
+            border-radius: 3px;
+            }
+
+            .searchInput.active .resultBox li{
+            display: block;
+            }
+            .resultBox li:hover{
+            background: #efefef;
+            }
+
+            .searchInput .icon{
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            height: 55px;
+            width: 55px;
+            text-align: center;
+            line-height: 55px;
+            font-size: 20px;
+            color: #644bff;
+            cursor: pointer;
+            }
+        </style>
+        <div class="searchInput">
+            <input type="text" placeholder="hello"/>
+            <div class="resultBox">
+            </div>
+                <script>
+                    let suggestions = [
+                        "Channel",
+                        "CodingLab",
+                        "CodingNepal",
+                        "YouTube",
+                        "YouTuber",
+                        "YouTube Channel",
+                        "Blogger",
+                        "Bollywood",
+                        "Vlogger",
+                        "Vechiles",
+                        "Facebook",
+                        "Freelancer",
+                        "Facebook Page",
+                        "Designer",
+                        "Developer",
+                        "Web Designer",
+                        "Web Developer",
+                        "Login Form in HTML & CSS",
+                        "How to learn HTML & CSS",
+                        "How to learn JavaScript",
+                        "How to became Freelancer",
+                        "How to became Web Designer",
+                        "How to start Gaming Channel",
+                        "How to start YouTube Channel",
+                        "What does HTML stands for?",
+                        "What does CSS stands for?",
+                    ];
+
+                    // getting all required elements
+                    const searchInput = document.querySelector(".searchInput");
+                    const input = searchInput.querySelector("input");
+                    const resultBox = searchInput.querySelector(".resultBox");
+                    const icon = searchInput.querySelector(".icon");
+                    let linkTag = searchInput.querySelector("a");
+                    let webLink;
+
+                    // if user press any key and release
+                    input.onkeyup = (e)=>{
+                        let userData = e.target.value; //user enetered data
+                        let emptyArray = [];
+                        if(userData){
+                            emptyArray = suggestions.filter((data)=>{
+                                //filtering array value and user characters to lowercase and return only those words which are start with user enetered chars
+                                return data.toLocaleLowerCase().startsWith(userData.toLocaleLowerCase()); 
+                            });
+                            emptyArray = emptyArray.map((data)=>{
+                                // passing return data inside li tag
+                                return data = '<li>'+ data +'</li>';
+                            });
+                            searchInput.classList.add("active"); //show autocomplete box
+                            showSuggestions(emptyArray);
+                            let allList = resultBox.querySelectorAll("li");
+                            for (let i = 0; i < allList.length; i++) {
+                                //adding onclick attribute in all li tag
+                                allList[i].setAttribute("onclick", "select(this)");
+                            }
+                        }else{
+                            searchInput.classList.remove("active"); //hide autocomplete box
+                        }
+                    }
+
+                    function showSuggestions(list){
+                        let listData;
+                        if(!list.length){
+                            userValue = input.value;
+                            listData = '<li>'+ userValue +'</li>';
+                        }else{
+                            listData = list.join('');
+                        }
+                        resultBox.innerHTML = listData;
+                    }
+
+                </script>
+</div>
+    </p>
+
+
+    <p>
+        <div class="select-wrapper">
+    <div class="select">
+        <div class="select__trigger"><span>Tesla</span>
+            <div class="arrow"></div>
+        </div>
+        <div class="custom-options">
+            <span class="custom-option selected" data-value="tesla">Tesla</span>
+            <span class="custom-option" data-value="volvo">Volvo</span>
+            <span class="custom-option" data-value="mercedes">Mercedes</span>
+        </div>
+    </div>
+</div>
+
+    </p>
 </body>
 </html>
 
