@@ -34,7 +34,7 @@ class ExampleState3(EventState):
         # Main purpose is to check state conditions and trigger a corresponding outcome.
         # If no outcome is returned, the state will stay active.
         # Otherwise this method is called periodically (10hz) while the state is active.  
-        # print("haha", userdata["hello_world_msg3"])
+        print("hello world msg3 from the first custom state", userdata["hello_world_msg3"])
         userdata["test_output"] = 12345
         self.persistent_member
         if True:

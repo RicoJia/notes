@@ -2,11 +2,12 @@
 # 1. must require the shbang, otherwise, we might be running another shell
 # function basics
 NUM1=32
+FLOAT=12
 function float_eval(){
   local FLOAT="$(echo "scale=2; $*" | bc -q 2>/dev/null)"
   echo ${FLOAT}
 }
-
+float_eval
 
 # 2
 function show_addition_and_func_name(){
@@ -40,7 +41,7 @@ function test_if(){
     #9 test -f will see if a file exists
     test -f $TEST_FILE || echo "hello, file $TEST_FILE exits"
 }
-test_if
+# test_if
 
 # 8
 function test_increase_variable(){
