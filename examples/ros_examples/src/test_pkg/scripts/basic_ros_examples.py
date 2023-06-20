@@ -11,7 +11,9 @@ import numpy as np
 from memory_profiler import profile
 
 def test_pub_sub_connection():
-    pub = rospy.Publisher( 
+    # - UserWarning: '/belief/unit4_staff-unit_staff_1/imminent' is not a legal ROS graph resource name. This may cause problems with other ROS tools(): - is not really supported
+
+    pub = rospy.Publisher(
                           "rico_topic",
                           StringList,
                           # need queue_size to suppress warning
