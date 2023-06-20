@@ -9,6 +9,8 @@
 <env name="test_env_var" value="hello_env"/>
 <!-- Here we're not supplying anything, default value is "" -->
 <param name="opt_env" value="$(optenv opt_env)"/>
+
+<!-- launch-prefix="pudb3" -->
 <node name="basic_ros_examples" type="basic_ros_examples.py" pkg="test_pkg" output="screen">
     <!-- private env var -->
     <env name="private_test_env_var" value="private_hello_env"/>
@@ -16,7 +18,7 @@
     <param name="private_opt_env" value="$(optenv private_opt_env private_hello_opt_env)"/>
 </node>
 
-<!-- <node name="logger" type="logger.py" pkg="test_pkg" output="screen" /> -->
+<!-- <node name="logger" type="logger.py" pkg="test_pkg" output="screen"/> -->
 
 <!-- Note it's interesting that you can still use consecutive '' here -->
 <node name="rostopic_test" type="rostopic" pkg="rostopic" args="pub -l /test_rico_topic std_msgs/String 'data: 'hehe''"/>

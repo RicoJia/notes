@@ -51,9 +51,11 @@ def test_subscriber():
     class SomeClass:
         def __init__(self):
             self.var = 1
-            self.sub = rospy.Subscriber("/test_topic", StringList, self.sub)
+            self.sub = rospy.Subscriber("/test_topic", StringList, self.sub_cb)
         def sub_cb(self, msg):
-            pass
+            print("test subscriber")
+    s =SomeClass()
+    rospy.spin()
 
 def test_timer_cb(timer_event: rospy.timer.TimerEvent):
     print("timer cb", timer_event.__dict__)
@@ -87,10 +89,10 @@ if __name__ == "__main__":
     rospy.init_node("test_basics") 
     rospy.loginfo("hello")
     # timer = rospy.Timer(period=rospy.Duration.from_sec(1), callback=test_timer_cb)
-    test_pub_sub_connection()
-    test_env_var()
-    rospy.sleep(0.5)
-    test_env_var()
-
-    rospy.spin()
+    # test_pub_sub_connection()
+    # test_env_var()
+    # rospy.sleep(0.5)
+    # test_env_var()
+    # rospy.spin()
+    test_subscriber()
 
