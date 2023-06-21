@@ -293,7 +293,12 @@ def test_bytecode():
 
 
 def test_argparse():
-    # 1 reading raw args
+    """
+    1, `--kwargs` is by default a key-worded argument
+        - `argparse.add("service")` will actually become a positional arg.
+            e.g., jefe sdf, sdf is "service" here
+    """
+    
     import sys
     # print("The first arg is the file itself", sys.argv[0], "second arg: ", sys.argv[1])
 

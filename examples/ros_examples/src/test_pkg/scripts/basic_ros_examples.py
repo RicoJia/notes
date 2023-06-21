@@ -9,6 +9,7 @@ from test_pkg.msg import StringList
 import json
 import numpy as np
 from memory_profiler import profile
+# import pudb
 
 def test_pub_sub_connection():
     # - UserWarning: '/belief/unit4_staff-unit_staff_1/imminent' is not a legal ROS graph resource name. This may cause problems with other ROS tools(): - is not really supported
@@ -53,6 +54,8 @@ def test_subscriber():
             self.var = 1
             self.sub = rospy.Subscriber("/test_topic", StringList, self.sub_cb)
         def sub_cb(self, msg):
+            # This is an intrusive test for pudb
+            # pudb.set_trace()
             print("test subscriber")
     s =SomeClass()
     rospy.spin()

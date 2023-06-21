@@ -132,10 +132,14 @@ test_loop(){
     # If a code is successful, sleep X always has exit value 0. In bash, any non-zero exit value is considered false, whereas 0 is considered true.  So while will take sleep 1; 
     # $? is the exit value of the last executed command
     # Then, break from the script
-    while sleep 1; do echo "haha"; echo $? && break; done 
+    # while sleep 1; do echo "haha"; echo $? && break; done 
+
+    # reading a file in bash: 1. Use read, which needs a file descriptor. 2. get the file descriptor using process substitution
+    # Process substitution gives you the file descriptor of the command
+    while read line; do echo "$line"; done < "lol"
 
 }
-# test_loop
+test_loop
 
 
 test_and(){
@@ -144,3 +148,12 @@ test_and(){
     # CAVEAT: test -f <SPACE> still gives 0! so make sure $FILE is set!
     test -f $FILE && { echo "$FILE exists."; echo "hello!"; } && ( echo $FILE; echo "hellp again"; )
 }
+
+test_array(){
+    echo "all inputs into the func: $@"
+    # you can declare arrays like this as well.
+    declare -a array1 array2
+    shift 2
+    echo "all inputs into the func after shifting 2 initial args: $@"
+}
+# test_array 1 2 3

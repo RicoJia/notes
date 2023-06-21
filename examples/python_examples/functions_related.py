@@ -6,12 +6,12 @@ import numpy as np
 ###############################################################################
 def test_optional_arg(): 
     from typing import Optional, Union
+    # Note: Optional is Union(..., None)
     # telling the type checker that an object of the specific type is required
     # this is called type hints 
     # Python doesn't enforce type hints, but mypy, pycharm will. 
     def func(arg: Union[int]): 
         print(type(arg))
-    # Optional is Union(..., None)
     def func2(arg: Optional[int]): 
         print(type(arg))
     func(None)

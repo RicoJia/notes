@@ -145,6 +145,13 @@ def test_decorator_in_class():
     b.bar = 3
     print(b.bar)
 
+def test_reference():
+    class Foo:
+        # This is not allowed, as Foo has not been constructed yet
+        # f = Foo()
+        def __init__(self):
+            self._f = Foo()
+
 
 def test_inserting_to_ordered_dict():
     from collections import OrderedDict
@@ -601,3 +608,4 @@ if __name__ == "__main__":
     test_inserting_to_ordered_dict()
     # test_slots()
     # test_get_attribute()
+    test_reference()

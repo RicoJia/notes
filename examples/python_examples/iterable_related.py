@@ -447,6 +447,8 @@ def list_basics():
     2. sorted will sort the list in place
     3. ls.reversed() will also does the job in place
     4. Create object with identical elements
+        - ["a"] * 4 is called "list concatenation". So, anything in this list will be have its reference used 
+            for constructing the list. However, for immutables, we just have the copies, not the references.
         - see 'aaaa'. * in python will create APPEND the object with 1. Identical elements for immutables, and references for mutables
         - so USE LIST  comprehension if we want to have real duplicates
     5. list.extend() adds an iterable's values to the list
@@ -468,13 +470,17 @@ def list_basics():
 
     # 3
     ls = [1,2,3]
-    ls.reversed()
+    ls.reverse()
     print(ls)
 
     # 4
     str_ = 'a'*4
     _str = 'a'*4
     print(str_)
+    # List concatenation
+    ls = ['a'] * 4
+    ls [1] = 2
+    print("list concatenation: ", ls)
     # * is no good in this case
     ls = [2 * [0]] * 3
     ls[0][0] = 1
@@ -616,7 +622,7 @@ def test_any_all():
     print("any, all can be used on iterables: ", all(di.values()))
     
 if __name__ == "__main__": 
-    test_dict_less_known_features()
+    # test_dict_less_known_features()
     # test_chain_map()
     # test_chain()
     # test_heapq_merge()
@@ -625,4 +631,5 @@ if __name__ == "__main__":
     # test_custom_containers()
     # test_comprehensions()
     # test_reduce()
-    test_any_all()
+    # test_any_all()
+    list_basics()

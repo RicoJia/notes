@@ -76,5 +76,12 @@ class ExampleBehaviorSM(Behavior):
 
 	# Private functions can be added inside the following tags
 	# [MANUAL_FUNC]
+    # NOTE: in sm, flexbe do not like custom functions with default args. E.g., 
+        # def log_failure(self, failure_type: FailureCategory = None, failure_msg: str = ""):
+        #     pass
+        # Else, next time you launch flexbe gui, it will show "behavior name not set."
+    # NOTE: If a state by default is tab: 
+    # use vscode's `c-s-p` and choose "convert tabs to spaces"
+    # Then in flexbe -> configuration -> code generation -> code indentation, change it to the number of spaces you want.
 	
 	# [/MANUAL_FUNC]
