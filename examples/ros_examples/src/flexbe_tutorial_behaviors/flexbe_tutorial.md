@@ -71,6 +71,22 @@
 
 2. When you load behavior, changes in behavior will update, but states are not
 
+3. Small quirks:
+    - Good
+        ```
+        def __init__(self,
+                get_context,
+        ```
+    - VS (bad)
+        ```
+        def __init__(
+            self,
+            get_context,
+        
+        ```
+    - flexbe is fussy about trailing , at the end
+
+
 ========================================================================
 ## How to launch 
 ========================================================================

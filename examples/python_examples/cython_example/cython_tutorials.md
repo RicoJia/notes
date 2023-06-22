@@ -65,6 +65,7 @@
     Then, you can import this module like python :)
     ```
 
+6. Cython is not necessarily faster than python
 ========================================================================
 ## Cython Tricks
 ========================================================================
