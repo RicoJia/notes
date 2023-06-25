@@ -621,6 +621,12 @@ def test_any_all():
     di = {1:2, 3: False}
     print("any, all can be used on iterables: ", all(di.values()))
     
+
+def test_counter():
+    c = Counter(all_possible_matches)
+    return_ls = [obj for obj, count in c.most_common(WORD_MAX_DIST)]
+    # print(f"most common: {c.most_common(WORD_MAX_DIST)}")
+
 if __name__ == "__main__": 
     # test_dict_less_known_features()
     # test_chain_map()

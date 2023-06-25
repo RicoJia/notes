@@ -4,6 +4,8 @@ from cython.parallel import prange
 
 from libcpp.string cimport string
 from libcpp.vector cimport vector
+from libcpp.map cimport map
+
 """
 - Motivation
     - A handcrafted C program can be slower than the cython program (because of optimization, etc.)
@@ -93,7 +95,6 @@ cpdef Matrix matrix_mult(Matrix A, Matrix B):
 
     return C
 
-
 # Test functions 
 # Profiling Results: Cython is not necessarily faster than Python 3.8
 # A python list with some type casting could be the way to go.
@@ -149,26 +150,71 @@ cpdef long test_typed_list(Alist L) except -1:
         sum += L.get(i).x
         return sum
 
-# cdef class BKTreeNode:
-#     cdef string word
-#     # python object as a cpp template class is not supported yet.
-#     # But using unque pointer is allowed
-#     cdef vector[string] recipe_names
-#     cdef object sub_tree
-#     def __cinit__(self, string word=''.encode('utf-8'), vector[string] recipe_names = []):
-#         word = word
-#         recipe_names = recipe_names
-#         sub_tree = []
-#         print(f"node: {word}, recipe_names: {recipe_names}")
-# cdef class BKTree:
-#     """
-#     We are assuming:
-#         - tree node word is clean, i.e., no non-alphanumeric symbols, words are tokenized
-#     """
-#     cdef object root
+    
+###################################################
+## Simple Componentwise testing
+###################################################
 
-#     def __cinit__(self):
-#         root = BKTreeNode()
-#     def add(self, string word, vector[string] recipe_names):
-#         new_node = BKTreeNode(word = word, recipe_names = recipe_names)
-#         # TODO
+cpdef int simple_test(int x):
+    # this is 200x faster than the python function
+    cdef int y = 1
+    cdef int i
+    for i in range(1, x+1):
+        y *= i
+    return y
+
+cpdef array_test(int len, int num):
+    # 1000x faster than the python function
+    # in C, you must declare size first. It has automatic storage
+    # Automatic means: scope of object is within the current block, 
+    # and gets created on stack. When block ends, the stack frame is popped
+
+    # But you can't return an array directly, unless you return raw pointer
+    cdef int my_array[10000]
+    for i in range(len):
+        my_array[i] = num
+    return my_array
+
+cpdef list_list_test(int len, int num):
+    ls = [num for _ in range(len)]
+
+cpdef vector_pushback_test(int len, int num):
+    # 2x faster than python
+    cpdef vector[int] vec = vector[int](len, num)
+    
+    # 40x - 100x faster than python
+    # raw cpp vector is not directly understood by python
+    cpdef vector[int] vec2 = vector[int]()
+    for _ in range(len):
+        vec2.push_back(num)
+    return vec
+
+cpdef map_string_test(object di):
+    # Part 1 - map string test
+    # Goal: get index look ups of a python dictionary
+    # This is 7x SLOWER than python. Encoding is map operation seems to be 6x Slower.
+    cpdef map[string, int] key_indices
+    cpdef map[string, int] value_indices
+    cdef string k
+    id = 0
+    for key, value in di.items():
+        k= key.encode()
+        key_indices[k] = id
+        value_indices[k] = id
+
+    # # this is roughly the same as python
+    # key_indices = {}
+    # value_indices = {}
+    # id = 0
+    # for key, val in di.items():
+    #     key_indices[key] = id
+    #     value_indices[key] = id
+
+cpdef map_int_test(object di):
+    # 3X slower 
+    cpdef map[int, int] key_indices
+    cpdef map[int, int] value_indices
+    id = 0
+    for k, value in di.items():
+        key_indices[k] = id
+        value_indices[k] = id

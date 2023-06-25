@@ -87,6 +87,18 @@ def test_blackboard_ns():
         root.logger.info("status: "+str(root.status))
     root.stop()
 
+def binding_initialise_with_get():
+    """
+    orig_on_enter = leaf_node.initialise
+    # Tree doesn't have name, only node does
+    tree_name = self.tree.root.name
+    def new_initialize(self):
+        FailureLogging.init_bt_failure_logging(tree_name)
+        orig_on_enter()
+    # __get__(): descriptor. this binds a function with a class
+    leaf_node.initialise = new_initialize.__get__(leaf_node)
+    """
+
 if __name__ == "__main__":
     # test_interesting_tree()
     test_blackboard_ns()

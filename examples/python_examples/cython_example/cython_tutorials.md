@@ -3,7 +3,8 @@
 ========================================================================
 1. Speed ups come from: 
     - typing `cdef int a`
-    - compiling python code itself
+    - compiling python code itselfm because python gets compiled into bytecode, then bytecode gets executed line by line in runtime, in a virtual machine.
+        - cython directly compiled into machine code.
 ========================================================================
 ## Basic Example
 ========================================================================
@@ -66,7 +67,27 @@
     ```
 
 6. Cython is not necessarily faster than python
+    - pure Cython is good for: 
+        - lots of loops.
+        - mathmatical operations
+        - Memory Allocation
+        - use `cpdef` for functions called elsewhere in cython, because that bypasses the python interpreter
+            - When to use `def`, and `cdef`: [link](https://stackoverflow.com/questions/49172528/should-i-define-my-cython-function-using-def-cdef-or-cpdef-for-optimal-perform)
+        - `cdef class` (extension) stores vars in a C struct not in a python dict: 
+        see [here](https://cython.readthedocs.io/en/latest/src/tutorial/cdef_classes.html)
+            - But becareful with `__cinit__()`: it's a cython function that initializes C level features. 
+                - it's called before `__init__()`
+            - `__cinit__()` and `__init__()` cannot access cdef functions?
+        - prange
+            - 2D `cnp.ndarray` doesn't seem to work well with pointers?? That's needed in prange, because prange wants everything owned by C. 
+            - You can use `vector`, which is visualizable
+        # cdef int[100][100] cross_association_table 
+    - pure Cython is not good for (but you can write python there to achieve similar performance):
+        - `std::map` operations. It's slower than its python counterpart!
+        - string operations (because if to/from python, you need to decode/encode them)
 ========================================================================
 ## Cython Tricks
 ========================================================================
-1. Manage memory yourself
+1. cnp.ndarray
+    - cnp.ndarray is a wrapper of numpy's C implementation: https://stackoverflow.com/questions/51737512/cython-why-do-numpy-arrays-need-to-be-type-cast-to-object
+
