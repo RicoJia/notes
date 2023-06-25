@@ -419,7 +419,9 @@ def test_bound_class_method():
     1. Everybody knows that self (instance) needs to be bound to a class method. How?
     2. Function itself is also a descriptor, with __get__(self, instance, owner_cls)
         - This is the secret sauce that binds the function to a class
-    3. 
+    3. What Foo().f does is it calls bar.__get__(Foo()), which is a version of bar() for Foo. 
+        Equivalent to storing Foo into bar? This is done in C.
+
     '''
     # 1
     class Foo(object):
@@ -437,6 +439,9 @@ def test_bound_class_method():
         pass
     bound_bar = types.MethodType(bar, Foo())
     print("bound_bar: ", bound_bar)
+
+
+
 
 if __name__ == "__main__": 
     # get_current_funcs_info()
