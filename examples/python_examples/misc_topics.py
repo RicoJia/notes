@@ -291,32 +291,6 @@ def test_bytecode():
         di_c = di.copy()
     dis.dis(func)
 
-
-def test_argparse():
-    """
-    1, `--kwargs` is by default a key-worded argument
-        - `argparse.add("service")` will actually become a positional arg.
-            e.g., jefe sdf, sdf is "service" here
-    """
-    
-    import sys
-    # print("The first arg is the file itself", sys.argv[0], "second arg: ", sys.argv[1])
-
-    # 2. But argparse will disable sys
-    import argparse
-    parser = argparse.ArgumentParser()
-    # required is default false. -- is optional, without -- is positional
-    parser.add_argument("--bool", action="store_false")
-    parser.add_argument("nums", nargs=2)
-    parser.add_argument("variable_nums", nargs='*')
-    # by specifying type, this could fail
-    parser.add_argument("--some_int", type=int)
-    # + means one or more
-    args = parser.parse_args()
-    print("bool should have a default value", args.bool)
-    print("nums should be the first 2 args", args.nums)
-    print("variable_nums are the rest of the args", args.variable_nums)
-
 def test_enum():
     from enum import Enum, unique, IntEnum, auto
     # Regular Enum
@@ -356,49 +330,6 @@ def test_enum():
         cat = 2
     print(f"IntEnum advantage 2: AnimalInt.dog == 1: {AnimalInt.dog == 1}, because IntEnum is a subclass of int {isinstance(AnimalInt.dog, int)}"
           "whereas Animal.dog == 1: {Animal.dog == 1}.")
-
-
-def test_cpu_limit():
-    """
-    1. Soft constraint is from the user configurtaion, hard is from the operating system
-        i.e., if violating the hard constraint, system will shutdown
-
-    """
-    import resource
-
-    # 1. Check resource limits, and change them
-    print("desc, name, soft, hard")
-    for name, desc in [
-        ('RLIMIT_CORE', 'core file size'),
-        ('RLIMIT_CPU', 'CPU time'),
-        ('RLIMIT_FSIZE', 'file size'),
-        ('RLIMIT_DATA', 'heap size'),
-        ('RLIMIT_STACK', 'stack size'),
-        ('RLIMIT_RSS', 'resident set size'),
-        ('RLIMIT_NPROC', 'number of processes'),
-        ('RLIMIT_NOFILE', 'number of open files'),
-        ('RLIMIT_MEMLOCK', 'lockable memory address'),
-        ]:
-        limit_num = getattr(resource, name)
-        soft, hard = resource.getrlimit(limit_num)
-        print('Maximum %-25s (%-15s) : %20s %20s' % (desc, name, soft, hard))
-
-    # 2. check the current process's usage
-    import time
-    usage = resource.getrusage(resource.RUSAGE_SELF)
-    for name, desc in [
-        ('ru_utime', 'User time'),
-        ('ru_stime', 'System time'),
-        ('ru_maxrss', 'Max. Resident Set Size'),
-        ('ru_ixrss', 'Shared Memory Size'),
-        ('ru_idrss', 'Unshared Memory Size'),
-        ('ru_isrss', 'Stack Size'),
-        ('ru_inblock', 'Block inputs'),
-        ('ru_oublock', 'Block outputs'),
-        ]:
-        print('%-25s (%-10s) = %s' % (desc, name, getattr(usage, name)))
-
-    # 3. set resource limit:
 
 
 def test_exception():
@@ -485,12 +416,25 @@ def test_sequence():
     # first, False and True = False. Then False or True = True
     print(False and True or True)
 
+def test_is(): 
+    """
+    Is identifies if two objects are the same object, by checking their memory address
+    == compares their values by checking their deep copies
+    {}, [] are mutables, so you have to use ==
+    (), "", '' are immutables, so use is
+    """
+    print("True is True", True is True)  #see True, because True is an object
+    print("None is None", None is None)  # see True
 
-def test_files_under_same_name():
-    import glob
-    prefix = "python"
-    matching_files = glob.glob(f"{prefix}*")
-    print("matching files: ", matching_files)
+    print("[] == []", [] == []) #because list is mutable, == should be used
+    print("{} == {}", {} == {})      #because dict is mutable, == should be used.
+    print("[] is []", [] is [])  # see false
+    print("{} is {}", {} is {})      # see false
+    print("'' == ''", '' == '')
+    print("'' is ''", '' is '')      # string is immutable (once created, value never changes), refers to the same memory location
+    print("() == ()", () == ())
+    print("() is ()", () is ())
+    # tuple is immutable as well
 
 if __name__ == "__main__":
     # test_warning()
@@ -511,6 +455,5 @@ if __name__ == "__main__":
     # test_argparse()
     # test_cpu_limit()
     # test_exception()
-    # test_files_under_same_name()
 
 
