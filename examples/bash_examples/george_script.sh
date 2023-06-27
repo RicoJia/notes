@@ -40,7 +40,8 @@ read_replace_print(){
         echo "$line" | sed "s/the/da/" 
     done < "$FILE_PATH"
 
-    TEXT="adsf
+    # local variable 
+    local TEXT="adsf
     asdfads
     adsfa"
 
@@ -53,7 +54,7 @@ read_replace_print(){
 }
 
 print_arr(){
-    # # local is to create 
+    # # local is to create a local variable. -n is name ref
     # Quirk: an array is (1 2 3) instead of ARR=(1,2,3)
     # This element 1,2,3 is a single string
     local -n ARR_LOCAL_REF=$1
