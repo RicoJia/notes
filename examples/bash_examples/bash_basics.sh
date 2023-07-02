@@ -164,3 +164,6 @@ test_test(){
     if [[ $a ]]; then echo "a exists"; else echo "a doesn't exist"; fi
 }
 test_test
+
+# Interesting way to listen to two topics at once
+# rostopic echo /rico & rostopic echo /george
