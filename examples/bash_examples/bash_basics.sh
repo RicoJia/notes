@@ -157,3 +157,10 @@ test_array(){
     echo "all inputs into the func after shifting 2 initial args: $@"
 }
 # test_array 1 2 3
+
+test_test(){
+    # in bash, if a is unset, you will see a difference. Else, if a is 0, it's still set
+    a=0
+    if [[ $a ]]; then echo "a exists"; else echo "a doesn't exist"; fi
+}
+test_test

@@ -436,6 +436,11 @@ def test_is():
     print("() is ()", () is ())
     # tuple is immutable as well
 
+def test_print():
+    x = [1,2,3]
+    #TODO Remember to remove
+    print(f'Rico: printing name and value of the var using = {x=}')
+
 if __name__ == "__main__":
     # test_warning()
     # test_math()
@@ -444,7 +449,7 @@ if __name__ == "__main__":
     # test_random()
     # test_datetime()
     # test_or()
-    test_enum()
+    # test_enum()
     # test_div()
     # test_lru_cache_optimization()
     # test_memory_leak()
@@ -456,4 +461,5 @@ if __name__ == "__main__":
     # test_cpu_limit()
     # test_exception()
 
+    test_print()
 
