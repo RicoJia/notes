@@ -1,11 +1,19 @@
-from flask import Flask, request, render_template
+from flask import Flask, render_template_string, request, redirect, url_for
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def home():
-    if request.method == 'POST':
-        new_value = request.form.get('new_value')
-        # This keeps the target 'display-value' for future replacements
-        return f"<div id='display-value'>{new_value}</div>"
-    return render_template('html_macro_example/htmx_example.html')
+    return render_template_string(open("templates/htmx_example.html").read())
+
+@app.route('/increment', methods=['POST'])
+def increment():
+    count = int(request.headers.get('count', 0))
+    return str(count + 1)
+
+@app.route('/update_text', methods=['POST'])
+def update_text():
+    text = request.form['text']
+    return text
+if __name__ == "__main__":
+    app.run(debug=True)
