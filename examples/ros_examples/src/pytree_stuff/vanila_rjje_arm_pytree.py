@@ -65,7 +65,7 @@ class Grasp(py_trees.behaviour.Behaviour):
 
 def get_tree(ret ="SEQUENCE_ROOT", test_blackboard = False):
     sequence_root = py_trees.composites.Sequence(name = "Test root", memory=True)
-    sequence_root.add_children((MoveToStandoffPos(name="move to stand off", test_blackboard=test_blackboard), Grasp(name="Grasp"))) 
+    sequence_root.add_children((Grasp(name="Grasp"), MoveToStandoffPos(name="move to stand off", test_blackboard=test_blackboard))) 
     return sequence_root
     
 #####################################################
@@ -340,12 +340,12 @@ def notes():
     pass
         
 if __name__ == "__main__":
-    # test_sequence()
+    test_sequence()
     # test_decorators()
     # test_parallel()
     # test_retry_until_succeed()
     # test_retry_finite_number_of_times()
-    test_blackboard_read_write()
+    # test_blackboard_read_write()
     # test_retry_finite_num_with_blackboard()
     # test_tree()
     # test_tree_printing()

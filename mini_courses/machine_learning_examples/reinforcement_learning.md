@@ -30,9 +30,23 @@ Sample Implementation: https://github.com/ankonzoid/LearningX/blob/master/classi
 - A (stochastic) policy is a look up table of **being in state S, what's the probability of choosing action A**: $\pi (A|S)$
     - Value Function: **using this lookup table, what would be the total expected reward, starting from current state s**
         - State Value Function, (Estimate by recording average $R$ w.r.t each state visited)
-            $$ 
-            v_{\pi}(s) = E_{\pi}[G_t|S_t=s] = E_{\pi}[R_{t+1} + \gamma R_{t+2} + ... |S_t=s]
-            $$
+            1. Set up
+                $$ 
+                v_{\pi}(s) = E_{\pi}[G_t|S_t=s] = E_{\pi}[R_{t+1} + \gamma R_{t+2} + ... |S_t=s]
+                \\
+                v_{\pi}(s') = E_{\pi}[G_{t+1}|S_{t+1}=s'] = E_{\pi}[R_{t+2} + \gamma R_{t+3} + ... |S_{t+1}=s']
+                \\
+                $$
+            1. For a given pair of $(s, a, s', r)$, its "update" is 
+                $$r + \gamma E_{\pi}[R_{t+2} + \gamma R_{t+3} + ... |S_{t+1}=s']$$
+            1. But you could have multiple $(s', r)$, given $(s,a)$. When going for $s$ to $s'$, ingegrate over $r$, and $s$
+                $$
+                E_{\pi}[R_{t+1} + \gamma R_{t+2} + ... |S_t=s] = 
+                \sum_{A} \pi_{A} (a|s) \sum_{r} \sum_{s'}P(s', r|s,a)(r + \gamma E_{\pi}[R_{t+2} + \gamma R_{t+3} + ... |S_{t+1}=s'])
+                \\
+                = \sum_{A} \pi_{A} (a|s) \sum_{r} \sum_{s'}P(s', r|s,a)(r + \gamma v_{\pi}(s')) 
+                $$
+            1. $v_{pi}$ is expected $G_t$ at $t$ when state is in $s$. I'm wondering if there's a guarantee that the value function will converge?
         - Action Value Function (Estimate by recording average $R$ w.r.t each states and actions visited)
             $$
             q_{\pi}(a, s) = E_{pi}[G_t|S_t=s, A_t=a] = E_{\pi}[R_{t+1} + \gamma R_{t+2} + ... |S_t=s, A_t=a]
@@ -41,9 +55,20 @@ Sample Implementation: https://github.com/ankonzoid/LearningX/blob/master/classi
 
     - Bellman Equation: TODO
     - Optimal Value: $v_{*}(s) = max_{A} q_{\pi*}(a,s)$, notice the `*` for optimality
-        - Becomes function $v_{*}(s) = func(v_{*}(s'))$
+        - You choose the max value of the next state + reward
+            $$
+            v_{*}(s) = max_{A} q_{\pi}(s,a) 
+            \\
+            =max_{A} \sum_{r} \sum_{s} P(s'r|s,a)v_{*}(s')
+            $$
+        - Q:
+            $$
+            q_{\pi*}(s) = \sum_{r} \sum_{s'} P(s', r|s, a)(r + \gamma max_{a'} q_{\pi *}(s', a'))
+            $$
 
-- 
+
+### Examples and More
+- [Grid World](https://towardsdatascience.com/introduction-to-reinforcement-learning-rl-part-3-finite-markov-decision-processes-51e1f8d3ddb7)
 
 - temporal difference learning: to update the value function, we have a small feedback loop with the future value:
     - We first play the game
