@@ -11,7 +11,7 @@ body {
     /* Set no margins top and bottom, equal margin left and right, as big as possible */
     margin: 0 auto;
 }
-targetting all p and blockquote elements
+/* targetting all p and blockquote elements */
 p,
 blockquote{
     line-height: 36px;
@@ -52,3 +52,15 @@ a.hover{
     position: relative;
     bottom: 0.25rem 
 }
+
+/* positioning testing */
+.test_relative_position{
+    position: relative;
+    bottom: 0.25rem 
+}
+
+.test_absolute_position{
+    position: absolute;
+    bottom: 0.25rem 
+}
+
