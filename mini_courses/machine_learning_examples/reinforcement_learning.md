@@ -59,12 +59,177 @@ Sample Implementation: https://github.com/ankonzoid/LearningX/blob/master/classi
             $$
             v_{*}(s) = max_{A} q_{\pi}(s,a) 
             \\
-            =max_{A} \sum_{r} \sum_{s} P(s'r|s,a)v_{*}(s')
+            =max_{A} \sum_{r} \sum_{s} P(s'r|s,a)[r + \gamma v_{*}(s')]
             $$
         - Q:
             $$
             q_{\pi*}(s) = \sum_{r} \sum_{s'} P(s', r|s, a)(r + \gamma max_{a'} q_{\pi *}(s', a'))
             $$
+
+## Dynamic Programming
+- Value Iteration
+    1. Initialize $v(s)$ to 0 in all states
+    1. policy evaluation : note we are trying to get the optimal value under the current policy?
+        $$v_{k+1}(s) = max_{A} \sum_{r} \sum_{s'}P(s',r|s,a)[r + \gamma v_{*}(s')]$$
+        - repeat until $$v_{k+1}(s)$$ doesn't change much
+    1. policy improvement: $$\pi(s)$$ is the most rewarding action, like in policy iteration.
+        - this is **deterministic**
+
+-  General Policy Iteration
+    1. Initialize $v(s)$ to 0 in all states
+    1. Have a an initial policy $\pi (a|s)$
+    1. for a given $\pi(a|s)$, policy evaluation (guess we are "evaluating" the policy by looking at the values?)
+        1. Do one pass over these states, **note we are just evaluating the value of s, instead of achieving the optimal value**
+            $$v_{k+1}(s) = \sum_{r} \sum_{s'}P(s',r|s,a)[r + \gamma v_{*}(s')]$$
+            - $k$ is the number of iteration. 
+        1. we keep sweeping the states, until the value function at each state doesn't chage
+    1. Policy improvement (greedy)
+        1. get action from the policy
+        1. For each state $s$, Find the most rewarding action $a'$, $a' = argmax_{A} \sum_{s'r}P(s',r|s,a)[r + \gamma v_{*}(s')]$
+        1. if $a != a'$ we need to go back to policy evaluation, with $\pi(s)=a'$
+            - **note: action a could be a set of actions, as long as these actions are equally rewarding**
+
+## Monte Carlo Methods
+Many times, we don't know the model of the world $P(s',r|s,a)$. So, for a given $(s,a)$we take average of next state, and rewards
+Say we have the grid world. We want to have 
+- $v(s)$, which could be all zeros
+- Returns $s(s)$ for each state, which should be all zeros
+- number of visits at each state $n(s)$ where every entry is zero
+- policy $\pi(s) for each state
+
+At this point, you don't know anything about the grid world. So, you do a bunch of experiments, in episode, **following $\pi$**
+
+In Each episode, you have $s_1, a_1, r_1 ...$ till T. and Total Reward $G=0$. , 
+Then, you go back in time, from time $T$ to $0$: Say now you are at state $s$,
+1. $G_t=\gamma G+r_t$, 
+1. $n(s)+=1$
+1. $s(s)+=G_t$.
+1. OPTIONAL: if you want to update policy $pi$:
+    1. calculate $v(s) = s(s)/n(s)$, or $q(s,a) = s(s,a)/n(s,a)$
+    1. you need optimal $(s,a, s')$ lookup
+    1. $a_{policy} = \pi(a|s)$, get $s'=lookup(s,a_policy)$ if $v_(s')< v_(s)$, then $\pi(a|s)=a$
+
+Then, you iterate through all episodes. 
+When you are done, for each state, you have $v(s) = s(s)/n(s)$
+
+First visit monte carlo vs Every visit monte carlo, [ref](https://ai.stackexchange.com/questions/10812/what-is-the-difference-between-first-visit-monte-carlo-and-every-visit-monte-car)
+- In first visit monte carlo, **will skip updating the above steps if your $s$ has already been visited in the same episode**
+- Every time monte carlo will finish the whole process
+
+
+Of course, you can do the same with $q(s,a)$, for state, action pi. Then, you can do control on that more easily
+1. When updating policy, you won't need the $(s,a, s')$. 
+1. You still choose your policy greedily.
+
+### On and Off Policy
+**One problem is you can't gurantee that all states (and maybe actions) are explored**
+So, you can choose to: 
+1. choose random start states for each episode, following some policy
+2. Have a stochastic policy of action for each state. **Note that in the above example, you don't change policy.**
+    - on-policy is to keep updating the policy $\pi (a|s)$
+
+### On-policy
+on policy, similar to the above mc method. but different in that 
+    - we evaluate q(s,a) on the go
+    - update policy **Say we do it first time, with Q(s,a)**
+1. Iteration
+    - $q(s,a)$, which could be all zeros
+    - Returns $s(s,a)$ for each state and action, which should be all zeros
+    - number of visits at each state $n(s,a)$ where every entry is zero
+    - policy $\pi$, epsilon-soft
+    At this point, you don't know anything about the grid world. So, you do a bunch of experiments, in episode.
+1. In one episode, you have $s_1, a_1, r_1 ...$ till T. and Total Reward $G=0$. , 
+1. Then, you go back in time, from time $T$ to $0$: Say now you are at state $s$,
+    1. $G_t=\gamma G+r_t$, 
+    1. **If $s_t$ has not shown up yet:**
+        1. $n(s,a)+=1$
+        1. $q(s,a)+=G_t/n(s,a)$.
+        1. get set of optimal actions  $A^*=argmax_a Q(s,a)$
+        1. update policy of actions $a$ in $s_t$, $A(s_t)$:
+            - Non-optimal actions $\epsilon / |A(s_t)|$
+            - optimal actions: $1 - \epsilon + \epsilon/|A(s_t)|$
+
+1. When you are done, for each state, you have $q(s,a)$, and policy $\pi(s,a)$
+### Importance Sampling
+If you want to get expectation, variance, etc. from a distribution that's hard to sample from, consider sampling from an easier distribution.
+- But you need ratio between the two distributions, at each value. 
+
+$$E(X) = \int xP(x)dx = \int x \frac{P(x)}{Q(x)}Q(x)$$
+    - people usually do $E(f(x)) = \int f(x)p(x)dx$
+
+- However, if $Q(x)$ and $xP(x)$ distribution look too different, then $xP(x)/Q(x)$ is large at every $xP(x)$, 
+so $var = E[X^2]-E[X]^2$ will become larger in those regions?
+
+
+
+### Importance Sampling
+- Need example: https://towardsdatascience.com/importance-sampling-introduction-e76b2c32e744
+1. TODO: notes are in IPAD
+
+
+### Off Policy
+Have a behavior policy $b(a_i|s_i)$, and a target policy $\pi (a_i|s_i)$. Use the behavior policy for generating new episodes, but
+target policy to update and return. 
+
+- Video: https://www.youtube.com/watch?v=bpUszPiWM7o
+1. TODO: notes are in IPAD
+
+## TD Learning. 
+In Monte Carlo method, we udpate using the final return of nth episode. 
+    $$v_{n+1}(s) = v_{n}(s) + \alpha (G_n(s) - v{n}(s))$$
+But in TD Learning, we can simplify this process by updating with the immediate reward, **which is online**
+    $$v_{n+1}(s) = v_{n}(s) + \alpha (r + \gamma v_{n}(s') - v_{n}(s))$$
+One step TD $TD(0)$ is the above:
+1. Initialize V(s), have a given policy
+2. Loop for each episode until the terminal condition is reached:
+    1, Take an action given by policy, observe next state $s'$, and its $v(s')$, $r$
+    1. update Value
+        $$v_{n+1}(s) = v_{n}(s) + \alpha (r + \gamma v_{n}(s') - v_{n}(s))$$
+    1. update $s -> s'$
+
+TD Target is $R + \gamma v_{n+1}(s)$, to replace total discounted reward $G_n(s)$. TD error is $R + \gamma v_{n+1}(s) - v_n(s)$
+
+**it's called bootstraping**, because you learn from another estimate.
+
+### SARSA
+It's basically the above, just swap them with $Q(s,a)$
+1. Initialize $Q(s,a)$, have a given policy $\pi$
+1. Loop for each episode until the terminal condition is reached:
+    1, Take an action $a$ given by policy $\pi, observe next state $s'$, $r$
+    1. Take action $a'$ based on policy, update its $Q(s',a')$ (From the sequence of things to update, S, A, R, S, A)
+    1. Update Q value
+        $$Q_{n+1}(s, a) = Q_{n}(s, a) + \alpha (r + \gamma Q_{n}(s', a') - Q_{n}(s, a))$$
+    1. update $s -> s'$
+
+### Q Learning
+Compared to SARSA, instead of using the policy, We take optimal action when updating Q. But we are still using the policy to find the next action
+1. Initialize $Q(s,a)$ arbitrarily, have a given policy $\pi$
+1. Loop for each episode until the terminal condition is reached:
+    1, Take an action $a$ given by policy $\pi, observe next state $s'$, $r$
+    1. Update Q value
+        $$Q_{n+1}(s, a) = Q_{n}(s, a) + \alpha (r + \gamma max_{a'} Q_{n}(s', a') - Q_{n}(s, a))$$
+    1. update $s -> s'$
+
+### Expected SARSA:
+Instead of updating with next actual action in SARSA
+    $$Q_{n+1}(s, a) = Q_{n}(s, a) + \alpha (r + \gamma Q_{n}(s', a') - Q_{n}(s, a))$$
+We update with the expectated Q:
+    $$Q_{n+1}(s, a) = Q_{n}(s, a) + \alpha (r + \gamma \sum_{a'} \pi(a'|s')Q_{n}(s', a') - Q_{n}(s, a))$$
+
+**Expected SARSA eliminates variance from random action selection**. Behaves better than SARSA.
+
+
+### Maximization Bias and Double Q Learning
+**Q(s'a') is seen as a random variable.**, then in Q Learning, because you always choose action that lead to current $max Q(s', a')$, there's always a difference between 
+the $E[max Q(s',a')]$, and the $max EQ(s',a')$. This difference is called bias, and we can show the bias is positive:
+1. $max(x)$ is a convex function. For convex function, there's Jensen's inequality, which states:
+    $$E[f(x)] >= f(E[x])$$
+1. So, $bias = E[max Q(s',a')] - max E[Q(s',a')] >= 0$
+1. So, the expectation of the max among Q(s'a') is always larger than the max of the expectation among Q(s'a') 
+
+So, there's double Q learning: TODO
+
+Have two $Q$ tables: $Q1(s,a)$, $Q2(s,a)$. Then, 
 
 
 ### Examples and More
