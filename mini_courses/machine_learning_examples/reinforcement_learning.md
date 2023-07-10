@@ -229,7 +229,19 @@ the $E[max Q(s',a')]$, and the $max EQ(s',a')$. This difference is called bias, 
 
 So, there's double Q learning: TODO
 
-Have two $Q$ tables: $Q1(s,a)$, $Q2(s,a)$. Then, 
+[Implementation](https://rubikscode.net/2021/07/20/introduction-to-double-q-learning/): Have two $Q$ tables: $Q1(s,a)$, $Q2(s,a)$.
+For each episode:
+    1. $Q_total =Q_A+Q_B$, find the max action. 
+    1. flip a coin. If updating $Q_A$:
+        $$
+        Q_{A,n}(s,a) = Q_{A,n}(s,a) + \alpha[R + \gamma Q_{B,n}(s_{n+1}, a) - Q_{A,n}(s,a)]
+        $$
+        - switch QA, QB if we want to update QB.
+    1. $s_n\rightarrow s_{n+1}$
+
+- TODO: 
+    - How does this minimize bias?
+    - why is SARSA online, QLearning offline?
 
 
 ### Examples and More
