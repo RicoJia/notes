@@ -1,3 +1,39 @@
+========================================================================
+## Survey
+========================================================================
+There are three types of machine learning algorithms: 
+- Supervised:
+    - Learns from labelled data to predict the outcome of a given problem, by minimizing the prediction loss e.g., MNIST.
+    - Iteratively evaluate by using SVM, Decision Tree, K-nearest neighbors, Deep Learning.
+- Unsupervised:
+    - Finds commonalities and structure between uncategorized data.
+    - K-means, apriori, or PCA. 
+- Reinforcement Learning:
+    - Goal is given an environment, action and state space, we want to optimize the total reward. So the goal is different from
+    unsupervised learning. 
+    - Over time, we want to learn a series of optimal actions. 
+    - There are three types of reinforcement learning:
+        - Model based, MDP
+        - Model free:
+            - Value based: We optimize value of state to predict, or state-action pair and control optimally 
+                - sarsa
+                - q learning
+                - When the state or state-action space is small enough, we can use a table to represent it (aka tabular learning). But when the state space is large, we want to use function approximation methods.
+            - Policy based: (high variance during training?)
+                - Reinforce (monte carlo policy gradient)
+                - Deterministic Policy Gradient (DPG)
+                - This is more similar to how we think: to figure out a strategy, unlike value based methods, learning the values of all states & actions.
+            - Actor-critic: evaluate both the policy and the value with statble convergence.
+                - 
+
+Deep learning helps reinforcement learning to learn features much faster (TODO, ?), which  allows us to learn larger and more complex goals.
+A reinforcement learning problem can be abstracted as an Markov Decision Process. But sure, this Markov Decision Process can be very large.
+
+### Applications 
+In Advertisement, to maximize total revenue, we want to show viewers ads that they will most likely like. This is called "impression allocation", where an impression is an ad pop-up. Platforms use collaborative filtering or content based filtering to rank sellers using historical scores, which considers how many customers the sellers likely to get. The current algorithms consider the sellers' similarities to customers, but not discounts sellers make to attract more customers. So, reinforcement learning can be used to better evaluate seller's behavior. Also, reinforcement learning can be used to detect fradulent behaviors on a platform? 
+
+On the other hand, sellers can use RL to allocate advertising budget across platforms. There's online bidding platforms that show a seller's ad if they win the bid. A seller can automatically bid based on the total reward of the combo of platforms they use.
+
 ## k-Armed Bandits 
 K-armed bandit is a slot machine has its own lever, and is called a “bandit” because it can empty your wallet like a thief :)
 - Each bandit has a probability to fail/succeed
@@ -90,6 +126,7 @@ Sample Implementation: https://github.com/ankonzoid/LearningX/blob/master/classi
             - **note: action a could be a set of actions, as long as these actions are equally rewarding**
 
 ## Monte Carlo Methods
+- TODO: confirm why it's called tabular methods?
 Many times, we don't know the model of the world $P(s',r|s,a)$. So, for a given $(s,a)$we take average of next state, and rewards
 Say we have the grid world. We want to have 
 - $v(s)$, which could be all zeros
@@ -126,7 +163,9 @@ Of course, you can do the same with $q(s,a)$, for state, action pi. Then, you ca
 So, you can choose to: 
 1. choose random start states for each episode, following some policy
 2. Have a stochastic policy of action for each state. **Note that in the above example, you don't change policy.**
-    - on-policy is to keep updating the policy $\pi (a|s)$
+    - the policy for selecting actions is called "behavior policy", policy for updating Q function is called "update policy"
+    - on-policy is to keep updating the policy $\pi (a|s)$, i.e., the behavior policy and the update policy are the same
+    - off policy has different behavior and update policies
 
 ### On-policy
 on policy, similar to the above mc method. but different in that 
@@ -155,7 +194,7 @@ If you want to get expectation, variance, etc. from a distribution that's hard t
 - But you need ratio between the two distributions, at each value. 
 
 $$E(X) = \int xP(x)dx = \int x \frac{P(x)}{Q(x)}Q(x)$$
-    - people usually do $E(f(x)) = \int f(x)p(x)dx$
+- people usually do $E(f(x)) = \int f(x)p(x)dx$
 
 - However, if $Q(x)$ and $xP(x)$ distribution look too different, then $xP(x)/Q(x)$ is large at every $xP(x)$, 
 so $var = E[X^2]-E[X]^2$ will become larger in those regions?
@@ -181,27 +220,35 @@ But in TD Learning, we can simplify this process by updating with the immediate 
     $$v_{n+1}(s) = v_{n}(s) + \alpha (r + \gamma v_{n}(s') - v_{n}(s))$$
 One step TD $TD(0)$ is the above:
 1. Initialize V(s), have a given policy
-2. Loop for each episode until the terminal condition is reached:
-    1, Take an action given by policy, observe next state $s'$, and its $v(s')$, $r$
+1. Loop for each episode until the terminal condition is reached:
+    1. Take an action given by policy, observe next state $s'$, and its $v(s')$, $r$
     1. update Value
         $$v_{n+1}(s) = v_{n}(s) + \alpha (r + \gamma v_{n}(s') - v_{n}(s))$$
     1. update $s -> s'$
 
 TD Target is $R + \gamma v_{n+1}(s)$, to replace total discounted reward $G_n(s)$. TD error is $R + \gamma v_{n+1}(s) - v_n(s)$
-
 **it's called bootstraping**, because you learn from another estimate.
+
+1. on and off policy
+    - SARSA updates its $Q$ using the actual action taken by $s'$, which corresponds to the behavior policy. So,
+        it's **on-policy** 
+    - Q Learning updates its $Q$ always chooses the most rewarding action of $s'$, which could be different from its actual actions.
+        So its update policy is different than its behavior policy, so it's **off-policy**
+    - Expected Policy can be either on or off policy. Update policy you use $\pi(a|s)$, could be, or different than your action policy
+    $b(a|s)$
 
 ### SARSA
 It's basically the above, just swap them with $Q(s,a)$
 1. Initialize $Q(s,a)$, have a given policy $\pi$
 1. Loop for each episode until the terminal condition is reached:
-    1, Take an action $a$ given by policy $\pi, observe next state $s'$, $r$
+    1. Take an action $a$ based on epsilon-greedy policy (greedy means "choosing the most rewarding policy")
+    1. observe next state $s'$, $r$
     1. Take action $a'$ based on policy, update its $Q(s',a')$ (From the sequence of things to update, S, A, R, S, A)
     1. Update Q value
         $$Q_{n+1}(s, a) = Q_{n}(s, a) + \alpha (r + \gamma Q_{n}(s', a') - Q_{n}(s, a))$$
     1. update $s -> s'$
 
-### Q Learning
+### Q Learning (watkins)
 Compared to SARSA, instead of using the policy, We take optimal action when updating Q. But we are still using the policy to find the next action
 1. Initialize $Q(s,a)$ arbitrarily, have a given policy $\pi$
 1. Loop for each episode until the terminal condition is reached:
@@ -212,9 +259,9 @@ Compared to SARSA, instead of using the policy, We take optimal action when upda
 
 ### Expected SARSA:
 Instead of updating with next actual action in SARSA
-    $$Q_{n+1}(s, a) = Q_{n}(s, a) + \alpha (r + \gamma Q_{n}(s', a') - Q_{n}(s, a))$$
+    $$Q_{n+1}(s, a) = Q_{n}(s, a) + \alpha (r' + \gamma Q_{n}(s', a') - Q_{n}(s, a))$$
 We update with the expectated Q:
-    $$Q_{n+1}(s, a) = Q_{n}(s, a) + \alpha (r + \gamma \sum_{a'} \pi(a'|s')Q_{n}(s', a') - Q_{n}(s, a))$$
+    $$Q_{n+1}(s, a) = Q_{n}(s, a) + \alpha (r' + \gamma \sum_{a'} \pi(a'|s')Q_{n}(s', a') - Q_{n}(s, a))$$
 
 **Expected SARSA eliminates variance from random action selection**. Behaves better than SARSA.
 
@@ -243,6 +290,15 @@ For each episode:
     - How does this minimize bias?
     - why is SARSA online, QLearning offline?
 
+### N step Bootstrapping
+You basically use actions and updates to update $n$ steps afterwards. 
+$$
+G_{t:t+n} = \sum_{m=0}^{m=n-1}[\gamma^{m} * R_{t+m}] + \gamma^(n) v_{k}(s_{t+n})
+v_{k+1}(s_{n}) = v_{k}(s_{n}) + \alpha (G_{t:t+n} - v_{k}(s_{t+n})
+$$
+- If you haven't got to finish the first $n$ steps yet, just stick to the policy, don't do anything.
+- for off-policy learning, you want to consider importance sampling:
+    - 
 
 ### Examples and More
 - [Grid World](https://towardsdatascience.com/introduction-to-reinforcement-learning-rl-part-3-finite-markov-decision-processes-51e1f8d3ddb7)
