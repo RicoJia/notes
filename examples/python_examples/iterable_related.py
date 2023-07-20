@@ -409,6 +409,7 @@ def set_funcs():
     4. frozenset
         1. does not support indexing, 
         2. but can be used to unpack
+    5. Set insert a string
     """
     # 1
     s = {1,2,3}
@@ -433,6 +434,13 @@ def set_funcs():
     str1, str2 = s3
     print(str1, " ", str2)
 
+    # Set insert a string here
+    # see ("a", "b", "c")
+    s = set("abc")
+    s = set(("abc"))
+    # correct way
+    s = set(("abc",))
+    
 def test_range(): 
     # you can access range object like list 
     r = range(1, 5)

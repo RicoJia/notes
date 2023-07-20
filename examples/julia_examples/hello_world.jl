@@ -1,3 +1,10 @@
+# # This hello world example is from this video: 
+# #  https://www.youtube.com/watch?v=8h8rQyEpiZA&list=PLP8iPy9hna6SCcFv3FvY_qjAmtTsNYHQE&index=9
+
+##############################################
+# Basics
+##############################################
+
 # Pkg manager
 # Install Ijulia for running it in Jupyter Notebook:
 # julia -> using Pkg -> Pkg.add("IJulia")
@@ -113,7 +120,10 @@ false && (println("hi"); true)
 true | (println("| has no short circuit here"); true)
 true || (println("| has short circuit here"); true)
 
-# function
+##############################################
+# Function
+##############################################
+
 # will automatically return the last line result
 function foo(i)
     i=1
@@ -123,7 +133,16 @@ println("print last var", foo(2))
 # lambda function
 f3 = x -> x+1
 println("lambda function", f3(3))
+# shorthand Function
+f(x, y) = 3x + 4y
+A = [1, 2, 3]
+B = [10, 20, 30]
+C = f(A, B)
+println(C)  # Outputs: [43, 86, 129]
 
+##############################################
+# Matrix
+##############################################
 # matrix multiplication?
 mat1 = fill(1, (3,3))
 println("matrix multiplying by itself: ", mat1^2)
@@ -140,12 +159,36 @@ println("without broadcasting: ", [1,2,3] + [4,5,6])
 # With broadcasting, it's like 3 rows of [1,2,3], added with an element in the column vector
 println("with broadcasting: ", [1,2,3] .+ [4,5,6]')
 
-# shorthand Function
-f(x, y) = 3x + 4y
-A = [1, 2, 3]
-B = [10, 20, 30]
-C = f(A, B)
-println(C)  # Outputs: [43, 86, 129]
-
 # If a plot with multiple lines doesn't show properly, then it's probably because 
 # the line data size do not match up
+
+##############################################
+# Benchmarking & Raw C
+##############################################
+
+# 100 times speed up!
+double_array = [1.0,2.0,3.1,4.2,5.3]
+@time sum(double_array)
+@benchmark sum([2,3,4])
+
+# We can even have a hand writen piece of code
+using Libdl
+C_code = """
+#include <stddef.h>
+// size_t is included in stddef.h
+double c_sum (size_t n, double* array){
+    double sum = 0.0;
+    for (size_t i = 0; i < n; i++){
+        sum += array[i];        
+    }
+    return sum;
+}
+"""
+# pipe code to gcc, then compile it
+const Clib = tempname()
+open(`gcc -fPIC -O3 -msse3 -xc -shared -o $(Clib * "." * Libdl.dlext) -`, "w") do f
+    print(f, C_code)
+end
+c_sum(X::Array{Float64}) = ccall(("c_sum", Clib), Float64, (Csize_t, Ptr{Float64}), length(X), X)
+# println(c_sum(double_array))
+@time c_sum(double_array)
