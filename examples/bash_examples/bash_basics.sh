@@ -167,3 +167,6 @@ test_test
 
 # Interesting way to listen to two topics at once
 # rostopic echo /rico & rostopic echo /george
+
+# timer: you should check systemctl list-timers
+# systemctl enable XX.timer, systemctl start XX.timer
