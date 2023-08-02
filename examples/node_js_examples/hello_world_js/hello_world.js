@@ -276,3 +276,5 @@ Many things are exposed to JS, but not implemented. They are called "host object
     - types: Array, Strings
     - Math, RegExp
 */
+
+// array

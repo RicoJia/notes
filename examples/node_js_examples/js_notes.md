@@ -26,3 +26,19 @@
 1. If you have an node js project, that depends on other npm libraries, then, create a new project
     1. `npm init` : set up `package.json`. npm is Node Package Manager
     2. `npm i prompt-sync`: `i` is also for `npm install`. we install this package
+
+
+### Syntax: TODO experiment
+1. import vs export
+    ```
+    
+    ```
+    ```
+    import myLocalFunction from './mylocalmodule';
+    // Global modules are in node_modules, from ES6
+    import function from 'module';
+    // older version:
+    const express = require('express')
+    // for an exported member
+    import { myLocalFunction } from './mylocalmodule';
+    ```

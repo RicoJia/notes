@@ -29,6 +29,15 @@
 # println(s1*s2*s3)
 # println("string interpolation is to use \$ : $my_var")
 
+# '' only used on chars
+char1 = 'c'
+
+# If you don't want printouts, append ; at the end of the function
+# Random.seed!(0);
+
+# in julia, no time.sleep
+# sleep(1)
+
 # # tuple is the same in python. But Julia index starts from 1
 # tup = (1,2,3)
 # println(tup[1])
@@ -53,11 +62,6 @@
 # pop!(arr2)
 # println("after pop!", arr1)
 
-# # copy array needs copy(), else, it's simply a shallow copy.
-# # to recursively copy all elements in a dictionary, do deepcopy()
-# cp_arr1 = copy(arr1)
-# deepcopy(arr2)
-
 # # while loop
 # some_n=10
 # while some_n<0
@@ -66,6 +70,41 @@
 #     some_n+=1
 #     println(some_n)
 # end
+# ##############################################
+# # Math
+# ##############################################
+# 1. Max and argmax
+arr = [1,2,3,4,5]
+println("max element: ",maximum(arr)," . max index: ",findmax(arr))
+# 2. Broadcasting
+arr1 = [5,6,7,8,9]
+println("If all elements are within tolerance of 2: ", all(abs.(arr .- arr1) .< 2))
+
+# Reference
+arr = arr1
+arr1[1] = 100
+println("arr also changed, because we have a reference: ", arr[1])
+
+# 
+for element in arr
+    println(element)
+end
+
+# # Or a julia syntactic sugar
+# for r in 1:3, w in 1:4
+#     A[r,w]=100
+# end
+# println(A)
+
+# # Array comprehension
+# # Here we have a 2D array, by default, it's row, column in A
+# A = [i+j for i in 1:3, j in 4:5]
+# println("array comprehension: ", A)
+
+# # copy array needs copy(), else, it's simply a shallow copy.
+# # to recursively copy all elements in a dictionary, do deepcopy()
+# cp_arr1 = copy(arr1)
+# deepcopy(arr2)
 
 # while length(cp_arr1) <= 1
 #     push!(cp_arr1,2)
@@ -87,16 +126,6 @@
 # end
 # println(A)
 
-# # Or a julia syntactic sugar
-# for r in 1:3, w in 1:4
-#     A[r,w]=100
-# end
-# println(A)
-
-# # Array comprehension
-# # Here we have a 2D array, by default, it's row, column in A
-# A = [i+j for i in 1:3, j in 4:5]
-# println("array comprehension: ", A)
 
 # # if elseif else
 # N = 15
@@ -193,8 +222,8 @@ end
 c_sum(X::Array{Float64}) = ccall(("c_sum", Clib), Float64, (Csize_t, Ptr{Float64}), length(X), X)
 # println(c_sum(double_array))
 @time c_sum(double_array)
-benchmark = @benchmark c_sum(double_array)
-println("Handwritten C sum benchmarking: ", benchmark)
+# benchmark = @benchmark c_sum(double_array)
+# println("Handwritten C sum benchmarking: ", benchmark)
 
 # Using C-fastmath, which uses SIMD (Single Instruction, Multiple Data)
 # That is, same operations on multiple data points. 
@@ -207,22 +236,22 @@ open(`gcc -fPIC -O3 -msse3 -xc -shared -ffast-math -o $(Clib_fastmath * "." * Li
 end
 c_sum_fastmath(X::Array{Float64}) = ccall(("c_sum", Clib_fastmath), Float64, (Csize_t, Ptr{Float64}), length(X), X)
 @time c_sum_fastmath(double_array)
-benchmark = @benchmark c_sum_fastmath(double_array)
-println("Handwritten C sum fastmath benchmarking: ", benchmark)
+# benchmark = @benchmark c_sum_fastmath(double_array)
+# println("Handwritten C sum fastmath benchmarking: ", benchmark)
 
 # Python built in sum
 using PyCall
 pysum = pybuiltin("sum")
-benchmark = @benchmark pysum(double_array)
 @time pysum(double_array)
-println("python built-in benchmarking", minimum(benchmark.times))
+# benchmark = @benchmark pysum(double_array)
+# println("python built-in benchmarking", minimum(benchmark.times))
 
 # Use numpy
 using Conda
 numpy_sum = pyimport("numpy")["sum"]
-benchmark = @benchmark numpy_sum(double_array)
 @time numpy_sum(double_array)
-println("python built-in benchmarking", minimum(benchmark.times))
+# benchmark = @benchmark numpy_sum(double_array)
+# println("python numpy benchmarking", minimum(benchmark.times))
 
 # Handwritten python function
 # MUST NOT have space in py"""

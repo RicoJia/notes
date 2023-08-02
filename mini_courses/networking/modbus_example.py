@@ -1,4 +1,5 @@
 # Modbus server (TCP)
+# https://apmonitor.com/dde/index.php/Main/ModbusTransfer
 from pymodbus.server import StartTcpServer
 from pymodbus.device import ModbusDeviceIdentification
 from pymodbus.datastore import ModbusSequentialDataBlock
@@ -6,7 +7,9 @@ from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
 
 from argparse import ArgumentParser
 
-PORT=5020
+PORT=502
+# PORT=5020
+ADDR = "192.168.102.156"
 
 def run_async_server():
     print('Modbus server started on localhost port ', PORT)
@@ -37,13 +40,16 @@ def run_async_server():
 def run_simple_client():
     print('Modbus simple client is on')
     from pymodbus.client import ModbusTcpClient
-    client = ModbusTcpClient("localhost", port=PORT)
+    # change to config IP. Kenna might be the one made mapping
+    client = ModbusTcpClient(ADDR, port=PORT)
     if client.connect():
         #TODO Remember to remove
         print(f'Connected')
-        client.write_coil(1, True)
-        result = client.read_coils(1,1)
-        print(result.bits[0])
+        # client.write_coil(0, False)
+        # client.write_coil(1, True)
+        # client.write_coil(2, True)
+        result = client.read_coils(0,count=3)
+        print(result.bits)
         client.close()
     else:
         print(f'Not connected')
@@ -57,7 +63,7 @@ def run_holding_reg_read_write_client():
     import time
 
     print('Start Modbus Client')
-    client = ModbusClient(host='127.0.0.1', port=PORT)
+    client = ModbusClient(host=ADDR, port=PORT)
     reg=0; address=0
 
     # initialize data
@@ -94,6 +100,6 @@ if __name__ == "__main__":
     if args.server:
         run_async_server()
     else:
-        # run_simple_client()
-        run_holding_reg_read_write_client()
+        run_simple_client()
+        # run_holding_reg_read_write_client()
         
