@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Title</title>
+</head>
+<body>
+    <p>
+        <!-- providing auto-wrap to the container -->
+        <div class="container">
+            <div class="row">
+                <!-- 3-unit column -->
+                <div class="col-3">
+                    hello
+                </div>
+
+                <div class="col-3">
+                    hello3
+                </div>
+                <div class="col-3">
+                    hello4
+                </div>
+            </div>
+        </div>
+
+    </p>
+
+    <p>
+        <!-- Method 1 for using default html file upload -->
+        <form action="#" method="post" enctype="multipart/form-data">
+            <input type="file" id="image_upload" name="image_upload" accept="image/*">
+            <input type="submit" value="Upload Image" name="submit">
+        </form>
+        <!-- Method 2 for custom upload -->
+        <style>
+            .upload-image {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50; /* green */
+            color: white;
+            cursor: pointer;
+            }
+
+            .upload-image:hover {
+            background-color: #45a049; /* dark green */
+            }
+        </style>
+        <div class="custom-upload">
+            <input type="file" id="file" accept="image/*" style="display: none;" />
+            <label for="file" class="upload-image">Upload Image</label>
+        </div>
+    </p>
+
+    <p>
+        <h1>Test grid container</h1>
+        <p>
+            We want to show a grid with one gray line in the middle, and the starts from the right of the 
+            page
+        </p>
+        <style>
+        </style>
+        <div class="head__container">
+            <div class="head__msg">HELLO</div>
+            <div class="navbar__grid__container">
+                <div class="navbar__grid__item"> item1 </div>
+                <div class="navbar__grid__item"> item2 </div>
+                <div class="navbar__grid__item"> item3 </div>
+            </div>
+        </div>
+
+    </p>
+
+</body>
+</html>
