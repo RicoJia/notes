@@ -1,0 +1,47 @@
+<!-- For legacy reasons, need to tell browser we're using html -->
+<!--1. Firefox:
+    - Visualize it using the HTML tree.
+    - If I can execute javascript 
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="rico-meta" content="rico is great">
+        <title>Example Application</title>
+        <link rel="stylesheet" href="dom_experiment_styles.css"/>
+    </head>
+    
+    <body>
+        <h1>Heroooo</h1>
+        <p class='body_text test_paragraph'>Hello, world!</p>
+        <blockquote lang="zh"> 
+            我是一颗跳跳糖, <br>
+            一颗闪闪发亮的跳跳糖 <br>
+            蹦跶跶 蹦跶 蹦跶跶 <br>
+            蹦跶 蹦跶跶 蹦跶蹦 <br>
+        </blockquote>
+
+        <p id="sample_paragraph"> Here I want to highlight <em style="background-color: #928ff1">
+            <em>a word</em>
+            <a href="https://www.youtube.com/watch?v=YrOb7OZXsU8">
+                <span class="rico_emoji">To a funny bunny video 😂</span>
+            </a>
+        </p>
+
+        <p>
+            Here is a list, (unordered)
+            <ul>
+                <li> apple </li>
+                <li> banana </li>
+                <li> orange </li>
+            </ul>
+            <input type="checkbox" name="option1"> Sample Option
+            <!-- Simulate click: document.querySelector("input").click() -->
+
+        </p>
+        <script src="dom_experiment.js"></script>
+    </body>
+</html>

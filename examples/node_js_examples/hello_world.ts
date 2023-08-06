@@ -18,4 +18,30 @@ function test_array(){
     // const_arr[0] = 2;
 }
 
-test_array()
+// test_array()
+// generics, a feature only in TS. Gives you more idea of what is being passed in
+function getFirstElement<T>(arr: T[]): T {
+    return arr[0];
+}
+let arr = [1,2,3];
+console.log(getFirstElement(arr));
+
+// Enum class
+enum DriverCarStatus {
+  POWER_COMM_OK = 0,
+  GROUP_OPERATION = 1,
+  UP_DIRECTION = 2,
+  DOWN_DIRECTION = 3,
+  DOOR_FULLY_OPEN = 4,
+  DOOR_FULLY_CLOSED = 5,
+  FIRE_SERVICE = 6,
+  CODE_BLUE = 7,
+  INSPECTION_OPERATIOM = 8,
+  REAR_DOOR_FULLY_OPEN = 9, // TODO: Test this
+  REAR_DOOR_FULLY_CLOSED = 10, // TODO: Test this
+}
+let arr3 = Array.from({length: 16}, (_, i) => i);
+for (let i = 0; i < arr3.length; i++) {
+    const status: string | undefined = DriverCarStatus[i];
+    console.log(status, i)
+}

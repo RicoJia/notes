@@ -36,6 +36,10 @@ scope - or lexical scope. That is, where in the code a variable is defined
 2. Hoisting. The term means "raising by pulley". That is, declaration of a variable
 will move the variable, function to the top of the current scope
 Be aware
+3. There are 3 scopes:
+    - global scope
+    - function scope (var)
+    - block scope (const, and let)
 */
 
 // Scope. Where as in C++, i will have block scope
@@ -72,7 +76,16 @@ function Bar_let(){
 }
 Bar_let();
 
-// Hoisting
+/*
+Hoisting: only var has it. The variable declaration is moved to the top, not its initialization
+below is equivalent to: 
+    var a;
+    console.log(a);
+    a = 5;
+    console.log(a);
+let and const do not have this.
+*/
+
 var a = "42";
 // can call foo() here because declaration of foo is hoisting
 foo();
