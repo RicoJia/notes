@@ -109,6 +109,7 @@ def np_random():
     print(random.randint(-4, 10, size = (3,3)))
 
 def test_categorical_sampling():
+    # Categorical Sampling: draw from a few categories
     ls = [1,2,3,4]
     # asarray will reuse the input if it's already an ndarray. More memory efficient
     arr = np.asarray(ls)
@@ -116,6 +117,30 @@ def test_categorical_sampling():
     # index of the first element that's larger than 5
     # broadcast: [False, False, True]
     return (arr_cumsum>5).argmax()
+
+def test_random_sampling():
+    """
+    1. seed is an initial value to a seeding sequence.
+        - Same seed value yields the same sequence.
+        - Entropy is to measure the randomness in the sequence
+    2. Create a bit generator, like ```MT19337``` (mersenne twister) and ```PCG64```
+        - Generate a sequence of uniformally-distributed bits, which are later
+        "box-mueller" transformed into gaussian distrbuted bits
+    3. Create a random number generator. 
+    """
+    # 1. Single random number generator with 1000 numbers
+    from numpy.random import Generator, PCG64
+    rg = Generator(PCG64(12345))  # create a Generator with a seeded PCG64 BitGenerator
+    random_floats = rg.random((1000,))  # generate 1000 random floats
+
+    # 2. if you want to create multiple random number generators:
+    seed = 100
+    seed_seq = np.random.SeedSequence(seed)
+    np_seed = seed_seq.entropy
+    # get 3 deterministic seeds
+    child_seeds = seed_seq.spawn(3)
+    rgs = [Generator(np.random.PCG64(s)) for s in child_seeds]
+
 
 if __name__=="__main__":
     np_basics1()
