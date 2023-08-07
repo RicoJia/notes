@@ -45,3 +45,6 @@ for (let i = 0; i < arr3.length; i++) {
     const status: string | undefined = DriverCarStatus[i];
     console.log(status, i)
 }
+
+// Specify Types
+// const status: string | undefined = DriverCarStatus[i];

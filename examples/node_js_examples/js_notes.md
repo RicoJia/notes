@@ -8,6 +8,7 @@
 (function (){console.log("hehe")})()
 ```
 - `const` was introduced in ES6
+- DTO (datoa transfer objects), used for slimming down a data object before sending them over wire
 
 ========================================================================
 ## Node Js

@@ -248,6 +248,7 @@ pysum = pybuiltin("sum")
 
 # Use numpy
 using Conda
+# If there's Pyimport error, try running python with it. Julia seems to hide its output
 numpy_sum = pyimport("numpy")["sum"]
 @time numpy_sum(double_array)
 # benchmark = @benchmark numpy_sum(double_array)

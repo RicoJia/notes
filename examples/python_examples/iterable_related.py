@@ -511,6 +511,9 @@ def list_basics():
     list_1.append(3)
     print("append list: ", list_1)
 
+    # create a list from two lists:
+    ls3 = [(i, j) for i in list_1 for j in list_2]
+
     # 5.1
     l = [1,2,3]
     def foo(): 

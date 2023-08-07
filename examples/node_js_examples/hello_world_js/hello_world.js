@@ -2,9 +2,12 @@
 /*
 Variables:
 - types (object)
+    - typed values, not typed variables.
+    - Null, object, symbol, symbols (ES6)
 - typeof
 - coercion
 - inequality
+
 */
 console.log("hello world");
 var arr = ["1", "2", "3"];
@@ -277,12 +280,20 @@ function func(){
 }
 func()
 
+// Convert to each array element
+arr.data.map((i) => Number(i)) // creates a new array, by iterating through each element in readCoilResult, and converting it to number
+
 /*
 Many things are exposed to JS, but not implemented. They are called "host objects"
 - On browser, 
     - alert("adsfasd"), console.log(), they are implemented in C/C++, exposed to JS.
         - Now they could be implemented in JS
     - DOM, document.getElementById(), is implemented in browser as well
+    - best practices In HTML:
+        - CSS stylesheet always at top, because it affects styles of subsequent elements
+        - JS scripts are included at the bottom, because this way you know all elements required are already there.
+    - The purpose of DOM:
+        - A tree of objects, that can be used to dynamically change the page (clicking buttons, etc.)
 - In node.js:
     - Process, fs, http
 - Native JS objects: 

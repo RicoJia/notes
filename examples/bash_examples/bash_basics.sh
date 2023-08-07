@@ -1,4 +1,8 @@
 #!/bin/bash
+# General Notes
+# 1. timer: you should check systemctl list-timers
+# systemctl enable XX.timer, systemctl start XX.timer
+
 # 1. must require the shbang, otherwise, we might be running another shell
 # function basics
 NUM1=32
@@ -165,8 +169,12 @@ test_test(){
 }
 test_test
 
-# Interesting way to listen to two topics at once
-# rostopic echo /rico & rostopic echo /george
+test_listening_to_2_ros_topics(){
+    # Interesting way to listen to two topics at once
+    rostopic echo /rico & rostopic echo /george
+}
 
-# timer: you should check systemctl list-timers
-# systemctl enable XX.timer, systemctl start XX.timer
+test_xclip(){
+    # - does ctrl-v a file
+    xclip -sel clip file-name
+}

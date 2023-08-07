@@ -108,6 +108,15 @@ def np_random():
     print(random.randint(4, 10, size = (3,3)))
     print(random.randint(-4, 10, size = (3,3)))
 
+def test_categorical_sampling():
+    ls = [1,2,3,4]
+    # asarray will reuse the input if it's already an ndarray. More memory efficient
+    arr = np.asarray(ls)
+    arr_cumsum = np.cumsum(arr)
+    # index of the first element that's larger than 5
+    # broadcast: [False, False, True]
+    return (arr_cumsum>5).argmax()
+
 if __name__=="__main__":
     np_basics1()
     # test_empty_arr()
