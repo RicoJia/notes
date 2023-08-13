@@ -1,6 +1,6 @@
 //  "use strict";
 /*
-Variables:
+================ Variables ================
 - types (object)
     - typed values, not typed variables.
     - Null, object, symbol, symbols (ES6)
@@ -135,13 +135,23 @@ test_use_strict()
 console.log("character count", "character count".length);
 
 /*
-Functions as variables
+================ Functions ================
+- Returning muliple values
 - IFFE
 - ARROW functions
 */
+function return_multple_elements(){
+    // this is returning an array
+    // JS doesn't have tuple
+    return [1,2];
+}
+
+[x,y] = return_multple_elements();
+console.log(x,y);
+
+// IIFE, immediately invoked function expression
 a = test_use_strict
 a();
-// IIFE, immediately invoked function expression
 var x = (function IIFE(){
     console.log("HELLO, IIFE!");
     return 42;
@@ -163,6 +173,10 @@ function outer(x) {
     return inner;
 }
 console.log(outer(1)(2));
+
+/**
+ * ================ Constructors ================
+ */
 
 // use camelCase for regular functions, but PascalCase for constructors, or class names
 function SomeModule(){
@@ -226,7 +240,6 @@ class Carro{
 var c = new Carro("c");
 c.meep();
 
-// This
 function foo(){
     // "use strict";
     // Without use strict, this could point to 
@@ -250,6 +263,42 @@ var obj3 = Object.create(obj2);
 obj3.baz = "baz";
 console.log(obj3.bar);
 
+// Since ES6, we have default values
+function func(a=2){}
+// But if you run on Pre-ES6
+function func(){
+   // Note: arguements is an array available to function in JS
+   var a = arguments[0] !== (undefined) ? arguments[0] : 2;
+   console.log(a);
+}
+func()
+
+/**
+ * ================ Array ================
+ */
+
+// Convert to each array element
+arr.map((i) => Number(i)) // creates a new array, by iterating through each element in readCoilResult, and converting it to number
+
+/*
+ * ================ Transpiler and Polyfill ================
+Many things are exposed to JS, but not implemented. They are called "host objects"
+- On browser, 
+    - alert("adsfasd"), console.log(), they are implemented in C/C++, exposed to JS.
+        - Now they could be implemented in JS
+    - DOM, document.getElementById(), is implemented in browser as well
+    - best practices In HTML:
+        - CSS stylesheet always at top, because it affects styles of subsequent elements
+        - JS scripts are included at the bottom, because this way you know all elements required are already there.
+    - The purpose of DOM:
+        - A tree of objects, that can be used to dynamically change the page (clicking buttons, etc.)
+- In node.js:
+    - Process, fs, http
+- Native JS objects: 
+    - types: Array, Strings
+    - Math, RegExp
+*/
+
 /*
 - Polyfill - piece of code on old browser to fake BEHAVIOR of some new features.
     - If you run the same code on a new browser, then that code has no effect
@@ -270,35 +319,3 @@ if (!Number.isNaN) {
 Number.isNaN(123);
 
 // Transpiler
-// Since ES6, we have default values
-function func(a=2){}
-// But if you run on Pre-ES6
-function func(){
-   // Note: arguements is an array available to function in JS
-   var a = arguments[0] !== (undefined) ? arguments[0] : 2;
-   console.log(a);
-}
-func()
-
-// Convert to each array element
-arr.data.map((i) => Number(i)) // creates a new array, by iterating through each element in readCoilResult, and converting it to number
-
-/*
-Many things are exposed to JS, but not implemented. They are called "host objects"
-- On browser, 
-    - alert("adsfasd"), console.log(), they are implemented in C/C++, exposed to JS.
-        - Now they could be implemented in JS
-    - DOM, document.getElementById(), is implemented in browser as well
-    - best practices In HTML:
-        - CSS stylesheet always at top, because it affects styles of subsequent elements
-        - JS scripts are included at the bottom, because this way you know all elements required are already there.
-    - The purpose of DOM:
-        - A tree of objects, that can be used to dynamically change the page (clicking buttons, etc.)
-- In node.js:
-    - Process, fs, http
-- Native JS objects: 
-    - types: Array, Strings
-    - Math, RegExp
-*/
-
-// array
