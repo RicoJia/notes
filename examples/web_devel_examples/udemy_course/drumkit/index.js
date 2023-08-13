@@ -35,7 +35,7 @@ for (let drum of drums) {
     });
 }
 
-document.addEventListener("keypress", function(event){
+document.addEventListener("keydown", function(event){
     makeSound(event.key);
     // button animation
     button_animation(event.key);
