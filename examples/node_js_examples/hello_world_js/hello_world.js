@@ -178,7 +178,8 @@ console.log(outer(1)(2));
  * ================ Constructors ================
  */
 
-// use camelCase for regular functions, but PascalCase for constructors, or class names
+// use camelCase for regular functions, 
+// but PascalCase for constructors, or class names
 function SomeModule(){
     var pwd, name;
     function login(n, pw) {
@@ -280,9 +281,9 @@ func()
 // Convert to each array element
 arr.map((i) => Number(i)) // creates a new array, by iterating through each element in readCoilResult, and converting it to number
 
-/*
- * ================ Transpiler and Polyfill ================
-Many things are exposed to JS, but not implemented. They are called "host objects"
+/**
+ * ================ Browser vs Node ================
+ * Many things are exposed to JS, but not implemented. They are called "host objects"
 - On browser, 
     - alert("adsfasd"), console.log(), they are implemented in C/C++, exposed to JS.
         - Now they could be implemented in JS
@@ -297,6 +298,12 @@ Many things are exposed to JS, but not implemented. They are called "host object
 - Native JS objects: 
     - types: Array, Strings
     - Math, RegExp
+ */
+
+// On browser, can use $0 to refer to the currently inspected element
+
+/*
+ * ================ Transpiler and Polyfill ================
 */
 
 /*
