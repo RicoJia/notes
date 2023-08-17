@@ -43,3 +43,41 @@
     // for an exported member
     import { myLocalFunction } from './mylocalmodule';
     ```
+
+### Event loop
+Event loop is a mechanism that poll-checks queues of events, then execute them one by one. In JS, 
+    - Callstack: stack (LIFO) that pops functions off for execution.
+    - Libuv (node JS): executes async futures in C++ threads.
+    - Task queues:
+        - macro tasks (e.g., callbacks from setTimeOut)
+        - microtasks: when Async futures are done from libuv, callbacks comes here.
+    - Event loop: constantly pushes items the micro and macro task queues onto the callstack
+
+E.g.,
+    ```
+    console.log('Start');
+    setTimeout(function() {
+      console.log('setTimeout');
+    }, 1000);
+
+    Promise.resolve().then(function() {
+      console.log('promise1');
+    });
+
+    Promise.resolve().then(function() {
+      console.log('promise2');
+    });
+    setTimeout(function() {
+      console.log('setTimeout2');
+    }, 500);
+    ```
+    1. console.log("start") gets on to the callstack. Then, it's popped for execution
+    1. setTimeout(...) gets on to the callstack, and popped for execution.
+        1. console.log('setTimeout');  onto macro tasks queue, and scheduled at 1000ms later
+    1. Promise.resolve() executes (on libuv)
+        1. callback gets put onto the micro-task queue
+    1. Event loop detects that callback is ready for execution, so it pushes it onto callstack. Then, callback gets executed.
+    1. Promise.resolve() executes while its future is executed on libuv. Then `console.log('promise2');` gets put onto microtasks queue, then gets onto callstack, then executes
+    1. setTimeout(...) gets on to the callstack, and popped for execution.
+        1. console.log('setTimeout2'); gets onto macro tasks queue, before the first timeout callback
+
