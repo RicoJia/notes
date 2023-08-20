@@ -1,5 +1,12 @@
 /**
  * Jquery Example
+ * Functional: 
+    - Generate a random number. Push it into array 
+    - 4 buttons, button w/ the right index changes color. play sound.
+    - Detect Key presses. If wrong, restart
+ * Front end:
+    - Font
+    - Button classes with colors, play sound
  */
 var keypress = [];
 const colors = ["black", "white"];
@@ -9,6 +16,11 @@ function random_color(){
     return colors[Math.floor(Math.random()*colors.length)]; 
 }
 
+/**
+ * Animate flash of button, optionally with sound.
+ * @param {number} button_idx - Index of the button pressed.
+ * @param {boolean} with_sound - Whether to play sound
+ */
 function animate_flash_with_sound(button_idx, with_sound=true){
     if (button_idx != undefined){
         // Note: elements in this array returned here has order of appearance, from the HTML DOM model
@@ -47,9 +59,13 @@ class StateMachine{
         $("h2").css("color", "pink");
     }
     fail(){
-        // TODO
         alert("Game Failed! Press Enter to restart");
     }
+    /**
+     * Converts keystroke to button index, animates it, checks if it is correct,
+     * and sets next keypress
+     * @param {char} char - Key that was pressed.
+     */
     step(char){
         var button_idx=this.button_char_2_idx[char]; 
         animate_flash_with_sound(button_idx);
@@ -70,6 +86,10 @@ class StateMachine{
     }
 }
 
+/**
+ * Callback for keypress
+ * @param {event} event: keypress event
+ */
 function response_cb(event){
     let char = String.fromCharCode(event.which);
     sm.step(char);
