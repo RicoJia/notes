@@ -80,4 +80,3 @@ E.g.,
     1. Promise.resolve() executes while its future is executed on libuv. Then `console.log('promise2');` gets put onto microtasks queue, then gets onto callstack, then executes
     1. setTimeout(...) gets on to the callstack, and popped for execution.
         1. console.log('setTimeout2'); gets onto macro tasks queue, before the first timeout callback
-

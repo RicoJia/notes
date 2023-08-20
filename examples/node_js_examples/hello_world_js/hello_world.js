@@ -7,6 +7,10 @@
 - typeof
 - coercion
 - inequality
+- let vs var:
+    - let is block scoped, var is function scoped
+    - let cannot be redefined, var can 
+    - Both are hoisted, but let is not initialized. var is initialized
 
 */
 console.log("hello world");
