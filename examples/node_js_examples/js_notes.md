@@ -27,6 +27,19 @@
 1. If you have an node js project, that depends on other npm libraries, then, create a new project
     1. `npm init` : set up `package.json`. npm is Node Package Manager
     2. `npm i prompt-sync`: `i` is also for `npm install`. we install this package
+        - `node_modules` are created
+        - `npm i serve -D`, install the dependency under dev in `package.json`. `-D` means `--save-dev`
+    1. Alternatively, use the `npm run start:fresh` convention.
+        1. go to `package.json`,
+            ```yaml
+            "scripts": {
+                ...
+                "start:fresh": "rm -rf ./node_modules && npm install && npm start",
+                ...
+            },
+            ```
+1. Start the app
+    1. alternatively, `nest start` is roughtly `node dist/main`. NestJS is a progression of node.
 
 
 ### Syntax: TODO experiment
@@ -80,3 +93,20 @@ E.g.,
     1. Promise.resolve() executes while its future is executed on libuv. Then `console.log('promise2');` gets put onto microtasks queue, then gets onto callstack, then executes
     1. setTimeout(...) gets on to the callstack, and popped for execution.
         1. console.log('setTimeout2'); gets onto macro tasks queue, before the first timeout callback
+
+
+## Typescript
+
+1. Motivation: TS is basically a "typed" language of JavaScript, where TSC, typescript compiler will transpile TS into JS. You get all benefits of typing.
+    1. `tsconfig.ts`: Example:
+        
+    1. valid start script
+
+        ```json
+        "scripts": {
+            "start": "nest start"
+        }
+        ```
+
+1. Set up
+    - `NestJS` is a package management system of TS.

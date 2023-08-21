@@ -1,0 +1,24 @@
+{
+    "compilerOptions":{
+        "module": "CommonJS",
+        "target": "ES2021",
+        # Always "node"
+        "moduleResolution": "node",
+        "rootDir": "./src",
+        "outDir": "./dist",
+        # Need "emitDecoratorMetadata" and "experimentalDecorators" for compiling decorators
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        # 
+        "esModuleInterop": true,
+        # speeds up by checking declaration files?
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        # 
+        "noImplicitReturns": true,
+        # Can't declare a variable to be "Any"
+        "noImplicitAny": true,
+        "strictPropertyInitialization": false
+    }
+}

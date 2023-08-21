@@ -1,0 +1,22 @@
+{
+  "name": "liftnet-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "serve"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@nestjs/swagger": "^7.1.8",
+    "i": "^0.3.7",
+    "request": "^2.88.2",
+    "swagger-ui-dist": "^5.4.2"
+  },
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}
