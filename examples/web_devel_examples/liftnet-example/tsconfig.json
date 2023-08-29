@@ -2,22 +2,30 @@
     "compilerOptions":{
         "module": "CommonJS",
         "target": "ES2021",
-        # Always "node"
+        /* Always "node". 2 options: classic and node. Node mimics
+        Node.js for dependency resolution. (search for module.ts, then
+        search in node_modules)
+        */
         "moduleResolution": "node",
         "rootDir": "./src",
         "outDir": "./dist",
-        # Need "emitDecoratorMetadata" and "experimentalDecorators" for compiling decorators
+        // Need "emitDecoratorMetadata" and "experimentalDecorators" for compiling decorators
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        # 
+        /*
+        Before ES6, CommonJS is used. esModuleInterop coordinates that with
+        ECMAScript modules. This allows: import x from y, instead of import x = require("y")
+        */
         "esModuleInterop": true,
-        # speeds up by checking declaration files?
+        // speeds up by checking declaration files?
         "skipLibCheck": true,
+        /*This doesn't enforce any casing (camel or Pascal). Just to avoid
+        user.ts and User.ts
+        */
         "forceConsistentCasingInFileNames": true,
         "strict": true,
-        # 
         "noImplicitReturns": true,
-        # Can't declare a variable to be "Any"
+        // Can't declare a variable to be "Any"
         "noImplicitAny": true,
         "strictPropertyInitialization": false
     }

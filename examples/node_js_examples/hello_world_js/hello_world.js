@@ -14,15 +14,6 @@
 
 */
 console.log("hello world");
-var arr = ["1", "2", "3"];
-// This is an obj
-var SomeObj = {
-    a: 1,
-    b: "hola"
-};
-// array is an subtype of object, so you can do
-console.log(arr.length, SomeObj.a, typeof(SomeObj), typeof(arr));
-typeof arr;
 
 // coercion
 var a = "42";
@@ -277,13 +268,6 @@ function func(){
    console.log(a);
 }
 func()
-
-/**
- * ================ Array ================
- */
-
-// Convert to each array element
-arr.map((i) => Number(i)) // creates a new array, by iterating through each element in readCoilResult, and converting it to number
 
 /**
  * ================ Browser vs Node ================

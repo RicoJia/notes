@@ -9,6 +9,11 @@
 ```
 - `const` was introduced in ES6
 - DTO (datoa transfer objects), used for slimming down a data object before sending them over wire
+- Transpiler (or in the JS world, compiler)
+    - Babel can do:
+        - ES6 to ES5 transpilation
+        - JSX (used in react) to regular JS
+        - Polyfill:
 
 ========================================================================
 ## Node Js
@@ -98,8 +103,10 @@ E.g.,
 ## Typescript
 
 1. Motivation: TS is basically a "typed" language of JavaScript, where TSC, typescript compiler will transpile TS into JS. You get all benefits of typing.
-    1. `tsconfig.ts`: Example:
-        
+
+1. Set up
+    1. `tsconfig.ts`: [Example](https://github.com/RicoJia/notes/blob/master/examples/web_devel_examples/liftnet-example/tsconfig.json)
+
     1. valid start script
 
         ```json
@@ -108,5 +115,18 @@ E.g.,
         }
         ```
 
-1. Set up
-    - `NestJS` is a package management system of TS.
+        - `NestJS` is a package management system of TS
+    1. `npm run start` should transpile and run the program
+        - `npm run start:dev`: watch and recompile
+
+1. Add a module
+    1. `nest.js` CLI install: `npm install -g @nestjs/cli`
+    1.  `nest generate module module-name`
+        - will generate file
+        - will add to `app.module.ts`
+    1. Modules are singletons by default. DO NOT Have the same module names
+
+1. Organization of nest js
+    1. `X.controller.ts` - endpoints 
+    1. `X.module.ts` - Include controller, and services? TODO
+    1. `main.ts` - set up the app, and the swagger document, and its port. (bootstrap())

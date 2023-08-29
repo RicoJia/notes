@@ -1,3 +1,6 @@
+/**
+ * controller.ts has endpoints 
+ *  */ 
 import { Controller, Get } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -5,7 +8,8 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 @Controller()
 export class AppController {
   @Get('hello')
-  @ApiResponse({ status: 200, description: 'Return hello world.' })
+  // description goes into description of swagger
+  @ApiResponse({ status: 200, description: 'Rico says: Return hello world.' })
   getHello(): string {
     return 'Hello World!';
   }

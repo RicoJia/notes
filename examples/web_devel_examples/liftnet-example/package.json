@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "serve"
+    "start": "nest start"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@nestjs/cli": "^10.1.12",
+    "@nestjs/platform-express": "^10.2.0",
     "@nestjs/swagger": "^7.1.8",
     "i": "^0.3.7",
     "request": "^2.88.2",
