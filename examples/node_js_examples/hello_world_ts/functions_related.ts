@@ -66,3 +66,29 @@ class Foo2{
 }
 let foo2 = new Foo2(200)
 console.log(foo2.i);
+
+
+/*
+    Enum:
+*/
+class carDTO{
+    public id = 0;
+    public brand = '';
+    public model = '';
+
+    /**
+     * static createinfo: Boolean[]Car
+     */
+    public static createCar(info: (number | string)[]) {
+        let carDTOObj = new carDTO();
+        const keys = Object.keys(carDTOObj);
+        
+        keys.forEach((key, i) => {
+            console.log(key, i);
+            carDTOObj[key] = info[i]; 
+        })
+        console.log(carDTOObj, keys);
+    }
+}
+
+carDTO.createCar([123, "toyota", "corolla"]);

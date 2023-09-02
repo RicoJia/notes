@@ -99,8 +99,14 @@ E.g.,
     1. setTimeout(...) gets on to the callstack, and popped for execution.
         1. console.log('setTimeout2'); gets onto macro tasks queue, before the first timeout callback
 
+========================================================================
+## React
+========================================================================
+index.js -> App.JS (App, App could be an extended module, or component) -> if App() is a component, provide render()
 
-## Typescript
+========================================================================
+##  Typescript
+========================================================================
 
 1. Motivation: TS is basically a "typed" language of JavaScript, where TSC, typescript compiler will transpile TS into JS. You get all benefits of typing.
 

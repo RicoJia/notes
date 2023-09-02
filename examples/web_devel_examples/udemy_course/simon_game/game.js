@@ -97,3 +97,22 @@ function response_cb(event){
 
 let sm = new StateMachine();
 $(document).keypress(response_cb);
+
+
+/**
+ * Jquery Summary:
+ * - Jquery lib is pretty lightweight, pulled from CDN (content distributed Network)
+ *  - Goal: make querying faster
+ * - $("hi"): selecting all elements with class "hi"
+ *  - $("hi").addClass("AnotherClass"): can add another CSS class
+ *  - removeClass(), removeClass()
+ *  - $("h1").text("Change to this new text")
+ *  - $("h1").html("<em>html</em>")
+ *  - $("h1").attr(src, "New_Path")
+ * - Event Callbacks
+ *  - $("document").keypress(
+ *     (event) => {if (event.key == 'a'){...}}
+ * )
+ * - $("button").click(...)
+ * - animation slideToggle()
+ */

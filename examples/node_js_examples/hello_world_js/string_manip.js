@@ -8,3 +8,6 @@ var name_i = "hello"
 name_i = `${name_i[0].toUpperCase()}${name_i.slice(1, name_i.length)}`;
 name_i = name_i.charAt(0).toUpperCase() + name_i.slice(1);
 console.log(name_i.slice(0,3));
+
+const originalString = "   Hello, world!   ";
+console.log("trimmed: ", originalString.trim());
