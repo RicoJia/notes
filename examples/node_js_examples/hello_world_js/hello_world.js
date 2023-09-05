@@ -13,20 +13,21 @@
     - Both are hoisted, but let is not initialized. var is initialized
 
 */
-console.log("hello world");
 
-// coercion
-var a = "42";
-// typeof null returns object. This is a bug that likely not gonna get fixed.
-// 1=='1' is true in JS because type cocersion is done here
-// 1===1 is "strict equality"
-console.log(Number(a), typeof null, 1===1, 1=='1');
+const test_coercion = () => {
+    // coercion
+    var a = "42";
+    // typeof null returns object. This is a bug that likely not gonna get fixed.
+    // 1=='1' is true in JS because type cocersion is done here
+    // 1===1 is "strict equality"
+    console.log(Number(a), typeof null, 1===1, 1=='1');
 
-// Inequality: there's no strict inequality.
-// see 3 falses, becasue "foo" is coerced into 'NaN'
-console.log(42<"foo", 42 == "foo", 42 > "foo");
-// Comparison operators will compare all of them into numbers
-console.log("foo"<42, "foo">42);
+    // Inequality: there's no strict inequality.
+    // see 3 falses, becasue "foo" is coerced into 'NaN'
+    console.log(42<"foo", 42 == "foo", 42 > "foo");
+    // Comparison operators will compare all of them into numbers
+    console.log("foo"<42, "foo">42);
+}
 
 /*
 scope - or lexical scope. That is, where in the code a variable is defined
@@ -47,7 +48,7 @@ function Bar(){
     }
     console.log(i);
 }
-Bar();
+// Bar();
 
 // let has block scope, a block is a pair of {}
 function Bar(){
@@ -62,7 +63,7 @@ function Bar(){
     }
     
 }
-Bar();
+// Bar();
 
 function Bar_let(){
     if (true){
@@ -72,44 +73,87 @@ function Bar_let(){
         }
     }
 }
-Bar_let();
+// Bar_let();
 
 /*
-Hoisting: only var has it. The variable declaration is moved to the top, not its initialization
-below is equivalent to: 
-    var a;
-    console.log(a);
-    a = 5;
-    console.log(a);
-let and const do not have this.
+Hoisting: 
+    - const and let does not have hoisting
+    - var: the variable declaration is moved to the top of the function, so you will see "undefined" before
+    var gets initialized.
+    - function: the function declaration and definition both are hoisted
 */
+const test_hoising = () => {
+    console.log('Test hoisting: before declaration, should see undefined: ', a);
+    var a = "42";
+    console.log("testing hoisting, after declaration: ", a);
+    foo();
+    function foo() {
+        a = 3;
+        // without this, there's no hoisting, and a above will be changed
+        // var a;
+        console.log("testing function hoisting: ", a);
+    };
+}
+// test_hoising()
 
-var a = "42";
-// can call foo() here because declaration of foo is hoisting
-foo();
-function foo() {
-    a = 3;
-    // without this, there's no hoisting, and a above will be changed
-    var a;
-};
-console.log(a);
-// this is auto global variable, DON'T DO THIS
-// a; 
 
 // Conditionals
-if (false){}
-else if (true){}
+const test_conditionals = () => {
+    var a;
+    if (false){}
+    else if (true){}
 
-switch (a){
-    case 2:
-        break;
-    case 3:
-        break;
-    default:
-        break;
+    switch (a){
+        case 2:
+            break;
+        case 3:
+            break;
+        default:
+            break;
+    }
+
+    var dummy = (true)? 1: 1;
+    
 }
 
-var dummy = (true)? 1: 1;
+// character count:
+const test_character_count = () => {
+    console.log("character count", "character count".length);
+}
+
+// Object Destructing
+const test_function_destructing = () => {
+    let constants = {
+        MAPS: "maps",
+        TILES: "tiles"
+    }
+    let {MAPS, DOORS} = constants;
+    console.log("test function destructing: ", MAPS, DOORS);
+}
+test_function_destructing();
+
+const test_multiple_declarations = () => {
+    // declaring a buch of variables
+    let var1, var2 = {}, var3 = 42;
+}
+
+/*
+================ Functions ================
+- Returning muliple values
+- IFFE
+- ARROW functions
+*/
+const test_return_multiple_values = () => {
+    function return_multple_elements(){
+        // this is returning an array
+        // JS doesn't have tuple
+        return [1,2];
+    }
+
+    [x,y] = return_multple_elements();
+    console.log("test return multiple values: ",x,y);
+}
+test_return_multiple_values();
 
 // strict mode - "use strict" pragma is placed in the scope of your program
 // You have to do it at the top of your program, or the function.
@@ -122,52 +166,31 @@ var dummy = (true)? 1: 1;
         firstVariable = "test2";
         console.log(secondVariable);   
     } catch(e){
+        console.log("testing use strict, should see unreferenced error: ", e);
     }
  }
-test_use_strict() 
-
-// character count:
-console.log("character count", "character count".length);
-
-/*
-================ Functions ================
-- Returning muliple values
-- IFFE
-- ARROW functions
-*/
-function return_multple_elements(){
-    // this is returning an array
-    // JS doesn't have tuple
-    return [1,2];
-}
-
-[x,y] = return_multple_elements();
-console.log(x,y);
+test_use_strict()
 
 // IIFE, immediately invoked function expression
-a = test_use_strict
-a();
-var x = (function IIFE(){
-    console.log("HELLO, IIFE!");
-    return 42;
-})();
-// get x
-x;
-
-// Arrow functions
-const dum = (req) => {
-    console.log(req);
+const test_iife = () => {
+    var x = (function IIFE(){
+        console.log("HELLO, IIFE!");
+        return 42;
+    })();
+    // get x
+    x;
 }
-dum("lol");
 
-// closures, and module
-function outer(x) {
-    function inner(y) {
-        return x+y;
+const test_closures = () => {
+    // closures, and module
+    function outer(x) {
+        function inner(y) {
+            return x+y;
+        }
+        return inner;
     }
-    return inner;
+    console.log(outer(1)(2));
 }
-console.log(outer(1)(2));
 
 /**
  * ================ Constructors ================
@@ -175,21 +198,24 @@ console.log(outer(1)(2));
 
 // use camelCase for regular functions, 
 // but PascalCase for constructors, or class names
-function SomeModule(){
-    var pwd, name;
-    function login(n, pw) {
-        name = n.toLowerCase();
-        pwd = pw
-        console.log("name:", name, "pwd:", pwd);
+const test_module_pattern = () =>{
+    function SomeModule(){
+        var pwd, name;
+        function login(n, pw) {
+            name = n.toLowerCase();
+            pwd = pw
+            console.log("name:", name, "pwd:", pwd);
+        }
+        var publicAPI = {
+            login: login
+        };
+        return publicAPI;
     }
-    var publicAPI = {
-        login: login
-    };
-    return publicAPI;
+
+    var fred = SomeModule();
+    fred.login("fred", "12345");
 }
 
-var fred = SomeModule();
-fred.login("fred", "12345");
 
 /*
 This, property, class, constructor function, prototype
@@ -202,72 +228,65 @@ This, property, class, constructor function, prototype
     - or delegate to other objects.
     - If you can't find a prototype in a object, JS will find in objects it delegates to
 */
-function Car(name){
-    // Can detect if being called with new. This will be undefined if not called with new
-    if (!new.target){
-        // note, string interpolation can only be done with `
-        return `${name} should be a car. Please call with new`;
+const test_ctor_function = () => {
+    function Car(name){
+        // Can detect if being called with new. This will be undefined if not called with new
+        if (!new.target){
+            // note, string interpolation can only be done with `
+            return `${name} should be a car. Please call with new`;
+        }
+        else{
+            this.name = name;
+            console.log(`New car ${this.name} is created`);
+        }
     }
-    else{
-        this.name = name;
-        console.log(`New car ${this.name} is created`);
-    }
-}
 
-funny_car = Car("funny car");
-console.log(funny_car, typeof(funny_car));
-var funny_car = new Car("funny car");
-// prototype
-Car.prototype.color = "red";
-// You can add more properties as well
-funny_car.engine = "Google Chrome V8";
-console.log(funny_car.color, funny_car.engine);
+    funny_car = Car("funny car");
+    console.log(funny_car, typeof(funny_car));
+    var funny_car = new Car("funny car");
+    // prototype
+    Car.prototype.color = "red";
+    // You can add more properties as well
+    funny_car.engine = "Google Chrome V8";
+    console.log(funny_car.color, funny_car.engine);
+}
 
 // A new class
-class Carro{
-    constructor(name){
-        this.name = name;
+const test_class = () => {
+    class Carro{
+        constructor(name){
+            this.name = name;
+        }
+        meep(){
+            console.log("Herro");
+        }
     }
-    meep(){
-        console.log("Herro");
-    }
+    // must call with new, otherwise, see an ReferenceError
+    var c = new Carro("c");
+    c.meep();
+    
 }
-// must call with new, otherwise, see an ReferenceError
-var c = new Carro("c");
-c.meep();
-
-function foo(){
-    // "use strict";
-    // Without use strict, this could point to 
-    // 1. the outer enclosing object
-    // 2. the call() method is callde on
-    console.log(this.bar);
-}
-var obj1 = {
-    foo: foo,
-    bar: "bar"
-};
-obj1.foo(); 
-
-var obj2 = {
-    bar: "bar2"
-}
-foo.call(obj2);
 
 // Prototype
-var obj3 = Object.create(obj2);
-obj3.baz = "baz";
-console.log(obj3.bar);
-
-// Since ES6, we have default values
-function func(a=2){}
-// But if you run on Pre-ES6
-function func(){
-   // Note: arguements is an array available to function in JS
-   var a = arguments[0] !== (undefined) ? arguments[0] : 2;
-   console.log(a);
+const test_create_prototype = () => {
+    var obj3 = Object.create(obj2);
+    obj3.baz = "baz";
+    console.log("creating an object prototype: ", obj3.bar);
 }
-func()
+// test_create_prototype();
+
+const test_default_value = () => {
+    // Since ES6, we have default values
+    function func(a=2){}
+    // But if you run on Pre-ES6
+    function func(){
+    // Note: arguements is an array available to function in JS
+    var a = arguments[0] !== (undefined) ? arguments[0] : 2;
+    console.log(a);
+    }
+    func()
+}
+
 
 /**
  * ================ Browser vs Node ================
@@ -303,14 +322,16 @@ func()
 - Transpiler: piece of code run on older browser, to fake SYNTAX of a newer code
 */
 // this check is very necessary 
-if (!Number.isNaN) {
-    // taking advantage of the fact that NaN is the only object in JavaScript
-    // that is not equal to itself
-    Number.isNaN = function (x){
-        console.log("using isNaN polyfill");
-        return x !== x;
+const test_polyfill = () => {
+    if (!Number.isNaN) {
+        // taking advantage of the fact that NaN is the only object in JavaScript
+        // that is not equal to itself
+        Number.isNaN = function (x){
+            console.log("using isNaN polyfill");
+            return x !== x;
+        }
     }
+    Number.isNaN(123);
 }
-Number.isNaN(123);
+test_polyfill();
 
-// Transpiler
