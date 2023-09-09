@@ -11,7 +11,7 @@
     - let is block scoped, var is function scoped
     - let cannot be redefined, var can 
     - Both are hoisted, but let is not initialized. var is initialized
-
+- Immutables: bool, string, int are all immutables. Objects are mutables
 */
 
 const test_coercion = () => {
@@ -80,7 +80,8 @@ Hoisting:
     - const and let does not have hoisting
     - var: the variable declaration is moved to the top of the function, so you will see "undefined" before
     var gets initialized.
-    - function: the function declaration and definition both are hoisted
+    - function: the function declaration and definition both are hoisted. 
+        IMPORTANT: hoisting makes functions visible throughout the current scope!
 */
 const test_hoising = () => {
     console.log('Test hoisting: before declaration, should see undefined: ', a);

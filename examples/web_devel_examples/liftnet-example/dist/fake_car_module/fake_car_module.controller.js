@@ -32,6 +32,10 @@ let FakeCarModuleController = exports.FakeCarModuleController = class FakeCarMod
     getCarById(id) {
         return this.fakeCarService.getById(id);
     }
+    // On swagger, there's no function name. They are distinguished by 
+    // 1. Submodules (query endpoint)
+    // 2. Input types
+    // 3. GET/POST, etc.
     // ? How do you create a fake car though curl call?
     createCar(car) {
         this.fakeCarService.create(car);

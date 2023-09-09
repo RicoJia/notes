@@ -1,14 +1,23 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AppModule } from './app.module';
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 
-async function bootstrap() {
+import { configureApp } from './config/app.config';
+import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
+import { IConfiguration } from './config/env.config';
+import { CONFIG_NAMESPACE } from './core/constants';
+/**
+ * Rico: using async function implicitly returning a promise
+ */
+async function bootstrap(): Promise<void> {
   // getting AppModule here
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
 
   // In prod
-  //   await configureApp(app);
+  await configureApp(app);
   // below is in configureSwagger(app);
+//   const config = app.get(ConfigService).getOrThrow<IConfiguration>(CONFIG_NAMESPACE);
   const config = new DocumentBuilder()
     .setTitle('Rico\'s NestJS API')
     .setDescription('The API description')
@@ -22,4 +31,6 @@ async function bootstrap() {
 
   await app.listen(3000);
 }
-bootstrap();
+bootstrap().catch((e) => {
+    console.error(e);
+})

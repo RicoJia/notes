@@ -27,6 +27,12 @@
         "noImplicitReturns": true,
         // Can't declare a variable to be "Any"
         "noImplicitAny": true,
-        "strictPropertyInitialization": false
+        "strictPropertyInitialization": false,
+        // Rico's addition
+        "baseUrl": "./",
+        "paths":{
+            // "@src/*": ["./src/*"]
+            "@src/*": ["src/*"],
+        }
     }
 }

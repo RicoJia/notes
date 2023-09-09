@@ -82,6 +82,8 @@ void argparser() {
 /**
     1. anonymous structure is NOT part of the standard
     2. :: here really is global variable
+        - eg: namespace A{void foo()} vs namespace B{namespace A{void foo()}}
+        - ::A::foo() vs ::B::A::foo()
     3. Lexical Scoping {}, good for managing RAII resources (mutex locks), etc. 
     4. When you see INSTANTIATION A::B ... A 只可能是namespace， 而不会是parent。
 */

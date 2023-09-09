@@ -1,7 +1,10 @@
 #include <iostream>
 using namespace std;
 
-// Test 1, conversion constructor (ctor can take 1 arg)
+/*
+* - conversion constructor (ctor can take 1 arg)
+* - initialization order: based on the order in declaration (not in the initiaizer list)
+*/ 
 class oop
 {
 public:

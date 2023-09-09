@@ -1,11 +1,18 @@
 /*
-Way to get all keys: Object.keys(obj)
+Objects basics: 
+    - using {}
+    - if a name is not valid for binding, double quote them. Else no need
+    - Way to get all keys: Object.keys(obj)
 */
-var obj = {
-    "a": 1
-}
+const test_object_basics = () => {
+    var obj = {
+        somProperty: "haha",
+        "a": 1
+    }
 
-console.log(Object.keys(obj));
+    console.log("keys of obj", Object.keys(obj));
+
+}
 
 /**
  * ================ Array ================
@@ -28,3 +35,10 @@ arr.splice(1,2,"haha")
 // guess what this does ;)
 arr.splice(1,2)
 console.log("What does array look like?", arr)
+
+const test_filter = () => {
+    let arr = [true, false, true, true];
+    let new_arr = arr.filter(x => x);
+    console.log("test filter, removed falsy elements with filter: ", new_arr);
+}
+test_filter();

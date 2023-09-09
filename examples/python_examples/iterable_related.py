@@ -449,6 +449,17 @@ def test_range():
     # create a set using range
     s = set(range(2))
 
+def test_deque():
+    from collections import deque
+    ls = [1,2,3,4,5]
+    q = deque(ls)
+
+    # Difference b/w ls and q
+    # this works:
+    print("from the second last element to the first", ls[-2::-1])
+    # CAN'T DO q[-2::-1]
+    
+
 def list_basics(): 
     """
     1. None in list works with if statement
@@ -649,4 +660,5 @@ if __name__ == "__main__":
     # test_comprehensions()
     # test_reduce()
     # test_any_all()
-    list_basics()
+    # list_basics()
+    test_deque()

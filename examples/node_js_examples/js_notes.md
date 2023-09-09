@@ -110,6 +110,13 @@ index.js -> App.JS (App, App could be an extended module, or component) -> if Ap
 
 1. Motivation: TS is basically a "typed" language of JavaScript, where TSC, typescript compiler will transpile TS into JS. You get all benefits of typing.
 
+#========================================================================
+## Nest JS
+========================================================================
+1. liftnet code structure (NestJS):
+    - app.controller (AppController) -> app.module(AppModule) -> main
+    - carmodule, BayModule -> app.module
+
 1. Set up
     1. `tsconfig.ts`: [Example](https://github.com/RicoJia/notes/blob/master/examples/web_devel_examples/liftnet-example/tsconfig.json)
 
@@ -136,3 +143,4 @@ index.js -> App.JS (App, App could be an extended module, or component) -> if Ap
     1. `X.controller.ts` - endpoints 
     1. `X.module.ts` - Include controller, and services? TODO
     1. `main.ts` - set up the app, and the swagger document, and its port. (bootstrap())
+

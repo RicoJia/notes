@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DOOR_HOLD_CALL_INTERVAL_MS = exports.DOOR_HOLD_LENGTH_MS = exports.MANAGE_CAR_REQUEST_POLLING_INTERVAL_MS = exports.LIFTNET_REQUEST_TIMEOUT_MS = exports.API_KEY_HEADER = exports.DOCS_PATH = exports.SWAGGER_DOC_TITLE = exports.ELEVATOR_SERVICE = exports.DEFAULT_API_VERSION = exports.DEFAULT_APP_PORT = exports.DEFAULT_APP_HOST = exports.CONFIG_NAMESPACE = exports.DOT_ENV_TEST = void 0;
+exports.DOT_ENV_TEST = '.env.test';
+exports.CONFIG_NAMESPACE = 'config';
+exports.DEFAULT_APP_HOST = '0.0.0.0';
+exports.DEFAULT_APP_PORT = 3000;
+exports.DEFAULT_API_VERSION = 1;
+exports.ELEVATOR_SERVICE = 'Elevator Service';
+exports.SWAGGER_DOC_TITLE = `${exports.ELEVATOR_SERVICE} API`;
+exports.DOCS_PATH = 'api-doc';
+exports.API_KEY_HEADER = 'x-api-key';
+exports.LIFTNET_REQUEST_TIMEOUT_MS = 10000;
+exports.MANAGE_CAR_REQUEST_POLLING_INTERVAL_MS = 3000;
+exports.DOOR_HOLD_LENGTH_MS = 20000;
+exports.DOOR_HOLD_CALL_INTERVAL_MS = 1000;
