@@ -69,3 +69,18 @@ const smaller_than_3 = numbers.filter(n => n < 3);
 console.log("filter: smaller than 3: ", smaller_than_3);
 const sum = numbers.reduce((acc, cur) => acc + cur, 0);
 console.log("reduce: sum: ", sum);
+
+
+/*
+Anonymous function vs arrow function:
+- this binding. Anonymous functions DO have their own this binding, to the scope of the INVOKING OBJECT
+- arrow function will just get this from its SURROUNDING SCOPE upon creation
+*/
+const test_this = () => {
+    obj = {x: 1};
+    obj.func1 = () => {console.log("arrow func will get this from its surrounding scope upon creation: ", this);}
+    obj.func2 = function () {console.log("function gets this from the invoking object: ", this);}
+    obj.func1();
+    obj.func2();
+}
+test_this();
