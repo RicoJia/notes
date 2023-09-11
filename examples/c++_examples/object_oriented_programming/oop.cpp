@@ -38,18 +38,6 @@ struct Derived : public Base  {
     void reimplementMe(int a) override {}
 };
 
-int main()
-{
-    oop o;
-    // this is real conversion. Will not happen if ctor is explicit
-    cout<<(o == 1)<<endl;
-
-    oop_explicit oe; 
-    // Explicit prohibits this
-    // oe = 4;
-    oe = (oop_explicit)4;
-}
-
 // Test - cp ctor synthesized, , explicit
 // class regex{
 //     public:
@@ -60,8 +48,6 @@ int main()
 // {
 //   regex rx = nullptr;    //won't compile, as = is copy initialization
 // }
-
-
 
 // // Test 3 - enclosed class is actually a friend class.
 // class Enclosing {
@@ -91,3 +77,16 @@ int main()
 //     e.func();
 //     
 // }
+int main()
+{
+    oop o;
+    // this is real conversion. Will not happen if ctor is explicit
+    cout<<(o == 1)<<endl;
+
+    oop_explicit oe; 
+    // Explicit prohibits this
+    // oe = 4;
+    oe = (oop_explicit)4;
+}
+
+
