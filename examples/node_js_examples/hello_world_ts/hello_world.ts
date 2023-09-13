@@ -9,8 +9,8 @@ console.log(Number(a), typeof null, 1===1, 1==1);
     yield an error anyways. 
 */
 function test_equality(){
-    console.log(true === 1);
-    console.log(true == 1);
+    // console.log(true === 1);
+    // console.log(true == 1);
 }
 test_equality();
 
@@ -43,3 +43,27 @@ const test_generics = () => {
     let arr = [1,2,3];
     console.log(getFirstElement(arr));
 };
+
+// try catch finally will be executed,after an exception is thrown
+const test_throw = () => {
+    try{
+        throw new Error("This is an error");
+    }
+    catch(err){
+        throw err;
+    }
+    finally{
+        console.log("finally");
+    }
+}
+// test_throw();
+
+const test_record = () => {
+    type LoggingInfoType = Record<string, number>;
+    const loggingInfo: LoggingInfoType = {
+        ipAddress: 1,
+        port: 1
+    };
+    console.log('loggingInfo: ', loggingInfo);
+}
+test_record();
