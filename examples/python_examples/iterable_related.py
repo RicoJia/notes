@@ -366,15 +366,21 @@ def test_chain_map():
 
 def test_chain(): 
     """
-    1. chain(iterable1, iterable2 ...) will make sa list of references to each element in the iterables. 
+    1. chain(iterable1, iterable2 ...) will make a list of references to each element in the iterables.
         - Everytime you have need complex iter tools, come to itertools
         - GREAT thing about chain: the iterables DO NOT HAVE TO BE of the same type.
     """
-    from itertools import chain
-    ls = [1,2,3]
-    s = {4,5,6}
-    for i in chain(ls, s): 
-        print(i)
+    import itertools
+    from collections import deque
+    m2o = [1,2,3]
+    o2m = deque([4,5,6])
+    def gen():
+        yield 1
+        yield 2
+    chained = itertools.chain(m2o, o2m, gen())
+    for c in chained:
+        print(c)
+
 def test_comprehensions(): 
     """
     1. Set comprehension

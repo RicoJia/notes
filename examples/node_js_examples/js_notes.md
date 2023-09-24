@@ -29,7 +29,7 @@
 
 ### Set up
 1. run a simple script: `node script`
-1. If you have an node js project, that depends on other npm libraries, then, create a new project
+2. If you have an node js project, that depends on other npm libraries, then, create a new project
     1. `npm init` : set up `package.json`. npm is Node Package Manager
     2. `npm i prompt-sync`: `i` is also for `npm install`. we install this package
         - `node_modules` are created
@@ -43,9 +43,7 @@
                 ...
             },
             ```
-1. Start the app
-    1. alternatively, `nest start` is roughtly `node dist/main`. NestJS is a progression of node.
-
+3. Package versioning `^2.3.0` > `3.0.0` will be added
 ### Syntax: TODO experiment
 1. import vs export
     ```
@@ -99,17 +97,22 @@ E.g.,
         1. console.log('setTimeout2'); gets onto macro tasks queue, before the first timeout callback
 
 ### NVM
+
 Workflow
-```
+
+```bash
 nvm install v14
 nvm alias default v14
-
 ```
 
 ========================================================================
 ## React
 ========================================================================
-index.js -> App.JS (App, App could be an extended module, or component) -> if App() is a component, provide render()
+1. Motivation: component tree 2. make your own element (like paragraphs?)
+    - each component has its own css and html
+    - diffing: what's changed. Much more interactive
+2. File Structure
+    index.js -> App.JS (App, App could be an extended module, or component) -> if App() is a component, provide render()
 
 ========================================================================
 ##  Typescript
@@ -124,7 +127,7 @@ index.js -> App.JS (App, App could be an extended module, or component) -> if Ap
     - app.controller (AppController) -> app.module(AppModule) -> main
     - carmodule, BayModule -> app.module
 
-1. Set up
+2. Set up
     1. `tsconfig.ts`: [Example](https://github.com/RicoJia/notes/blob/master/examples/web_devel_examples/liftnet-example/tsconfig.json)
 
     1. valid start script
@@ -138,16 +141,16 @@ index.js -> App.JS (App, App could be an extended module, or component) -> if Ap
         - `NestJS` is a package management system of TS
     1. `npm run start` should transpile and run the program
         - `npm run start:dev`: watch and recompile
+        -  alternatively, `nest start` is roughtly `node dist/main`. NestJS is a progression of node.
 
-1. Add a module
+3. Add a module
     1. `nest.js` CLI install: `npm install -g @nestjs/cli`
     1.  `nest generate module module-name`
         - will generate file
         - will add to `app.module.ts`
     1. Modules are singletons by default. DO NOT Have the same module names
 
-1. Organization of nest js
+4. Organization of nest js
     1. `X.controller.ts` - endpoints 
     1. `X.module.ts` - Include controller, and services? TODO
     1. `main.ts` - set up the app, and the swagger document, and its port. (bootstrap())
-

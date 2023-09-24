@@ -32,9 +32,11 @@ def test_default_arg():
 
 def kwargs_test(): 
     """
-    1. kwargs(keyworded arguments) is just a dictionary
+    1. packing and unpacking using *:
+        - Inside function(), * is packing. In function definition, * is unpacking.
+        - kwargs(keyworded arguments) is just a dictionary, args is a tuple
     2. args(positional args) and kwargs for the same function
-        - remember kwargs don't have an order, so have them at the very last
+        - remember kwargs are packed into a dictionary, so they don't have an order, so have them at the very last
         - also whatever comes after *args will be kwargs
     3. You can enforce functions to have only keyworded,
     """
