@@ -83,4 +83,18 @@ const test_this = () => {
     obj.func1();
     obj.func2();
 }
-test_this();
+// test_this();
+
+/**
+ * Generator is the same concept as python. You need function* ... { yield something} to show this is a generator
+ */
+const test_generator = () => {
+    function* generateArray(){
+        yield 1;
+        yield 2;
+    }
+    for (let i of generateArray()){
+        console.log("generator: ", i);
+    }
+}
+// test_generator();

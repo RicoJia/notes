@@ -178,3 +178,8 @@ test_xclip(){
     # - does ctrl-v a file
     xclip -sel clip file-name
 }
+
+test_jq(){
+    # .name` will spit out "john"
+    `echo '{"name":"John","age":30}' | jq 
+}

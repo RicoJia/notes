@@ -128,4 +128,28 @@ const test_all_and_race_promises = () => {
         })
     ]).then(result => {console.log(result)});
 }
-test_all_and_race_promises();
+// test_all_and_race_promises();
+
+/**
+ * A common async bug is to change a shared value
+ */
+const test_async_bug = () => {
+    let arr = ["a", "b", "c"];
+    let finalString = "";
+    bug_func = async () => {
+        // promise.all gets an array of promises. So you should pass in promises
+        await Promise.all(arr.map(async item => {
+            // setTimeout doesn't return a promise
+            return new Promise(resolve =>{
+                setTimeout(() => {
+                    finalString += `${item}_lol`;
+                    resolve("done");
+                }, 100);
+            });
+        })).then(res => console.log(res)); // see 3 "done"
+        // not returning any promise
+    };
+    bug_func().then(res => console.log(res));
+
+}
+test_async_bug();
