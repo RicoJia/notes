@@ -24,4 +24,43 @@ const test_enum = () => {
     // Specify Types
     // const status: string | undefined = DriverCarStatus[i];
 }
-test_enum();
+// test_enum();
+
+/**
+ * Type: different from class!
+ *  - cannot be instantiated. Only lists method types and vars
+ */
+const test_type = () => {
+    type Dog = {
+        bark: () => void;
+        name: string;
+    };
+    const d: Dog = {
+        bark: () => {console.log("bark");},
+        name: "tracker"
+    };
+    d.bark();
+}
+test_type();
+
+/**
+ * Partial makes all fields of a type optional
+ *  - works on both class and type
+ */
+const test_partial = () => {
+    type Foo = {
+        field1: string;
+        field2: number;
+    };
+
+    const f: Partial<Foo> = {field1: "foo"};
+    console.log(f);
+
+    class Bar{
+        field1: string;
+        field2: number;
+    }
+    const b: Partial<Bar> = {field1: "bar"};
+    console.log(b);
+}
+test_partial();

@@ -122,6 +122,7 @@ const test_symbol = () => {
 /*
 - Getter & setter
     - getter cannot have parameters
+- By default, class methods are public
 */
 const test_getter_setter = () => {
     class Matrix {
