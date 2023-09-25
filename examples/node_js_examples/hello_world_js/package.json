@@ -1,0 +1,14 @@
+{
+  "name": "hello_world_js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "asynch.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async-mutex": "^0.4.0"
+  }
+}

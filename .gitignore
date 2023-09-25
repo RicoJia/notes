@@ -8,3 +8,4 @@ devel
 .catkin_tools/
 *logs/
 **/movielens_20/
+node_modules/

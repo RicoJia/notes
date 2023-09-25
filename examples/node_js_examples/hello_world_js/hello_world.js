@@ -336,3 +336,6 @@ const test_polyfill = () => {
 }
 test_polyfill();
 
+const test_try_catch_finally = () => {
+// JS doesn't have `try-catch-else`. Only `try-catch-finally`
+}

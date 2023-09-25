@@ -98,3 +98,14 @@ const test_generator = () => {
     }
 }
 // test_generator();
+
+const test_mutex = async () => {
+   const { Mutex } = require('async-mutex');
+   const mtx = new Mutex();
+   const release = await mtx.acquire(); 
+   release();
+   // Less error-prone way: using runExclusive
+   mtx.runExclusive(() => {return "something"});
+
+}
+test_mutex();
