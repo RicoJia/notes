@@ -63,4 +63,14 @@ const test_partial = () => {
     const b: Partial<Bar> = {field1: "bar"};
     console.log(b);
 }
-test_partial();
+// test_partial();
+
+const test_optional_property = () => {
+    type Person = {
+        name: string;
+        age?: number;
+    };
+    const p: Person = {name: "foo"};
+    console.log(p);
+}
+test_optional_property();

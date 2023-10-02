@@ -152,4 +152,33 @@ const test_async_bug = () => {
     bug_func().then(res => console.log(res));
 
 }
-test_async_bug();
+// test_async_bug();
+
+/**
+ * IMPORTANT NOTE:
+ * - A non-async function blocks an execution thread. So, inside all async functions, make sure you use async functions
+ */
+const test_non_async_blocking = () => {
+    function blockingFunction() {
+        // Simulate a long-running operation
+        for (let i = 0; i < 10000000000; i++) {}
+        console.log('Blocking function completed');
+    }
+
+    async function asyncFunction() {
+    console.log('Async function started');
+    blockingFunction();  // This will block
+    console.log('Async function completed');
+    }
+
+    async function anotherAsyncFunction() {
+    console.log('Another async function started');
+    await new Promise(resolve => setTimeout(resolve, 1000));  // Simulate a network request
+    console.log('Another async function completed');
+    }
+
+    // Call the functions
+    asyncFunction();
+    anotherAsyncFunction();
+}
+test_non_async_blocking();

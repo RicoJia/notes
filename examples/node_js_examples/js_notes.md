@@ -113,6 +113,13 @@ nvm alias default v14
     - diffing: what's changed. Much more interactive
 2. File Structure
     index.js -> App.JS (App, App could be an extended module, or component) -> if App() is a component, provide render()
+3. [Airbnb coding guide](https://airbnb.io/javascript/react/)
+    1. One component per file, called ```component.jsx```
+        - `App.js` also in `components/`
+    2. states:
+        - For stateless components, use functions``` function foo{return HTML}; ```
+        - For stateful components, use classes ``` class Component extends React.Components{} ```
+
 
 ========================================================================
 ##  Typescript
