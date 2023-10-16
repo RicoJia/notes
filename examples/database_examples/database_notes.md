@@ -5,6 +5,8 @@
 Basic Databases:
 - relational (sql) (Structural)
   - SQL: more structure (table), requires a schema, scale vertically, relationships
+        - relational: you have clear relationships, SQL is for you: table 1: user_id | user_address; table 2: order_id | user_id | product_id ; table3: product_id | product_description. Can set columns to be related to one another
+        - But a table grows vertically. Searching there might hit a bottleneck; NoSQL can grow horizontally.
   - Mongodb: horizontal (more distributed.)
 - document, no sql (mongodb), media data
 - graph (neo4j), how customers are related to each other
