@@ -56,6 +56,7 @@ export class AppController {
     return this.appService.createDummyReport(reportDTO, typeInDTO);
 }
 
+// @Body("DATA") is equivalent to (data?: string) => data ? req.body["DATA"] : req.body
 @Patch("update-dummy-report")
 update_dummy_report(
     @Body() reportDTO : ReportDTO,

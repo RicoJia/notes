@@ -1,6 +1,22 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 
+/**
+ - HTTP request: 
+    - header, 
+    - body (actual data being sent, in POST, or PUT), 
+    - method (GET, etc.)
+    - URL: url being accessed
+    - Cookies: any strings sent by the client
+    - params: URL params, query string params
+    - client info: IP address
+- HTTP response
+    - header
+    - status code
+    - body
+    - msg
+- session data
+ */
 @Catch()
 export class GenericReturnInResponseFilter implements ExceptionFilter {
   public catch(exception: Error, host: ArgumentsHost): void {
