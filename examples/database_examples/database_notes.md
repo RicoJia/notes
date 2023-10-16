@@ -3,11 +3,37 @@
 ## Overview
 
 Basic Databases:
-- relational (sql)
-- document (mongodb), media data
+- relational (sql) (Structural)
+  - SQL: more structure (table), requires a schema, scale vertically, relationships
+  - Mongodb: horizontal (more distributed.)
+- document, no sql (mongodb), media data
 - graph (neo4j), how customers are related to each other
 - full text search: elastic
 - Cache: redis
+
+## Postgres
+
+1. `docker compose up` to start the container
+2. `docker exec -it elevator_service_db psql -U postgres`
+    - psql is the postgreSQL client; -U is the user.
+3. Basic Opertions
+
+```
+# Not sure if this is necessary
+SELECT current_database()
+# List of databases
+\l
+# connect to the database
+\c DATABASE_NAME
+# check tables
+\dt
+SELECT * FROM TABLE_NAME;
+```
+
+4. Syntax
+    - end your command with `;`. Otherwise, each line will be moved to a buffer.
+    - reset the buffer is `\r`
+
 
 ## Redis
 
