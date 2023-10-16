@@ -12,8 +12,11 @@ import { AppService } from './app.service'
 @Controller()
 // class needed in app.module.ts
 export class AppController {
-    constructor(
-        private readonly appService: AppService
+    // readonly: you can't change reference after construction except for object.assign
+    // For deeper immutability, use Object.freeze()
+    private readonly appService: AppService
+    // Note: nest JS is fussy about access modifiers
+    public constructor(
     ){}
 
   @Get('status/all')

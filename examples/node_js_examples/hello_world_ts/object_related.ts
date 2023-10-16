@@ -77,3 +77,8 @@ const test_optional_property = () => {
     console.log(p);
 }
 // test_optional_property();
+
+const test_omitting_type = () => {
+    // TODO `export class carDTO extends OmitType(ElevatorRequest, ['site', 'car', 'bay'] as const)`
+    // - omitting types of ElevatorRequest.
+}

@@ -240,7 +240,8 @@ const test_call = () => {
 // test_call();
 
 /*
-Freezing an object is Object.freeze(), then you set it readonly
+- Freezing an object is Object.freeze(), then you set it readonly
+- Object.assign does not have deep copy. Also, each field could be overwritten
 */
 const test_freeze = () => {
     const o = {a: 1, b: 2};
@@ -250,6 +251,13 @@ const test_freeze = () => {
     } catch(e){
         console.log("Once you do Object.freeze, you can't change the object");
     }
+
+    obj1 = {a: 1, b: 2};
+    obj2 = {b:3, c:4};
+    target = {d:5}
+    // see {a:1, b:3, c:4, d:5}
+    newTarget = Object.assign(target, a, b)
+    Object.assign()
 }
 // test_freeze();
 
