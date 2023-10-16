@@ -46,15 +46,18 @@ test_type();
 /**
  * Partial makes all fields of a type optional
  *  - works on both class and type
+ * However, in other cases, you should still mark fields as optional
  */
 const test_partial = () => {
     type Foo = {
         field1: string;
-        field2: number;
+        field2?: number;
     };
 
     const f: Partial<Foo> = {field1: "foo"};
     console.log(f);
+    // - If something may be undefined: `if (var? == undefined){}` get rid of it as early as you can
+    console.log(f.field2 == undefined);
 
     class Bar{
         field1: string;
@@ -63,7 +66,7 @@ const test_partial = () => {
     const b: Partial<Bar> = {field1: "bar"};
     console.log(b);
 }
-// test_partial();
+test_partial();
 
 const test_optional_property = () => {
     type Person = {
@@ -73,4 +76,4 @@ const test_optional_property = () => {
     const p: Person = {name: "foo"};
     console.log(p);
 }
-test_optional_property();
+// test_optional_property();
