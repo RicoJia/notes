@@ -72,4 +72,6 @@ delete_dummy_report(
     return this.appService.deleteDummyReport(reportId);
 }
 
+// @ReqUser() user: User: extracts user after being authenticated
+
 }
