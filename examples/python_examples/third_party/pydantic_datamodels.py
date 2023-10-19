@@ -71,7 +71,46 @@ def test_dataclass():
     a = Album(**album_dict)
     print(f'can create dataclass from dictionary using **: {a}')
 
+def test_custom_pydantic():
+    import pydantic, re
+    from enum import Enum
+
+    def to_camel(string: str) -> str:
+        return re.sub(r'_([a-z])', lambda x: x.group(1).upper(), string)
+    class Color(Enum):
+        RED = "red_value"
+        GREEN = "green_value"
+        BLUE = "blue_value"
+    class ConfigBaseModel(pydantic.BaseModel):
+        # Needc to define a Config class
+        class Config:
+            # If you change a field's value, it will be validated again
+            validate_assignment = True
+            # Aliases
+            allow_population_by_field_name = True
+            alias_generator = to_camel
+            # without it, it will show as color=<Color.RED: 'red_value'>
+            # With it, it will show as color=red_value
+            # However, you need "red_value" to be correct in the input json, anyways
+            use_enum_values = True
+
+    class Car(ConfigBaseModel):
+        id: int
+        brand: str
+        color: Color
+    
+    try:
+        input_data = {"id": "invalid id", "brand": "hola"}
+        model = Car(**input_data)
+    except pydantic.error_wrappers.ValidationError:
+        pass
+
+    input_data = {"id": 12345, "brand": "hola", "color": "red_value"}
+    model = Car(**input_data)
+    #TODO Remember to remove
+    print(f'model: {model}')
 
 if __name__ == "__main__":
     # test_basic_pydantic()
-    test_dataclass()
+    # test_dataclass()
+    test_custom_pydantic()
