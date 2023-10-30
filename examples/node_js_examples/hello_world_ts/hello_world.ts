@@ -1,4 +1,5 @@
 // You can't do 1=='11, as TS is a strongly typed language
+// Must have const, or let, var declaration.
 var a = 1;
 // Type script doesn't support 1=='1'
 console.log(Number(a), typeof null, 1===1, 1==1);

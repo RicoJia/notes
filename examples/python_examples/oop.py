@@ -152,6 +152,10 @@ def test_reference():
         def __init__(self):
             self._f = Foo()
 
+def test_immutable_reference():
+    # getting reference to an immutable is difficult
+    a = 1
+
 
 def test_inserting_to_ordered_dict():
     from collections import OrderedDict
