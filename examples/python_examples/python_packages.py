@@ -103,6 +103,13 @@ def test_python_path():
 # And the module you import will show their path in __name__ (Pronounced as 'dunder_name')
 # The script (top level) running the script will show __main__ if you print(__name__)
 
+""" Poetry
+1. Update a package to a certain version:
+    - in pyproject.toml, have
+        [dependencies]
+        package-name="^0.5.0"   # 0.5.x
+    - poetry update package name
+"""
 if __name__ == '__main__':
     test_python_path()
 

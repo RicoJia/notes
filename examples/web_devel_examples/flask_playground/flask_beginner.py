@@ -6,7 +6,12 @@
 2. Flask:
     - Follow this guy: https://www.zhihu.com/people/he-he-da-92-32-97/posts?page=4
     - Nice class: https://www.bilibili.com/video/BV1SM4y1P7xi?p=87&spm_id_from=pageDriver
+3, Flask is using an MVC model, from backend to frontend
+    - M Model is data logic, (backend)
+    - V is view (rendering views, or API), (front end )
+    - C is controller (the intermediary between V)
 """
+
 from flask import Flask, render_template, url_for, jsonify
 # __name__ will be __main__ or name of the module (if being run as submodule)
 app = Flask(__name__)

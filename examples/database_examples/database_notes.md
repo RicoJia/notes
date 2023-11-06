@@ -36,6 +36,28 @@ SELECT * FROM TABLE_NAME;
     - end your command with `;`. Otherwise, each line will be moved to a buffer.
     - reset the buffer is `\r`
 
+### PostgreSQL Migration and Seeding
+Basic Concepts
+    - [js migration with ORM](https://blog.errorbaker.tw/posts/minw/nest-js-migration/)
+    - primary key, foreign key: https://blog.csdn.net/blues_more/article/details/81628001
+
+1. Migration is: changing schema (table, columns, datatypes, constraints?), or moving data between systems.
+    - Make sure TypeORM & entity are in there
+        - `migrations/`, `entities/`
+
+2. An orm is a class that allows us to interact with DB tables, without directly touching that.
+    how does association work? Use primary and foreign key
+
+3. Seeding is to populate initial data
+    - in `mikro-ORM`, seeders have `run()` implemented
+    - `EntityManager` is the central access point, manages entities, like "session"
+    - persisting and flushing:
+        1. create a new entity
+        2. persist the entity (mark the entity for insertion or update)
+        3. em.remove(), mark the entity as DELETE
+        4. em.flush(): write all persisted entities to db, not the ones marked DELETE
+        5. change entity, then flush again
+
 
 ## Redis
 
