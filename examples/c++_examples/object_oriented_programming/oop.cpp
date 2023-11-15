@@ -12,7 +12,7 @@ public:
     oop (int i = 3, int j = 4.0): i_(i), j_(j){}
     bool operator == (const oop& rhs){ return (rhs.i_ == i_) & (rhs.j_ == j_); }
 private:
-    int i_; 
+    int i_;
     int j_;
 };
 

@@ -1,6 +1,11 @@
+#include <bits/types/clock_t.h>
 #include <vector>
 #include <iostream>
+#include <string>
 #include <memory>
+#include <cerrno>
+#include <fcntl.h>
+#include <unistd.h>
 
 using std::cout; using std::endl; 
 
@@ -66,8 +71,39 @@ void mtx_ptr_in_struct()
     Bar();
 }
 
+/**
+ * Notes:
+ * 1. constexpr only works with literal types (POD), because they are guaranteed
+ *    to be known. std::string has dynamic memory allocation, so it's not.
+ *    So, constexpr std::string_view (cpp 17+) or constexpr char* are allowed
+ * 2. std::perror(const char*). std::string -> const char* doesn't happen naturally
+ * 
+ */
+void test_perror(){
+    const std::string file_name = "non_existent_file";
+    int fd = open(file_name.c_str(), O_RDONLY);
+
+    // this wouldn't be seen as a system error,
+    // so error number will be 0. perror will see it as success 
+    try{
+        throw std::runtime_error("test_perror");
+    } catch(...){
+        std::perror("test_perror");
+    }
+
+    if (fd == -1){
+        std::perror((file_name + "Error Opening File ").c_str());
+        std::cerr << "Error code: " << errno << std::endl;
+    }
+    else{
+        close(fd);
+    }
+    
+}
+
 int main()
 {
-    make_unique_crash();
+    // make_unique_crash();
     // mtx_ptr_in_struct();
+    test_perror();
 }
