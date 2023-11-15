@@ -41,6 +41,20 @@ class Doggy{
 const d2 = new Doggy( "Doggy in a class");
 d2.bark();
 
+
+// Pre-ES6: using call to call a function
+function funcWithCall() {
+    /*TODO: rico to remove*/
+    console.log(`testing call: ${this.x}`);
+}
+
+callObj = {
+    x: 2
+}
+// call allows you to specify the context explicitly
+funcWithCall.call(callObj)
+
+
 /*
 - extends is creating a child class
 */
