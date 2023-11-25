@@ -14,6 +14,7 @@ function float_eval(){
 float_eval
 
 # 2
+# Note: echo can show multiple things
 function show_addition_and_func_name(){
     echo "${FUNCNAME[0]}" $((1+2))
 }
@@ -33,19 +34,22 @@ function test_if(){
     # /newline is a command separate, same as ;**
     if [[ 1 ]]
     then 
-        echo "hehe"
+        echo "testing true for if"
     fi
 
     # 5 - "" is used whenever the variable might contain space or is empty. This way, the entire thing is treated as a single argument. Else, the string might be broken into many. So, always wrap string with ""
     # 6 - UID is 0 if you execute the script as root, UID is a **shell built-in variable, not an environment variable**.  
     # 7 -eq for equal, = for comparing strings, == is for bash only. -ne is not equal. != for strings. -le is less than or equal to
     # 8 You also need space for -eq, so it is a separate word.
-    if [[ ${UID} -eq 0 ]]; then echo "UID is 0"; fi
+    if [[ ${UID} -eq 0 ]]; then echo "UID is 0. The actual user is sudo"; fi
+    # EUID is "effective UID", which is used for SUDO running access priviledge. 
+    # EUID starts off with the UID value, but later it can be changed with setuid
+    if [[ ${EUID} -ne 0 ]]; then echo "Not running effectively as sudo"; fi
 
     #9 test -f will see if a file exists
     test -f $TEST_FILE || echo "hello, file $TEST_FILE exits"
 }
-# test_if
+test_if
 
 # 8
 function test_increase_variable(){
@@ -124,6 +128,47 @@ test_and_or(){
     # - $PS1 is an 'prompt variable', which is needed for prompting the user for an input. So it's set in an interactive shell session (not set in non-interactive shell). It looks like: ```\u@\h:\w$```, where u is username. h is homedirectory
     # - && and || will stop executing if the return value can be determined
 }
+
+test_date(){
+    # -I will make it ISO8601, n will show the full date
+    date -In
+}
+# test_date
+
+test_grep(){
+    # grep -v is to not show lines with a certain word.. 
+    # This line is common for filtering out greps
+    grep -v grep
+}
+# test_grep
+
+test_ping_and_disown(){
+    # -c 2: sends 2 ICMP echo requests
+    # ICMP is a protocol different from TCP/UDP, used to report, not correct
+    # Network problems. DoS (denial of service) attack could be a flood of ICMP
+    # Requests
+    # -W 0.5: waits for a ping response with timeout=0.5
+    ping 172.1.1.0 -c 2 -W 1.5 &
+    # disown: Shell has an active_job_table, for running, suspended, background
+    # disown -h marks all jobs on the active_job_table not to receive SIGHUP.
+    # Then these processes are not reported by built-ins like job. This is great for long-running processes launched in SSH: it doesn't listen to SIGHUP signals for termination anymore. That means, when you close the SSH console, the process won't be terminated.
+    # So, disown will let go of the ping background process. 
+    disown -h
+}
+test_ping_and_disown
+
+test_bash_source(){
+    # : gives full path of script
+    # Say this file sources B.sh. Then in B.sh: $0 gives this file, but BASH_SOURCE will give the entire list of files
+    echo "testing bash source" ${BASH_SOURCE[0]}
+}
+test_bash_source
+
+test_ssh(){
+    # -t is psuedo terminal, which is required for password prompts
+    ssh -t IP
+}
+
 
 test_stderr(){
     # This will directly redirect the output to stderr
