@@ -328,6 +328,16 @@ def test_class_variable():
     """
     class Foo:
         var = 1
+
+        @staticmethod
+        def bar():
+            pass
+        # When creating class variables, if bar already exists, no problem
+        # DICT is class scope, so you can just do bar
+        DICT = {
+            "exec": bar
+        }
+
     f = Foo()
     g = Foo()
     Foo.var = 2
@@ -342,6 +352,8 @@ def test_class_variable():
     print("Foo var is", Foo.var, "while f.bar : ", f.bar, "and f.var: ", f.var, " and g.var: ", g.var)
     print(Foo.__dict__, f.__dict__)
 
+    # __func__ returns a bound function in python 3.0
+    print(f'{Foo.bar.__func__}')
 
 def test_sort_by_attr():
     """

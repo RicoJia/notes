@@ -32,11 +32,60 @@ function test_if(){
     # - need spacing after if, before [[. ]]. Spacing matters, else it won't evaluate properly!!
     # [[ is a **bash-only keyword. old way is [**. [[]] is an alias for test, a shell built-in command. So it's equivalent to having 3 arguments ```test ${VAR} == 'B'```
     # /newline is a command separate, same as ;**
-    if [[ 1 ]]
+    
+    if [[ 0 ]]
     then 
-        echo "testing true for if"
+        echo "0 is evaluated as a string and since it's not empty,  it is also true"
     fi
 
+    if [[ 1 ]]
+    then 
+        echo "1 is a non empty string so it is also true"
+    fi
+
+    if [[ "" ]]
+    then
+        echo "Empty string in the test construct is true"
+    else
+        echo "Empty string in the test construct is false"
+    fi
+
+    if [[ 1 -eq 1 ]]
+    then 
+        echo "1 -eq 1 is a numerical comparison, where 1 is evaluated as a number"
+    fi
+
+    function return_0(){
+        return 0
+    }
+
+    function return_1(){
+        return 1
+    }
+
+    if [[ $(return_1) ]]
+    then 
+        echo "Returning 1 in test construct is true"
+    else
+        echo "Returning 1 in test construct with $() is false"
+    fi
+
+    if return_0 
+    then 
+        echo "Returning 0 is also true"
+    fi
+
+    if return_1 
+    then 
+        echo "Returning 1 is also true"
+    else
+        echo "Returning 1 is NOT true"
+    fi
+
+}
+test_if
+
+function test_eid(){
     # 5 - "" is used whenever the variable might contain space or is empty. This way, the entire thing is treated as a single argument. Else, the string might be broken into many. So, always wrap string with ""
     # 6 - UID is 0 if you execute the script as root, UID is a **shell built-in variable, not an environment variable**.  
     # 7 -eq for equal, = for comparing strings, == is for bash only. -ne is not equal. != for strings. -le is less than or equal to
@@ -49,7 +98,6 @@ function test_if(){
     #9 test -f will see if a file exists
     test -f $TEST_FILE || echo "hello, file $TEST_FILE exits"
 }
-test_if
 
 # 8
 function test_increase_variable(){

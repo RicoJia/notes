@@ -422,6 +422,11 @@ def test_is():
     == compares their values by checking their deep copies
     {}, [] are mutables, so you have to use ==
     (), "", '' are immutables, so use is
+
+    - interning means "reusing variables". Like int and strings
+        - int, strings do that, but not tuples. 
+        - tuples can hold various datatypes, so searching in the entire python stack for the same tuple could be expensive.
+        - `set([(1,2), (1,2)])` will still yield `{(1,2)}`
     """
     print("True is True", True is True)  #see True, because True is an object
     print("None is None", None is None)  # see True

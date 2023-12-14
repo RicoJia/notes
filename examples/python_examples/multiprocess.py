@@ -8,7 +8,7 @@ import time
 ################################################################
 import signal
 import os
-from multiprocessing import  Process
+from multiprocessing import  Process, Manager
 def test_process(): 
     """
     Theory: 
@@ -146,6 +146,18 @@ def test_process_scanning():
         # except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
         #     pass
 
+def test_manager_and_shared_list():
+    def worker(shared_list):
+        shared_list.append(1)
+        shared_list.append(5)
+
+    with Manager() as manager:
+        shared_list = manager.list()
+        p = Process(target=worker, args=(shared_list, ))
+        p.start()
+        p.join()
+        print(shared_list) 
+        
 def test_process_pipe():
     def worker(in_p):
         # you can do in_p.poll() as well
@@ -167,6 +179,8 @@ def test_process_pipe():
 
     worker.join()
     client.join()
+
+        
 
 def test_simple_server_and_client(is_client):
     '''
@@ -202,12 +216,12 @@ if __name__ == "__main__":
     # test_forking()
     # test_multiprocess_queue()
     # test_process_scanning()
-    test_multiple_threads_queue()
+    # test_multiple_threads_queue()
     # test_daemon_thread()
 
     # test_threading_timer()
-    test_process_pipe()
-
+    # test_process_pipe()
+    test_manager_and_shared_list()
     import argparse
     parser = argparse.ArgumentParser()
     # interesting, -- does make a difference

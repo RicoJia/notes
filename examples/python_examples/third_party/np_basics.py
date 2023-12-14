@@ -27,6 +27,8 @@ def np_basics1():
 
     # 3 broadcast a row, 
     print("Broadcasting row to the arr: ", arr + [10, 20, 30, 40])
+    # Array multiplication through broadcasting
+    print(np.array([1,2]) * np.array([3,4]))
 
     # 4 
     print("using np where to make elements 1/10", np.where(arr < 10, 1, 10))
@@ -49,6 +51,7 @@ def np_basics1():
     # eigen values
     print("eigen values: ", np.linalg.eigvals(m))
     print("det: ", np.linalg.det(m))
+
 
 def np_filter():
     arr = np.ones((4,3))
