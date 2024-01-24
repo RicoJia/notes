@@ -101,9 +101,24 @@ void test_perror(){
     
 }
 
+#include <exception>
+/**
+ * @brief : std::exception is the parent class of all cpp exceptions
+ * See all exceptions: https://rollbar.com/guides/cpp/how-to-handle-exceptions-in-cpp/#
+ */
+void test_invalid_argument(){
+    try{
+        throw std::invalid_argument("test_invalid_argument");
+    }
+    catch (const std::exception& e){
+        std::cout<<e.what()<<std::endl;
+    }
+}
+
 int main()
 {
     // make_unique_crash();
     // mtx_ptr_in_struct();
-    test_perror();
+    // test_perror();
+    test_invalid_argument();
 }
