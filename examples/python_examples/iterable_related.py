@@ -87,8 +87,6 @@ def test_unpack():
     x, = (1,2)
     print("singleton tuple: ", x)
 
-    # Unpack map obj (applies the function on everything in the list)
-    x,y,z = map(lambda x: x+1, [1,2,3]) 
 
 def test_permutations():
     """
@@ -160,14 +158,6 @@ def dict_operations():
     4. dict Basics
         - dict uses hash to map to a hash bucket. If multiple keys don't have hash conflicts, hten get, set is o(1). But list is O(1) for get and set...
     """
-    # 1
-    di = {1:"a", 2:"b"}
-    ls = list(di.items())
-    print(list(filter(lambda x: x[0] < 5, ls)))
-    # dict_items() type, not supporting filter() directly on dict.items(). Must use list
-    print(type(di.items()))
-    print(di.values())
-
     # 2 
     dic = [ {'fname': 'Brian', 'lname': 'Jones', 'uid': 1003}, {'fname': 'David', 'lname': 'Beazley', 'uid': 1002}, {'fname': 'John', 'lname': 'Cleese', 'uid': 1001}, {'fname': 'Big', 'lname': 'Jones', 'uid': 1004}]
     print("sort dictionary by single key: ", sorted(dic, key = lambda k : k["lname"]))
@@ -480,7 +470,6 @@ def list_basics():
         - extend can work with non-local variables, while += can only work with locals
         - append is used to add another element in. +=, extend doesn't do those
     6. slice is a great object to hold list indices, which is to be used over and over
-    7. reduce can be used to merge lists, get sum
     8. list.remove(object), will pop up error msg for not in list. 
         - will remove all object instances
         - requires object == object is true

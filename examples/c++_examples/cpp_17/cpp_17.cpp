@@ -13,7 +13,6 @@ void test_optional(){
         if(does_return) 
             return 1;
         else 
-            // or std::nullopt
             return {};
     };
     cout<<get_ll(true).value()<<endl;
