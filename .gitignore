@@ -2,6 +2,8 @@
 *.log
 build
 devel
+install
+log
 *.so
 *.out
 *.pyc
